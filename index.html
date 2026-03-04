@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logística & Mantenimiento</title>
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #282c34;
+      color: white;
+      min-height: 100vh;
+    }
+
+    /* Barra superior */
+    .barra-superior {
+      width: 100%;
+      height: 100px;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .barra-superior img {
+      height: 96px;
+    }
+
+    .menu {
+      display: flex;
+      gap: 30px;
+      position: relative;
+    }
+
+    .menu a {
+      color: #3688b4;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+      transition: color 0.3s ease;
+      padding: 8px 16px;
+      border: 2px solid #ffffff;
+      border-radius: 5px;
+      background-color: transparent;
+      position: relative;
+    }
+
+    .menu a:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 24px;
+      width: 2px;
+      background-color: #3688b4;
+    }
+
+    .menu a:hover {
+      color: #ffffff;
+      background-color: #0b3642;
+    }
+
+    #selector-idioma {
+      margin-left: 20px;
+      padding: 6px 10px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      color: #333;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      margin-top: 100px;
+    }
+
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(60%);
+    }
+
+    .hero-texto {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      color: white;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+      z-index: 1;
+      padding: 20px;
+      width: 90%;
+      max-width: 1000px;
+      gap: 3px;
+    }
+
+    .hero-texto-left {
+      flex: 1;
+      text-align: left;
+      padding: 0;
+    }
+
+    .hero-texto-right {
+      flex: 1;
+      text-align: right;
+      padding: 0;
+    }
+
+    .hero-texto h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-texto p {
+      font-size: 1rem;
+    }
+
+    /* Botones Hero */
+    .botones-hero {
+      display: flex;
+      gap: 20px;
+      justify-content: flex-end;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .botones-hero button {
+      padding: 12px 25px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .botones-hero a:first-child button {
+      background: linear-gradient(135deg, #00b4db, #0083b0);
+    }
+
+    .botones-hero a:first-child button:hover {
+      background: linear-gradient(135deg, #0083b0, #005f73);
+      transform: translateY(-2px);
+    }
+
+    .botones-hero a:last-child button {
+      background: linear-gradient(135deg, #28a745, #218838);
+    }
+
+    .botones-hero a:last-child button:hover {
+      background: linear-gradient(135deg, #1e7e34, #19692c);
+      transform: translateY(-2px);
+    }
+
+    /* Contenido adicional */
+    .contenido {
+      padding: 60px 40px;
+      background-color: #1c1f26;
+      text-align: center;
+    }
+
+    .contenido p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .boton-contenido {
+      padding: 12px 25px;
+      font-size: 1rem;
+      background-color: #324bbc;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .boton-contenido:hover {
+      background-color: #0d0e48;
+      transform: scale(1.05);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-texto {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .hero-texto-left,
+      .hero-texto-right {
+        padding: 0;
+        text-align: center;
+      }
+
+      .hero-texto h2 {
+        font-size: 1.2rem;
+      }
+
+      .hero-texto p {
+        font-size: 0.95rem;
+      }
+
+      .botones-hero {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de navegación -->
+  <div class="barra-superior">
+    <img src="LM5.GIF" alt="Logo de la empresa" />
+    <nav class="menu">
+      <a href="#inicio" data-es="Inicio" data-en="Home">Inicio</a>
+      <a href="nosotros.html" data-es="Nosotros" data-en="About Us">Nosotros</a>
+      <a href="servicios.html" data-es="Servicios" data-en="Services">Servicios</a>
+      <a href="contactanos.html" data-es="Contáctanos" data-en="Contact">Contáctanos</a>
+    </nav>
+    <select id="selector-idioma">
+      <option value="es"> Español</option>
+      <option value="en"> English</option>
+    </select>
+  </div>
+
+  <!-- Hero principal -->
+  <div class="hero" id="inicio">
+    <img src="callao.jpg" alt="Imagen central" />
+    <div class="hero-texto">
+      <!-- Columna izquierda -->
+      <div class="hero-texto-left">
+        <h2 data-es="Limpieza y mantenimiento naval" data-en="Naval cleaning and maintenance">
+          Limpieza y mantenimiento naval
+        </h2>
+        <h2 data-es="operaciones sin contratiempos." data-en="trouble-free operations.">
+          operaciones sin contratiempos.
+        </h2>
+      </div>
+      <!-- Columna derecha -->
+      <div class="hero-texto-right">
+        <p id="servicios-texto" data-es="¿Necesitas nuestros servicios?" data-en="Do you need our services?">
+          ¿Necesitas nuestros servicios?
+        </p>
+        <div class="botones-hero">
+          <a href="contactanos.html">
+            <button data-es="Solicita una cotización" data-en="Request a Quote">Solicita una cotización</button>
+          </a>
+          <a href="servicios.html">
+            <button data-es="Conoce nuestros servicios" data-en="Learn About Our Services">Conoce nuestros servicios</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script de idioma -->
+  <script>
+    const selector = document.getElementById("selector-idioma");
+    selector.addEventListener("change", () => {
+      const idioma = selector.value;
+      document.querySelectorAll("[data-es]").forEach(el => {
+        el.textContent = el.dataset[idioma];
+      });
+    });
+  </script>
+  <!-- Pie de página -->
+<footer class="footer">
+  <div class="footer-enlaces">
+    <a href="#politica">Política de Privacidad</a>
+    <a href="#terminos">Términos de Uso</a>
+    <a href="#derechos">Derechos de Autor</a>
+    <a href="#aviso">Aviso Legal</a>
+  </div>
+  <p class="footer-copy">&copy; 2025 TuEmpresa. Todos los derechos reservados.</p>
+</footer>
+<!-- Sección: Política de Privacidad -->
+<section id="politica" class="seccion-legal">
+  <h3>Política de Privacidad</h3>
+  <p>Explica cómo recopilamos, usamos y protegemos tu información personal.</p>
+</section>
+
+<!-- Sección: Términos de Uso -->
+<section id="terminos" class="seccion-legal">
+  <h3>Términos de Uso</h3>
+  <p>Describe las condiciones que aceptas al usar nuestro sitio web.</p>
+</section>
+
+<!-- Sección: Derechos de Autor -->
+<section id="derechos" class="seccion-legal">
+  <h3>Derechos de Autor</h3>
+  <p>Todo el contenido publicado en este sitio es propiedad de TuEmpresa, salvo que se indique lo contrario.</p>
+</section>
+
+<!-- Sección: Aviso Legal -->
+<section id="aviso" class="seccion-legal">
+  <h3>Aviso Legal</h3>
+  <p>Información legal obligatoria relacionada con el sitio web, empresa o entidad responsable.</p>
+</section>
+
+
+</body>
+</html>

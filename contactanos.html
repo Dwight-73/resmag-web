@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contáctanos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #282c34; /* color de fondo */
+      color: white;/* color del texto */
+      text-align: center;
+      min-height: 100vh;
+      padding: 60px 40px;
+    }
+
+    .barra-superior {
+      background-color: white;/* color de la barra superior */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .barra-superior img {
+      height: 70px;
+    }
+
+   .menu a { 
+      color: #3e7984; /* color del texto */
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+      transition: color 0.3s ease;
+      padding: 8px 16px;
+      border: 2px solid #ffffff; /* color del borde */
+      border-radius: 5px;
+      background-color: transparent;
+    }
+
+    .menu a:hover {
+      color: #ffffff; /* color del texto */
+      background-color: #0b3642; /* color de fondo */
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-top: 40px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+
+    form {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    input, textarea {
+      width: 80%;
+      max-width: 500px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+button {
+      padding: 12px 25px;
+      font-size: 1rem;
+      background-color: #324bbc; /* color de fondo */
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #fff; /* color del texto */
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0d0e48;/* color al poner el mouse encima */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="barra-superior">
+    <img src="LM2.jpeg" alt="Logo de la empresa">
+    <div class="menu">
+      <a href="index.html">Inicio</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="servicios.html">Servicios</a>
+      <a href="contactanos.html">Contáctanos</a>
+    </div>
+  </div>
+
+  <h1>Contáctanos</h1>
+  <p>Envíanos un mensaje. Te responderemos lo antes posible.</p>
+
+ <form action="https://formsubmit.co/eguerrero@lm.com" method="POST">
+  <input type="text" name="nombre" placeholder="Tu nombre" required>
+  <input type="email" name="email" placeholder="Tu correo electrónico" required>
+  <textarea name="mensaje" rows="5" placeholder="Tu mensaje" required></textarea>
+  <button type="submit">Enviar</button>
+</form>
+
+</body>
+</html>
