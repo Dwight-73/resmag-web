@@ -23,7 +23,7 @@ body {
   background-color: #1c1f26; /* Default dark background */
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center; /* Center content horizontally */
   padding: 0 40px;
   position: fixed;
   top: 0;
@@ -42,6 +42,10 @@ body {
 
 .barra-superior img {
   height: 96px;
+  position: absolute; /* Take logo out of flex flow */
+  left: 40px; /* Stick to left */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%);
 }
 
 .menu {
@@ -71,7 +75,6 @@ body {
 }
 
 #selector-idioma {
-  margin-left: 20px;
   padding: 6px 10px;
   font-size: 0.9rem;
   border-radius: 20px;
