@@ -3,75 +3,189 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Servicios</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: rgb(244, 244, 244); /* COLOR AL PONER EL MOUSE ENCIMA  */
-      color: rgb(0, 0, 0); /* COLOR DEL TEXTO */
-      text-decoration: none; /* QUITA EL SUBRAYADO DEL TEXTO */
-      text-align: center;
-      min-height: 100vh;
-      padding: 60px 40px;
-    }
-
-     .barra-superior {
-  background-color: rgb(255, 255, 255); /* COLOR DE LA BARRA SUPERIOR */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* SOMBRA */
-  border-bottom: 3px solid #000000; /*  BORDE INFERIOR AGREGADO */
-}
-
-    .barra-superior img {
-      height: 70px;
-    }
-
- .menu a { 
-      color: #3e7984; /* color del texto */
-      text-decoration: none;
-      font-size: 1.1rem;
-      font-weight: bold;
-      transition: color 0.3s ease;
-      padding: 8px 16px;
-      border: 2px solid #ffffff; /* color del borde */
-      border-radius: 5px;
-      background-color: transparent;
-    }
-
-    .menu a:hover {
-      color: #ffffff; /* color del texto */
-      background-color: #0b3642; /* color de fondo */
-    }
-
-
-    h1 {
-      font-size: 3rem;
-      margin-top: 40px;
-    }
-
-    p {
-      font-size: 1.2rem;
-      margin-top: 20px;
-    }
-  </style>
+  <title>RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC – Servicios</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="pagina-servicios">
 
+  <!-- Barra de navegación -->
   <div class="barra-superior">
-    <img src="LM2.jpeg" alt="Logo de la empresa">
-    <div class="menu">
-      <a href="index.html">Inicio</a>
-      <a href="nosotros.html">Nosotros</a>
-      <a href="servicios.html">Servicios</a>
-      <a href="contactanos.html">Contáctanos</a>
+    <img src="resmag.png" alt="RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC" />
+    <nav class="menu">
+      <a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a>
+      <a href="nosotros.html" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a>
+      <a href="servicios.html" class="active" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
+      <a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a>
+    </nav>
+    <select id="selector-idioma">
+      <option value="es"> Español</option>
+      <option value="en"> English</option>
+      <option value="pt"> Português</option>
+    </select>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div class="contenido-interno">
+    <h1 data-es="Nuestros Servicios" data-en="Our Services" data-pt="Nossos Serviços">Nuestros Servicios</h1>
+    <p class="intro-servicios" 
+       data-es="Soluciones integrales para la industria naval e industrial, garantizando eficiencia y seguridad en cada operación." 
+       data-en="Comprehensive solutions for the naval and industrial industry, ensuring efficiency and safety in every operation." 
+       data-pt="Soluções abrangentes para a indústria naval e industrial, garantindo eficiência e segurança em cada operação.">
+      Soluciones integrales para la industria naval e industrial, garantizando eficiencia y seguridad en cada operación.
+    </p>
+
+    <div class="grid-servicios">
+      <div class="card-servicio">
+        <div class="icono-servicio">🚢</div>
+        <h3 data-es="Mantenimiento Naval" data-en="Naval Maintenance" data-pt="Manutenção Naval">Mantenimiento Naval</h3>
+        <p data-es="Servicios de mantenimiento preventivo y correctivo para buques y estructuras marítimas."
+           data-en="Preventive and corrective maintenance services for ships and maritime structures."
+           data-pt="Serviços de manutenção preventiva e corretiva para navios e estruturas marítimas.">
+           Servicios de mantenimiento preventivo y correctivo para buques y estructuras marítimas.
+        </p>
+      </div>
+      <div class="card-servicio">
+        <div class="icono-servicio">⚓</div>
+        <h3 data-es="Logística Marítima" data-en="Maritime Logistics" data-pt="Logística Marítima">Logística Marítima</h3>
+        <p data-es="Soluciones integrales de logística para el transporte de mercancías por vía marítima."
+           data-en="Comprehensive logistics solutions for the transportation of goods by sea."
+           data-pt="Soluções integrais de logística para o transporte de mercadorias por via marítima.">
+           Soluciones integrales de logística para el transporte de mercancías por vía marítima.
+        </p>
+      </div>
+      <div class="card-servicio">
+        <div class="icono-servicio">⚙️</div>
+        <h3 data-es="Reparaciones Industriales" data-en="Industrial Repairs" data-pt="Reparos Industriais">Reparaciones Industriales</h3>
+        <p data-es="Servicios de reparación y mantenimiento para equipos y maquinaria industrial."
+           data-en="Repair and maintenance services for industrial equipment and machinery."
+           data-pt="Serviços de reparo e manutenção para equipamentos e máquinas industriais.">
+           Servicios de reparación y mantenimiento para equipos y maquinaria industrial.
+        </p>
+      </div>
+      <div class="card-servicio">
+        <div class="icono-servicio">🌊</div>
+        <h3 data-es="Limpieza de Cascos" data-en="Hull Cleaning" data-pt="Limpeza de Cascos">Limpieza de Cascos</h3>
+        <p data-es="Limpieza especializada de cascos de barcos para mejorar la eficiencia y velocidad."
+           data-en="Specialized cleaning of ship hulls to improve efficiency and speed."
+           data-pt="Limpeza especializada de cascos de navios para melhorar a eficiência e velocidade.">
+           Limpieza especializada de cascos de barcos para mejorar la eficiencia y velocidad.
+        </p>
+      </div>
+      <div class="card-servicio">
+        <div class="icono-servicio">🏗️</div>
+        <h3 data-es="Gestión de Proyectos" data-en="Project Management" data-pt="Gestão de Projetos">Gestión de Proyectos</h3>
+        <p data-es="Supervisión y gestión completa de proyectos navales desde el diseño hasta la ejecución."
+           data-en="Complete supervision and management of naval projects from design to execution."
+           data-pt="Supervisão e gestão completa de projetos navais desde o design até a execução.">
+           Supervisión y gestión completa de proyectos navales desde el diseño hasta la ejecución.
+        </p>
+      </div>
+      <div class="card-servicio">
+        <div class="icono-servicio">🛡️</div>
+        <h3 data-es="Consultoría de Seguridad" data-en="Safety Consulting" data-pt="Consultoria de Segurança">Consultoría de Seguridad</h3>
+        <p data-es="Asesoramiento experto en normativas de seguridad marítima y prevención de riesgos."
+           data-en="Expert advice on maritime safety regulations and risk prevention."
+           data-pt="Assessoria especializada em normas de segurança marítima e prevenção de riscos.">
+           Asesoramiento experto en normativas de seguridad marítima y prevención de riesgos.
+        </p>
+      </div>
+    </div>
+
+    <div class="seccion-nosotros" style="margin-top:40px;">
+      <h2 data-es="Por qué elegir RESMAG" data-en="Why Choose RESMAG" data-pt="Por que escolher a RESMAG">Por qué elegir RESMAG</h2>
+      <p data-es="Respuesta rápida 24/7, equipos certificados y procedimientos estandarizados para intervenciones seguras y eficientes."
+         data-en="24/7 rapid response, certified teams and standardized procedures for safe and efficient interventions."
+         data-pt="Resposta rápida 24/7, equipes certificadas e procedimentos padronizados para intervenções seguras e eficientes.">
+         Respuesta rápida 24/7, equipos certificados y procedimientos estandarizados para intervenciones seguras y eficientes.
+      </p>
+      <p data-es="Gestión integral de proyectos, trazabilidad completa y cumplimiento de normativas locales e internacionales."
+         data-en="End-to-end project management, full traceability and compliance with local and international regulations."
+         data-pt="Gestão integral de projetos, rastreabilidade completa e conformidade com normas locais e internacionais.">
+         Gestión integral de proyectos, trazabilidad completa y cumplimiento de normativas locales e internacionales.
+      </p>
+    </div>
+
+    <div class="seccion-nosotros">
+      <h2 data-es="Sectores que Atendemos" data-en="Sectors We Serve" data-pt="Setores Atendidos">Sectores que Atendemos</h2>
+      <p data-es="Puertos, astilleros, navieras, operadores logísticos, industria, minería, energía y oil & gas."
+         data-en="Ports, shipyards, shipping lines, logistics operators, industry, mining, energy and oil & gas."
+         data-pt="Portos, estaleiros, companhias marítimas, operadores logísticos, indústria, mineração, energia e oil & gas.">
+         Puertos, astilleros, navieras, operadores logísticos, industria, minería, energía y oil & gas.
+      </p>
     </div>
   </div>
 
-  <h1>Servicios</h1>
-  <p>Ofrecemos soluciones digitales, asesoría personalizada y desarrollo de software a medida.</p>
+  <!-- Pie de página -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Col 1: Logo y Descripción -->
+      <div class="footer-col">
+        <img src="resmag.png" alt="RESMAG Logo" class="footer-logo">
+        <p data-es="Soluciones integrales en mantenimiento y logística naval." 
+           data-en="Integral solutions in naval maintenance and logistics."
+           data-pt="Soluções integrais em manutenção e logística naval.">
+           Soluciones integrales en mantenimiento y logística naval.
+        </p>
+      </div>
+      
+      <!-- Col 2: Enlaces Rápidos -->
+      <div class="footer-col">
+        <h4 data-es="Enlaces Rápidos" data-en="Quick Links" data-pt="Links Rápidos">Enlaces Rápidos</h4>
+        <ul>
+          <li><a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a></li>
+          <li><a href="nosotros.html" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a></li>
+          <li><a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a></li>
+          <li><a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a></li>
+        </ul>
+      </div>
+  
+      <!-- Col 3: Contacto -->
+      <div class="footer-col">
+        <h4 data-es="Contacto" data-en="Contact" data-pt="Contato">Contacto</h4>
+        <p>📍 <a href="https://maps.app.goo.gl/SQQ8TvCqo834wht99" target="_blank" style="color: inherit; text-decoration: none;">Callao, Perú</a></p>
+        <p>✉️ contacto@resmag.com</p>
+        <p>📞 +51 999 999 999</p>
+      </div>
+  
+      <!-- Col 4: Legal -->
+      <div class="footer-col">
+        <h4 data-es="Legal" data-en="Legal" data-pt="Legal">Legal</h4>
+        <ul>
+          <li><a href="index.html#politica" data-es="Política de Privacidad" data-en="Privacy Policy" data-pt="Política de Privacidade">Política de Privacidad</a></li>
+          <li><a href="index.html#terminos" data-es="Términos de Uso" data-en="Terms of Use" data-pt="Termos de Uso">Términos de Uso</a></li>
+          <li><a href="index.html#derechos" data-es="Derechos de Autor" data-en="Copyright" data-pt="Direitos Autorais">Derechos de Autor</a></li>
+          <li><a href="index.html#aviso" data-es="Aviso Legal" data-en="Legal Notice" data-pt="Aviso Legal">Aviso Legal</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p class="footer-copy" 
+         data-es="&copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. Todos los derechos reservados."
+         data-en="&copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. All rights reserved."
+         data-pt="&copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. Todos os direitos reservados.">
+         &copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Botón Flotante de WhatsApp -->
+  <a href="https://wa.me/51999999999" class="whatsapp-float" target="_blank">
+    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="white">
+      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+    </svg>
+  </a>
+
+  <!-- Script de idioma -->
+  <script>
+    const selector = document.getElementById("selector-idioma");
+    selector.addEventListener("change", () => {
+      const idioma = selector.value;
+      document.querySelectorAll("[data-es]").forEach(el => {
+        el.textContent = el.dataset[idioma];
+      });
+    });
+  </script>
 
 </body>
 </html>

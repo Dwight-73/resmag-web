@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC – Contáctanos</title>
+  <title>RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC – Cotización</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="pagina-contactanos">
@@ -26,77 +26,65 @@
 
   <!-- Contenido Principal -->
   <div class="contenido-interno">
-    <h1 data-es="Contáctanos" data-en="Contact Us" data-pt="Contate-nos">Contáctanos</h1>
+    <h1 data-es="Solicitar Cotización" data-en="Request a Quote" data-pt="Solicitar Orçamento">Solicitar Cotización</h1>
     <p class="intro-contacto" 
-       data-es="Estamos aquí para ayudarte. Ponte en contacto con nosotros para cualquier consulta o cotización." 
-       data-en="We are here to help. Contact us for any inquiries or quotes." 
-       data-pt="Estamos aqui para ajudar. Entre em contato conosco para qualquer dúvida ou orçamento.">
-      Estamos aquí para ayudarte. Ponte en contacto con nosotros para cualquier consulta o cotización.
+       data-es="Completa el formulario a continuación para recibir una propuesta detallada adaptada a tus necesidades." 
+       data-en="Complete the form below to receive a detailed proposal adapted to your needs." 
+       data-pt="Preencha o formulário abaixo para receber uma proposta detalhada adaptada às suas necessidades.">
+      Completa el formulario a continuación para recibir una propuesta detallada adaptada a tus necesidades.
     </p>
 
-    <div class="contenedor-contacto">
-      <!-- Información de Contacto -->
-      <div class="info-contacto">
-        <h2 data-es="Información de Contacto" data-en="Contact Information" data-pt="Informações de Contato">Información de Contacto</h2>
-        
-        <p>
-          <span>📍</span>
-          <a href="https://maps.app.goo.gl/SQQ8TvCqo834wht99" target="_blank" style="color: inherit; text-decoration: none; border-bottom: 1px dashed #ccc;">
-            <span data-es="Av. La Marina 1234, Callao, Perú" data-en="1234 La Marina Ave, Callao, Peru" data-pt="Av. La Marina 1234, Callao, Peru">Av. La Marina 1234, Callao, Perú</span>
-          </a>
-        </p>
-        
-        <p>
-          <span>✉️</span>
-          <span>contacto@resmag.com</span>
-        </p>
-        
-        <p>
-          <span>📞</span>
-          <span>+51 999 999 999</span>
-        </p>
-        
-        <p>
-          <span>🕒</span>
-          <span data-es="Lunes - Viernes: 8:00 AM - 6:00 PM" data-en="Monday - Friday: 8:00 AM - 6:00 PM" data-pt="Segunda - Sexta: 8:00 AM - 6:00 PM">Lunes - Viernes: 8:00 AM - 6:00 PM</span>
-        </p>
+    <div class="contenedor-contacto" style="justify-content: center;">
+      <!-- Formulario de Cotización -->
+      <div class="form-contacto" style="max-width: 800px; width: 100%;">
+        <h2 data-es="Detalles del Requerimiento" data-en="Requirement Details" data-pt="Detalhes do Requerimento">Detalles del Requerimiento</h2>
+        <form action="https://formsubmit.co/eguerrero@lm.com" method="POST">
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <input type="text" name="nombre" required
+                   placeholder="Nombre Completo"
+                   data-es-placeholder="Nombre Completo"
+                   data-en-placeholder="Full Name"
+                   data-pt-placeholder="Nome Completo">
+            
+            <input type="text" name="empresa" required
+                   placeholder="Empresa"
+                   data-es-placeholder="Empresa"
+                   data-en-placeholder="Company"
+                   data-pt-placeholder="Empresa">
+          </div>
 
-        <div class="mapa-placeholder">
-          <iframe 
-            width="100%" 
-            height="100%" 
-            frameborder="0" 
-            style="border:0" 
-            src="https://maps.google.com/maps?q=Av.+La+Marina+1234,+Callao,+Peru&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-            allowfullscreen>
-          </iframe>
-        </div>
-        <div style="margin-top: 10px; text-align: center;">
-          <a href="https://maps.app.goo.gl/SQQ8TvCqo834wht99" target="_blank" class="boton-mapa">
-            Ver ubicación exacta en Google Maps
-          </a>
-        </div>
-      </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <input type="email" name="email" required
+                   placeholder="Correo Electrónico"
+                   data-es-placeholder="Correo Electrónico"
+                   data-en-placeholder="Email Address"
+                   data-pt-placeholder="Endereço de E-mail">
 
-      <!-- Formulario -->
-      <div class="form-contacto" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-        <h2 data-es="¿Necesitas una Cotización?" data-en="Need a Quote?" data-pt="Precisa de um Orçamento?">¿Necesitas una Cotización?</h2>
-        <p style="margin-bottom: 30px; color: #555; font-size: 1.1rem;" 
-           data-es="Solicita un presupuesto detallado para nuestros servicios de mantenimiento y logística naval."
-           data-en="Request a detailed quote for our naval maintenance and logistics services."
-           data-pt="Solicite um orçamento detalhado para nossos serviços de manutenção e logística naval.">
-           Solicita un presupuesto detallado para nuestros servicios de mantenimiento y logística naval.
-        </p>
-        <a href="cotizacion.html" style="width: 100%; text-decoration: none;">
-          <button style="width: 100%; padding: 15px; font-size: 1.2rem; background-color: #0b3642; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;"
-                  onmouseover="this.style.backgroundColor='#00b4db'" 
-                  onmouseout="this.style.backgroundColor='#0b3642'"
-                  data-es="Realizar una cotización" 
-                  data-en="Request a Quote" 
-                  data-pt="Fazer um Orçamento">
-            Realizar una cotización
-          </button>
-        </a>
+            <input type="tel" name="telefono" required
+                   placeholder="Teléfono / Celular"
+                   data-es-placeholder="Teléfono / Celular"
+                   data-en-placeholder="Phone / Mobile"
+                   data-pt-placeholder="Telefone / Celular">
+          </div>
+
+          <select name="servicio" required style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 5px; background: white;">
+            <option value="" disabled selected data-es="Seleccione un Servicio" data-en="Select a Service" data-pt="Selecione um Serviço">Seleccione un Servicio</option>
+            <option value="Mantenimiento Naval" data-es="Mantenimiento Naval" data-en="Naval Maintenance" data-pt="Manutenção Naval">Mantenimiento Naval</option>
+            <option value="Limpieza Industrial" data-es="Limpieza Industrial" data-en="Industrial Cleaning" data-pt="Limpeza Industrial">Limpieza Industrial</option>
+            <option value="Logística" data-es="Logística" data-en="Logistics" data-pt="Logística">Logística</option>
+            <option value="Reparaciones" data-es="Reparaciones" data-en="Repairs" data-pt="Reparos">Reparaciones</option>
+            <option value="Otro" data-es="Otro" data-en="Other" data-pt="Outro">Otro</option>
+          </select>
+
+          <textarea name="mensaje" rows="5" required
+                    placeholder="Describe tu requerimiento..."
+                    data-es-placeholder="Describe tu requerimiento..."
+                    data-en-placeholder="Describe your requirement..."
+                    data-pt-placeholder="Descreva seu requerimento..."></textarea>
+
+          <button type="submit" data-es="Enviar Solicitud" data-en="Send Request" data-pt="Enviar Solicitação">Enviar Solicitud</button>
+        </form>
       </div>
     </div>
   </div>
@@ -107,6 +95,24 @@
       <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
     </svg>
   </a>
+
+  <!-- Script de idioma -->
+  <script>
+    const selector = document.getElementById("selector-idioma");
+    selector.addEventListener("change", () => {
+      const idioma = selector.value;
+      
+      // Update texts
+      document.querySelectorAll("[data-es]").forEach(el => {
+        el.textContent = el.dataset[idioma];
+      });
+
+      // Update placeholders
+      document.querySelectorAll("[data-es-placeholder]").forEach(el => {
+        el.placeholder = el.dataset[idioma + "-placeholder"];
+      });
+    });
+  </script>
 
   <!-- Pie de página -->
   <footer class="footer">
@@ -131,7 +137,7 @@
           <li><a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a></li>
         </ul>
       </div>
-  
+
       <!-- Col 3: Contacto -->
       <div class="footer-col">
         <h4 data-es="Contacto" data-en="Contact" data-pt="Contato">Contacto</h4>
@@ -139,7 +145,7 @@
         <p>✉️ contacto@resmag.com</p>
         <p>📞 +51 999 999 999</p>
       </div>
-  
+
       <!-- Col 4: Legal -->
       <div class="footer-col">
         <h4 data-es="Legal" data-en="Legal" data-pt="Legal">Legal</h4>
@@ -161,27 +167,6 @@
       </p>
     </div>
   </footer>
-
-  <!-- Script de idioma -->
-  <script>
-    const selector = document.getElementById("selector-idioma");
-    selector.addEventListener("change", () => {
-      const idioma = selector.value;
-      
-      // Update text content
-      document.querySelectorAll("[data-es]").forEach(el => {
-        el.textContent = el.dataset[idioma];
-      });
-
-      // Update placeholders
-      document.querySelectorAll("[data-es-placeholder]").forEach(el => {
-        const newPlaceholder = el.getAttribute(`data-${idioma}-placeholder`);
-        if (newPlaceholder) {
-          el.placeholder = newPlaceholder;
-        }
-      });
-    });
-  </script>
 
 </body>
 </html>

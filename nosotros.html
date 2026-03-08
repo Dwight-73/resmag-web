@@ -3,74 +3,208 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nosotros</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: rgb(244, 244, 244); /* COLOR AL PONER EL MOUSE ENCIMA  */
-      color: rgb(0, 0, 0); /* COLOR DEL TEXTO */
-      text-decoration: none; /* QUITA EL SUBRAYADO DEL TEXTO */
-      text-align: center;
-      min-height: 100vh;
-      padding: 60px 40px;
-    }
-
-    .barra-superior {
-  background-color: rgb(255, 255, 255); /* COLOR DE LA BARRA SUPERIOR */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* SOMBRA */
-  border-bottom: 3px solid #000000; /*  BORDE INFERIOR AGREGADO */
-}
-
-    .barra-superior img {
-      height: 70px;
-    }
-
-    .menu a { 
-      color: #3e7984; /* color del texto */
-      text-decoration: none;
-      font-size: 1.1rem;
-      font-weight: bold;
-      transition: color 0.3s ease;
-      padding: 8px 16px;
-      border: 2px solid #ffffff; /* color del borde */
-      border-radius: 5px;
-      background-color: transparent;
-    }
-    .menu a:hover {
-      color: #ffffff;/* COLOR AL PONER EL MOUSE ENCIMA  */
-       background-color: #0b3642; /* color de fondo */
-    }
-
-    h1 {
-      font-size: 3rem;
-      margin-top: 40px;
-    }
-
-    p {
-      font-size: 1.2rem;
-      margin-top: 20px;
-    }
-  </style>
+  <title>RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC – Nosotros</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="pagina-nosotros">
 
+  <!-- Barra de navegación -->
   <div class="barra-superior">
-    <img src="LM2.jpeg" alt="Logo de la empresa">
-    <div class="menu">
-      <a href="index.html">Inicio</a>
-      <a href="nosotros.html">Nosotros</a>
-      <a href="servicios.html">Servicios</a>
-      <a href="contactanos.html">Contáctanos</a>
-    </div>
+    <img src="resmag.png" alt="RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC" />
+    <nav class="menu">
+      <a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a>
+      <a href="nosotros.html" class="active" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a>
+      <a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
+      <a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a>
+    </nav>
+    <select id="selector-idioma">
+      <option value="es"> Español</option>
+      <option value="en"> English</option>
+      <option value="pt"> Português</option>
+    </select>
   </div>
 
-  <h1>Nosotros</h1>
-  <p>Somos una empresa apasionada por brindar soluciones de calidad.</p>
-  <p>Con años de experiencia y un equipo comprometido, trabajamos para nuestros clientes.</p>
+  <!-- Contenido Principal -->
+  <div class="contenido-nosotros">
+    <h1 data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</h1>
+    
+    <p class="intro-nosotros" 
+       data-es="Conoce más sobre nuestra historia, misión y los valores que nos impulsan a ser líderes en el sector naval." 
+       data-en="Learn more about our history, mission, and the values that drive us to be leaders in the naval sector." 
+       data-pt="Saiba mais sobre nossa história, missão e os valores que nos impulsionam a ser líderes no setor naval.">
+       Conoce más sobre nuestra historia, misión y los valores que nos impulsan a ser líderes en el sector naval.
+    </p>
+
+    <div class="seccion-nosotros">
+      <h2 data-es="Quiénes Somos" data-en="Who We Are" data-pt="Quem Somos">Quiénes Somos</h2>
+      <p data-es="RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC es una empresa líder dedicada a brindar soluciones integrales en el sector naval e industrial. Nos especializamos en logística, mantenimiento y reparaciones, garantizando operaciones eficientes y seguras para nuestros clientes."
+         data-en="RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC is a leading company dedicated to providing comprehensive solutions in the naval and industrial sectors. We specialize in logistics, maintenance, and repairs, ensuring efficient and safe operations for our clients."
+         data-pt="RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC é uma empresa líder dedicada a fornecer soluções abrangentes nos setores naval e industrial. Especializamo-nos em logística, manutenção e reparos, garantindo operações eficientes e seguras para nossos clientes.">
+         RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC es una empresa líder dedicada a brindar soluciones integrales en el sector naval e industrial. Nos especializamos en logística, mantenimiento y reparaciones, garantizando operaciones eficientes y seguras para nuestros clientes.
+      </p>
+      <p data-es="Contamos con un equipo de profesionales altamente capacitados y comprometidos con la excelencia, listos para atender las necesidades más exigentes del mercado marítimo."
+         data-en="We have a team of highly trained professionals committed to excellence, ready to meet the most demanding needs of the maritime market."
+         data-pt="Contamos com uma equipe de profissionais altamente capacitados e comprometidos com a excelência, prontos para atender às necessidades mais exigentes do mercado marítimo.">
+         Contamos con un equipo de profesionales altamente capacitados y comprometidos con la excelencia, listos para atender las necesidades más exigentes del mercado marítimo.
+      </p>
+    </div>
+
+    <div class="seccion-nosotros">
+      <h2 data-es="Nuestra Misión y Visión" data-en="Our Mission and Vision" data-pt="Nossa Missão e Visão">Nuestra Misión y Visión</h2>
+      <p><strong><span data-es="Misión:" data-en="Mission:" data-pt="Missão:">Misión:</span></strong> 
+        <span data-es="Proporcionar servicios de mantenimiento y logística naval de alta calidad, superando las expectativas de nuestros clientes a través de soluciones innovadoras, seguras y sostenibles."
+              data-en="To provide high-quality naval maintenance and logistics services, exceeding our clients' expectations through innovative, safe, and sustainable solutions."
+              data-pt="Fornecer serviços de manutenção e logística naval de alta qualidade, superando as expectativas de nossos clientes por meio de soluções inovadoras, seguras e sustentáveis.">
+        Proporcionar servicios de mantenimiento y logística naval de alta calidad, superando las expectativas de nuestros clientes a través de soluciones innovadoras, seguras y sostenibles.
+        </span>
+      </p>
+      <p><strong><span data-es="Visión:" data-en="Vision:" data-pt="Visão:">Visión:</span></strong> 
+        <span data-es="Ser reconocidos como el socio estratégico preferido en la industria naval en Latinoamérica, destacándonos por nuestra confiabilidad, eficiencia y compromiso con el desarrollo del sector."
+              data-en="To be recognized as the preferred strategic partner in the naval industry in Latin America, standing out for our reliability, efficiency, and commitment to the sector's development."
+              data-pt="Ser reconhecido como o parceiro estratégico preferencial na indústria naval na América Latina, destacando-nos por nossa confiabilidade, eficiência e compromisso com o desenvolvimento do setor.">
+        Ser reconocidos como el socio estratégico preferido en la industria naval en Latinoamérica, destacándonos por nuestra confiabilidad, eficiencia y compromiso con el desarrollo del sector.
+        </span>
+      </p>
+    </div>
+
+    <div class="seccion-nosotros">
+      <h2 data-es="Nuestros Valores" data-en="Our Values" data-pt="Nossos Valores">Nuestros Valores</h2>
+      <div class="grid-valores">
+        <div class="card-valor">
+          <h3 data-es="Integridad" data-en="Integrity" data-pt="Integridade">Integridad</h3>
+          <p data-es="Actuamos con honestidad y transparencia en cada proyecto."
+             data-en="We act with honesty and transparency in every project."
+             data-pt="Atuamos com honestidade e transparência em cada projeto.">
+             Actuamos con honestidad y transparencia en cada proyecto.
+          </p>
+        </div>
+        <div class="card-valor">
+          <h3 data-es="Excelencia" data-en="Excellence" data-pt="Excelência">Excelencia</h3>
+          <p data-es="Buscamos la máxima calidad en cada detalle de nuestro trabajo."
+             data-en="We seek the highest quality in every detail of our work."
+             data-pt="Buscamos a máxima qualidade em cada detalhe do nosso trabalho.">
+             Buscamos la máxima calidad en cada detalle de nuestro trabajo.
+          </p>
+        </div>
+        <div class="card-valor">
+          <h3 data-es="Seguridad" data-en="Safety" data-pt="Segurança">Seguridad</h3>
+          <p data-es="Priorizamos la seguridad de nuestro equipo y las operaciones."
+             data-en="We prioritize the safety of our team and operations."
+             data-pt="Priorizamos a segurança de nossa equipe e das operações.">
+             Priorizamos la seguridad de nuestro equipo y las operaciones.
+          </p>
+        </div>
+        <div class="card-valor">
+          <h3 data-es="Compromiso" data-en="Commitment" data-pt="Compromisso">Compromiso</h3>
+          <p data-es="Estamos dedicados al éxito y satisfacción de nuestros clientes."
+             data-en="We are dedicated to the success and satisfaction of our clients."
+             data-pt="Dedicamo-nos ao sucesso e satisfação dos nossos clientes.">
+             Estamos dedicados al éxito y satisfacción de nuestros clientes.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="seccion-nosotros">
+      <h2 data-es="Nuestra Historia" data-en="Our History" data-pt="Nossa História">Nuestra Historia</h2>
+      <p data-es="Nacimos con el propósito de elevar los estándares de mantenimiento y logística en el sector naval e industrial. A lo largo de los años hemos consolidado relaciones estratégicas con puertos, astilleros y empresas líderes, ofreciendo soluciones confiables y orientadas a resultados."
+         data-en="We were born with the purpose of raising maintenance and logistics standards in the naval and industrial sectors. Over the years, we have built strategic relationships with ports, shipyards, and leading companies, delivering reliable, results-oriented solutions."
+         data-pt="Surgimos com o propósito de elevar os padrões de manutenção e logística nos setores naval e industrial. Ao longo dos anos, consolidamos relações estratégicas com portos, estaleiros e empresas líderes, oferecendo soluções confiáveis e orientadas a resultados.">
+         Nacimos con el propósito de elevar los estándares de mantenimiento y logística en el sector naval e industrial. A lo largo de los años hemos consolidado relaciones estratégicas con puertos, astilleros y empresas líderes, ofreciendo soluciones confiables y orientadas a resultados.
+      </p>
+      <p data-es="Nuestra experiencia operando en entornos críticos nos permite responder con rapidez y precisión, manteniendo la seguridad, el cumplimiento normativo y la continuidad de las operaciones de nuestros clientes."
+         data-en="Our experience operating in critical environments allows us to respond quickly and accurately, maintaining safety, regulatory compliance, and the continuity of our clients' operations."
+         data-pt="Nossa experiência em ambientes críticos nos permite responder com rapidez e precisão, mantendo a segurança, a conformidade regulatória e a continuidade das operações de nossos clientes.">
+         Nuestra experiencia operando en entornos críticos nos permite responder con rapidez y precisión, manteniendo la seguridad, el cumplimiento normativo y la continuidad de las operaciones de nuestros clientes.
+      </p>
+    </div>
+
+    <div class="seccion-nosotros">
+      <h2 data-es="Certificaciones y Cumplimiento" data-en="Certifications and Compliance" data-pt="Certificações e Conformidade">Certificaciones y Cumplimiento</h2>
+      <p data-es="Operamos bajo estándares internacionales de calidad y seguridad. Nuestro equipo está entrenado y certificado para tareas de mantenimiento especializado, inspecciones y operaciones logísticas en instalaciones marítimas e industriales."
+         data-en="We operate under international quality and safety standards. Our team is trained and certified for specialized maintenance tasks, inspections, and logistics operations in maritime and industrial facilities."
+         data-pt="Operamos de acordo com padrões internacionais de qualidade e segurança. Nossa equipe é treinada e certificada para tarefas de manutenção especializada, inspeções e operações logísticas em instalações marítimas e industriais.">
+         Operamos bajo estándares internacionales de calidad y seguridad. Nuestro equipo está entrenado y certificado para tareas de mantenimiento especializado, inspecciones y operaciones logísticas en instalaciones marítimas e industriales.
+      </p>
+      <p data-es="Promovemos la mejora continua, la gestión de riesgos y el cumplimiento de normativas locales e internacionales para asegurar resultados consistentes y trazables."
+         data-en="We promote continuous improvement, risk management, and compliance with local and international regulations to ensure consistent and traceable results."
+         data-pt="Promovemos a melhoria contínua, a gestão de riscos e o cumprimento de normas locais e internacionais para garantir resultados consistentes e rastreáveis.">
+         Promovemos la mejora continua, la gestión de riesgos y el cumplimiento de normativas locales e internacionales para asegurar resultados consistentes y trazables.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Pie de página -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Col 1: Logo y Descripción -->
+      <div class="footer-col">
+        <img src="resmag.png" alt="RESMAG Logo" class="footer-logo">
+        <p data-es="Soluciones integrales en mantenimiento y logística naval." 
+           data-en="Integral solutions in naval maintenance and logistics."
+           data-pt="Soluções integrais em manutenção e logística naval.">
+           Soluciones integrales en mantenimiento y logística naval.
+        </p>
+      </div>
+      
+      <!-- Col 2: Enlaces Rápidos -->
+      <div class="footer-col">
+        <h4 data-es="Enlaces Rápidos" data-en="Quick Links" data-pt="Links Rápidos">Enlaces Rápidos</h4>
+        <ul>
+          <li><a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a></li>
+          <li><a href="nosotros.html" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a></li>
+          <li><a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a></li>
+          <li><a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a></li>
+        </ul>
+      </div>
+  
+      <!-- Col 3: Contacto -->
+      <div class="footer-col">
+        <h4 data-es="Contacto" data-en="Contact" data-pt="Contato">Contacto</h4>
+        <p>📍 <a href="https://maps.app.goo.gl/SQQ8TvCqo834wht99" target="_blank" style="color: inherit; text-decoration: none;">Callao, Perú</a></p>
+        <p>✉️ contacto@resmag.com</p>
+        <p>📞 +51 999 999 999</p>
+      </div>
+  
+      <!-- Col 4: Legal -->
+      <div class="footer-col">
+        <h4 data-es="Legal" data-en="Legal" data-pt="Legal">Legal</h4>
+        <ul>
+          <li><a href="index.html#politica" data-es="Política de Privacidad" data-en="Privacy Policy" data-pt="Política de Privacidade">Política de Privacidad</a></li>
+          <li><a href="index.html#terminos" data-es="Términos de Uso" data-en="Terms of Use" data-pt="Termos de Uso">Términos de Uso</a></li>
+          <li><a href="index.html#derechos" data-es="Derechos de Autor" data-en="Copyright" data-pt="Direitos Autorais">Derechos de Autor</a></li>
+          <li><a href="index.html#aviso" data-es="Aviso Legal" data-en="Legal Notice" data-pt="Aviso Legal">Aviso Legal</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p class="footer-copy" 
+         data-es="&copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. Todos los derechos reservados."
+         data-en="&copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. All rights reserved."
+         data-pt="&copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. Todos os direitos reservados.">
+         &copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Botón Flotante de WhatsApp -->
+  <a href="https://wa.me/51999999999" class="whatsapp-float" target="_blank">
+    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="white">
+      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+    </svg>
+  </a>
+  <!-- Script de idioma -->
+  <script>
+    const selector = document.getElementById("selector-idioma");
+    selector.addEventListener("change", () => {
+      const idioma = selector.value;
+      document.querySelectorAll("[data-es]").forEach(el => {
+        el.textContent = el.dataset[idioma];
+      });
+    });
+  </script>
 
 </body>
 </html>
