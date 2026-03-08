@@ -460,15 +460,32 @@ body {
 
 .card-valor {
   text-align: center;
-  padding: 20px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  border: 1px solid #eee;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.card-valor:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
 .card-valor h3 {
   color: #0b3642;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+
+.card-valor p {
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 /* Estilos de Contactanos */
