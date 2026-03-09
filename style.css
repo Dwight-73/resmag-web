@@ -408,7 +408,11 @@ img[src*="LM1.png"] {
   color: white;
   text-align: center;
   min-height: 100vh;
-  padding: 140px 40px 60px; /* Top padding increased for fixed header */
+  padding: 0;
+}
+
+.pagina-servicios .contenido-interno {
+  padding: 60px 40px;
 }
 
 .pagina-servicios h1 {
@@ -432,6 +436,10 @@ img[src*="LM1.png"] {
   gap: 30px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.pagina-servicios .grid-servicios {
+  margin-bottom: 60px;
 }
 
 .card-servicio {
@@ -519,6 +527,7 @@ img[src*="LM1.png"] {
   margin-bottom: 10px;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
   letter-spacing: 2px;
+  color: white;
 }
 
 .breadcrumb {
@@ -565,6 +574,10 @@ img[src*="LM1.png"] {
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   margin-bottom: 30px;
   border: 1px solid rgba(255, 255, 255, 0.05);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
 }
 
 .seccion-nosotros h2 {
@@ -630,7 +643,11 @@ img[src*="LM1.png"] {
   color: white;
   text-align: center;
   min-height: 100vh;
-  padding: 140px 40px 60px; /* Top padding increased for fixed header */
+  padding: 0;
+}
+
+.pagina-contactanos .contenido-interno {
+  padding: 60px 40px;
 }
 
 .pagina-contactanos h1 {
@@ -712,20 +729,38 @@ img[src*="LM1.png"] {
 .form-contacto {
   flex: 1;
   min-width: 300px;
-  background: white;
+  background: #15181e;
   padding: 40px;
   border-radius: 10px;
-  color: #333;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .form-contacto input, 
-.form-contacto textarea {
+.form-contacto textarea,
+.form-contacto select {
   width: 100%;
   padding: 12px;
   margin-bottom: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 5px;
   font-size: 1rem;
+  background-color: #282c34;
+  color: white;
+}
+
+.form-contacto input::placeholder,
+.form-contacto textarea::placeholder {
+  color: #888;
+}
+
+.form-contacto input:focus,
+.form-contacto textarea:focus,
+.form-contacto select:focus {
+  outline: none;
+  border-color: #61dafb;
+  box-shadow: 0 0 0 2px rgba(97, 218, 251, 0.2);
 }
 
 .form-contacto button {
@@ -810,27 +845,31 @@ img[src*="LM1.png"] {
   }
 }
 
-/* Botón Flotante de WhatsApp */
+/* WhatsApp Flotante */
 .whatsapp-float {
   position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #25d366;
+  color: white;
   width: 60px;
   height: 60px;
-  bottom: 40px;
-  right: 40px;
-  background-color: #25d366;
-  color: #FFF;
-  border-radius: 50px;
-  text-align: center;
-  font-size: 30px;
-  box-shadow: 2px 2px 3px #999;
-  z-index: 1000;
+  border-radius: 50%;
   display: flex;
-  align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .whatsapp-float:hover {
   transform: scale(1.1);
-  background-color: #20b85a;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+.whatsapp-float svg {
+  width: 35px;
+  height: 35px;
+  fill: white;
 }
