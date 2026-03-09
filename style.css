@@ -40,6 +40,49 @@ body {
   background-color: rgba(28, 31, 38, 0.9);
 }
 
+/* Clase para logos transparentes en modo oscuro */
+/* Se aplica a todos los logos para invertir el fondo blanco a negro y luego ocultarlo con screen */
+.logo-variante {
+  /* Invertimos colores para que el fondo blanco sea negro */
+  /* Rotamos el tono 180 grados para restaurar el color azul original (aprox) */
+  filter: invert(100%) hue-rotate(180deg) !important;
+  mix-blend-mode: screen !important;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+}
+
+/* Footer logo sin filtros (para logo.png) */
+.footer-logo {
+  /* Hacemos que el logo sea blanco brillante para que se vea bien en el fondo oscuro */
+  filter: brightness(0) invert(1) !important;
+  mix-blend-mode: normal !important;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+}
+
+/* Ajuste específico para LM1.png que parece tener un fondo no puramente blanco */
+/* Ya no es necesario porque el usuario quitó el fondo manualmente */
+img[src*="LM1.png"] {
+  filter: none !important;
+  mix-blend-mode: normal !important;
+}
+
+/* Fix específico para el logo de la barra superior */
+/* Eliminamos los filtros agresivos ya que ahora la imagen es transparente */
+.barra-superior img {
+  filter: none !important;
+  mix-blend-mode: normal !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Excepción para SVG fixed - ELIMINADO */
+
 .barra-superior img {
   height: 96px;
   position: absolute; /* Take logo out of flex flow */
@@ -285,23 +328,27 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-wrap: wrap; /* Restore wrapping */
+  flex-direction: row; /* Back to horizontal */
+  justify-content: space-between; /* Spread columns */
+  align-items: flex-start; /* Align top */
+  text-align: left; /* Left align text */
   padding: 0 40px;
-  gap: 40px;
+  gap: 40px; /* Good gap */
 }
 
 .footer-col {
   flex: 1;
-  min-width: 250px;
+  min-width: 200px; /* Allow wrapping on small screens */
+  max-width: 300px; /* Prevent columns from getting too wide */
+  margin-bottom: 30px; /* Vertical space when wrapped */
 }
 
 .footer-logo {
-  height: 80px; /* Increased size */
+  max-width: 100%; /* Ensure it doesn't overflow */
+  height: auto; /* Maintain aspect ratio */
+  max-height: 80px; /* Limit height if needed */
   margin-bottom: 20px;
-  background-color: white; /* Added background for visibility */
-  padding: 5px;
-  border-radius: 5px;
 }
 
 .footer-col h4 {
