@@ -486,6 +486,117 @@ img[src*="LM1.png"] {
   font-size: 0.95rem;
 }
 
+/* Galería de Servicios */
+.galeria-servicios {
+  margin-top: 10px;
+}
+
+.grid-galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.foto-servicio {
+  background: #15181e;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.foto-servicio img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.95);
+}
+
+.foto-servicio figcaption {
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  color: #c0c5ce;
+}
+
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.lightbox.open {
+  display: flex;
+}
+
+.lightbox-content {
+  text-align: center;
+  max-width: 90vw;
+}
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox .caption {
+  margin-top: 12px;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.lightbox .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-size: 32px;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.lightbox .nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.lightbox .prev-btn {
+  left: 24px;
+}
+
+.lightbox .next-btn {
+  right: 24px;
+}
+
+.lightbox .nav-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
 /* Estilos de Nosotros */
 .pagina-nosotros {
   font-family: Arial, sans-serif;
