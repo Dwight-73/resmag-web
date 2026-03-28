@@ -10,23 +10,25 @@
 
   <!-- Barra de navegación -->
   <div class="barra-superior">
-    <img src="LM1.png" alt="RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC" />
+    <img src="images/LM1.png" alt="RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC" />
     <nav class="menu">
       <a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a>
       <a href="nosotros.html" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a>
       <a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
       <a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a>
+      <select id="selector-idioma">
+        <option value="es">🇪🇸 ES</option>
+        <option value="en">🇺🇸 US</option>
+        <option value="pt">🇧🇷 BR</option>
+      </select>
+      <span class="spacer"></span>
+      <a href="login.html" class="login-btn" data-es="Ingresar" data-en="Login" data-pt="Entrar">Ingresar</a>
     </nav>
-    <select id="selector-idioma">
-      <option value="es">🇪🇸 ES</option>
-      <option value="en">🇺🇸 US</option>
-      <option value="pt">🇧🇷 BR</option>
-    </select>
   </div>
 
   <!-- Banner Hero -->
   <div class="banner-page">
-    <img src="callao.jpg" alt="Solicitar Cotización" class="banner-bg">
+    <img src="images/callao.jpg" alt="Solicitar Cotización" class="banner-bg">
     <div class="banner-content">
       <h1 data-es="SOLICITAR COTIZACIÓN" data-en="REQUEST A QUOTE" data-pt="SOLICITAR ORÇAMENTO">SOLICITAR COTIZACIÓN</h1>
       <div class="breadcrumb">
@@ -48,7 +50,7 @@
       <!-- Formulario de Cotización -->
       <div class="form-contacto" style="max-width: 800px; width: 100%;">
         <h2 data-es="Detalles del Requerimiento" data-en="Requirement Details" data-pt="Detalhes do Requerimento">Detalles del Requerimiento</h2>
-        <form action="https://formsubmit.co/eguerrero@lm.com" method="POST">
+        <form action="http://localhost/res-log-man/api/quotes-create.php" method="POST">
           
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <input type="text" name="nombre" required
@@ -78,13 +80,8 @@
                    data-pt-placeholder="Telefone / Celular">
           </div>
 
-          <select name="servicio" required>
+          <select id="servicioSelect" name="servicio_codigo" required>
             <option value="" disabled selected data-es="Seleccione un Servicio" data-en="Select a Service" data-pt="Selecione um Serviço">Seleccione un Servicio</option>
-            <option value="Mantenimiento Naval" data-es="Mantenimiento Naval" data-en="Naval Maintenance" data-pt="Manutenção Naval">Mantenimiento Naval</option>
-            <option value="Limpieza Industrial" data-es="Limpieza Industrial" data-en="Industrial Cleaning" data-pt="Limpeza Industrial">Limpieza Industrial</option>
-            <option value="Logística" data-es="Logística" data-en="Logistics" data-pt="Logística">Logística</option>
-            <option value="Reparaciones" data-es="Reparaciones" data-en="Repairs" data-pt="Reparos">Reparaciones</option>
-            <option value="Otro" data-es="Otro" data-en="Other" data-pt="Outro">Otro</option>
           </select>
 
           <textarea name="mensaje" rows="5" required
@@ -100,7 +97,7 @@
   </div>
 
   <!-- Botón Flotante de WhatsApp -->
-  <a href="https://wa.me/51999999999" class="whatsapp-float" target="_blank">
+  <a href="https://wa.me/51923660474" class="whatsapp-float" target="_blank">
     <svg width="35" height="35" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
     </svg>
@@ -122,6 +119,138 @@
         el.placeholder = el.dataset[idioma + "-placeholder"];
       });
     });
+    (function sessionNav(){
+      const menu = document.querySelector('.menu');
+      const loginBtn = document.querySelector('.login-btn');
+      if (!menu || !loginBtn) return;
+      function renderUser(email, role){
+        const raw = (email || '').split('@')[0] || 'Cuenta';
+        const pretty = raw.charAt(0).toUpperCase() + raw.slice(1);
+        loginBtn.textContent = pretty;
+        loginBtn.href = 'javascript:void(0)';
+        loginBtn.removeAttribute('data-es');
+        loginBtn.removeAttribute('data-en');
+        loginBtn.removeAttribute('data-pt');
+        loginBtn.classList.add('user-name');
+        loginBtn.style.color = '#fff';
+        let logoutLink = document.querySelector('.logout-btn');
+        if (!logoutLink) {
+          logoutLink = document.createElement('a');
+          logoutLink.className = 'logout-btn';
+          logoutLink.href = 'http://localhost/res-log-man/logout.php';
+          logoutLink.textContent = 'Cerrar Sesión';
+          logoutLink.addEventListener('click', function(){
+            try { sessionStorage.removeItem('resmag_email'); } catch(e){}
+            try { localStorage.removeItem('resmag_email'); } catch(e){}
+          });
+          loginBtn.insertAdjacentElement('afterend', logoutLink);
+        }
+        if (role === 'admin') {
+          let adminLink = document.querySelector('.admin-link');
+          if (!adminLink) {
+            adminLink = document.createElement('a');
+            adminLink.className = 'admin-link';
+            adminLink.href = 'admin.html';
+            adminLink.textContent = 'Admin';
+            loginBtn.insertAdjacentElement('afterend', adminLink);
+          }
+        }
+      }
+      function fetchSession(){
+        return fetch('/res-log-man/api/session.php', { credentials: 'include' })
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => null)
+          .then(s => {
+            if (s) return s;
+            return fetch('http://localhost/res-log-man/api/session.php', { credentials: 'include' })
+              .then(r => r.ok ? r.json() : null)
+              .catch(() => null);
+          });
+      }
+      fetchSession()
+        .then(s => {
+          const isLogged = !!(s && (s.logged === true || s.ok === true || s.status === 'ok' || (s.user && s.user.email) || s.email || s.correo));
+          if (isLogged) {
+            const mail = (s && (s.email || s.correo || (s.user && s.user.email) || (s.usuario && s.usuario.correo))) || '';
+            const role = (s && (s.rol || (s.user && (s.user.role || s.user.rol)))) || '';
+            renderUser(mail, role);
+            return;
+          }
+          const ss = (typeof sessionStorage !== 'undefined') ? sessionStorage.getItem('resmag_email') : null;
+          const ls = (typeof localStorage !== 'undefined') ? localStorage.getItem('resmag_email') : null;
+          const emailFallback = ss || ls;
+          if (emailFallback) renderUser(emailFallback, '');
+        })
+        .catch(()=>{
+          const ss = (typeof sessionStorage !== 'undefined') ? sessionStorage.getItem('resmag_email') : null;
+          const ls = (typeof localStorage !== 'undefined') ? localStorage.getItem('resmag_email') : null;
+          const emailFallback = ss || ls;
+          if (emailFallback) renderUser(emailFallback, '');
+        });
+    })();
+    (function loadServicios(){
+      const sel = document.getElementById('servicioSelect');
+      if (!sel) return;
+      function fetchServicios(){
+        return fetch('/res-log-man/api/services.php', { credentials: 'include' })
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => null)
+          .then(list => {
+            if (list) return list;
+            return fetch('http://localhost/res-log-man/api/services.php', { credentials: 'include' })
+              .then(r => r.ok ? r.json() : [])
+              .catch(() => []);
+          });
+      }
+      fetchServicios()
+        .then(list => {
+          if (!Array.isArray(list)) return;
+          list.forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.codigo || s.id || s.nombre;
+            opt.textContent = s.nombre || s.codigo;
+            sel.appendChild(opt);
+          });
+        })
+        .catch(()=>{});
+    })();
+    (function guardCliente(){
+      const form = document.querySelector('form[action*="quotes-create"]');
+      const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+      function guardFetch(){
+        return fetch('/res-log-man/api/session.php', { credentials: 'include' })
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => null)
+          .then(s => {
+            if (s) return s;
+            return fetch('http://localhost/res-log-man/api/session.php', { credentials: 'include' })
+              .then(r => r.ok ? r.json() : {logged:false})
+              .catch(() => ({logged:false}));
+          });
+      }
+      guardFetch()
+        .then(s => {
+          const mail = (s && (s.email || s.correo || s.mail || (s.user && (s.user.email || s.user.correo))
+                              || (s.usuario && (s.usuario.email || s.usuario.correo))
+                              || (s.cliente && (s.cliente.email || s.cliente.correo))
+                              || (s.account && (s.account.email || s.account.correo)))) || '';
+          const isLogged = !!(s && (s.logged === true || s.ok === true || s.status === 'ok' || s.success === true || mail));
+          if (!isLogged) {
+            if (submitBtn) submitBtn.disabled = true;
+            const msg = document.createElement('div');
+            msg.textContent = 'Debes registrarte para hacer una cotización';
+            msg.style.margin = '10px 0';
+            msg.style.padding = '10px 12px';
+            msg.style.borderRadius = '8px';
+            msg.style.background = 'rgba(255, 193, 7, 0.15)';
+            msg.style.border = '1px solid rgba(255, 193, 7, 0.35)';
+            msg.style.color = '#ffe8a1';
+            if (form) form.prepend(msg);
+            setTimeout(()=>{ window.location.href = 'registro.html?motivo=registrate-cotizacion&next=cotizacion.html'; }, 1200);
+          }
+        })
+        .catch(()=>{});
+    })();
   </script>
 
   <!-- Pie de página -->
@@ -129,7 +258,7 @@
     <div class="footer-container">
       <!-- Col 1: Logo y Descripción -->
       <div class="footer-col">
-        <img src="logo.png" alt="RESMAG Logo" class="footer-logo">
+        <img src="images/logo.png" alt="RESMAG Logo" class="footer-logo">
         <p data-es="Soluciones integrales en mantenimiento y logística naval." 
            data-en="Integral solutions in naval maintenance and logistics."
            data-pt="Soluções integrais em manutenção e logística naval.">
@@ -153,7 +282,7 @@
         <h4 data-es="Contacto" data-en="Contact" data-pt="Contato">Contacto</h4>
         <p>📍 <a href="https://maps.app.goo.gl/SQQ8TvCqo834wht99" target="_blank" style="color: inherit; text-decoration: none;">Callao, Perú</a></p>
         <p>✉️ contacto@resmag.com</p>
-        <p>📞 +51 999 999 999</p>
+        <p>📞 +51 923 660 474</p>
       </div>
 
       <!-- Col 4: Legal -->

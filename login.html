@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RESMAG – Ingresar</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .auth-wrapper{max-width:420px;margin:80px auto;padding:30px;background:#1b2028;border:1px solid rgba(255,255,255,0.06);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.35)}
+    .auth-wrapper h1{margin:0 0 14px;color:#fff;font-size:1.6rem}
+    .auth-wrapper p{margin:0 0 20px;color:#c0c5ce}
+    .auth-wrapper input{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:#141820;color:#fff;margin-bottom:14px}
+    .auth-actions{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .auth-wrapper button{flex:1;padding:12px;border:none;border-radius:8px;background:linear-gradient(135deg,#00b4db,#0083b0);color:#fff;font-weight:700;cursor:pointer}
+    .auth-wrapper a{color:#00b4db;text-decoration:none}
+    .auth-note{display:none;margin:0 0 14px;padding:12px;border-radius:8px}
+    .auth-note.info{border:1px solid rgba(0,180,219,0.4);background:rgba(0,180,219,0.12);color:#9ad2e6}
+    .auth-note.success{border:1px solid rgba(46,204,113,0.35);background:rgba(46,204,113,0.12);color:#8bd9a8}
+    .auth-note.warn{border:1px solid rgba(241,196,15,0.4);background:rgba(241,196,15,0.12);color:#e9d27a}
+    .auth-note.error{border:1px solid rgba(231,76,60,0.4);background:rgba(231,76,60,0.12);color:#f0a29a}
+  </style>
+</head>
+<body class="transparent-header-page">
+
+  <div class="barra-superior">
+    <img src="images/LM1.png" alt="RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC" />
+    <nav class="menu">
+      <a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a>
+      <a href="nosotros.html" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a>
+      <a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
+      <a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a>
+      <select id="selector-idioma">
+        <option value="es">🇪🇸 ES</option>
+        <option value="en">🇺🇸 US</option>
+        <option value="pt">🇧🇷 BR</option>
+      </select>
+      <span class="spacer"></span>
+      <a href="login.html" class="login-btn" data-es="Ingresar" data-en="Login" data-pt="Entrar">Ingresar</a>
+    </nav>
+  </div>
+
+  <div class="auth-wrapper">
+    <h1 data-es="Ingresar a tu cuenta" data-en="Sign in to your account" data-pt="Entrar na sua conta">Ingresar a tu cuenta</h1>
+    <p data-es="Usa tu correo y contraseña para continuar." data-en="Use your email and password to continue." data-pt="Use seu e-mail e senha para continuar.">Usa tu correo y contraseña para continuar.</p>
+    <div id="authNotice" class="auth-note"></div>
+    <form action="http://localhost/res-log-man/login.php" method="POST">
+      <input type="hidden" name="next" id="nextField" value="index.html">
+      <input type="email" name="email" placeholder="Correo electrónico"
+             data-es-placeholder="Correo electrónico"
+             data-en-placeholder="Email"
+             data-pt-placeholder="E-mail" required>
+      <input type="password" name="password" placeholder="Contraseña"
+             data-es-placeholder="Contraseña"
+             data-en-placeholder="Password"
+             data-pt-placeholder="Senha" required>
+      <div class="auth-actions">
+        <button type="submit" data-es="Ingresar" data-en="Login" data-pt="Entrar">Ingresar</button>
+        <a href="registro.html" data-es="Crear cuenta" data-en="Create account" data-pt="Criar conta">Crear cuenta</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const selector = document.getElementById("selector-idioma");
+    selector.addEventListener("change", () => {
+      const idioma = selector.value;
+      document.querySelectorAll("[data-es]").forEach(el => { el.textContent = el.dataset[idioma]; });
+      document.querySelectorAll("[data-es-placeholder]").forEach(el => { el.placeholder = el.dataset[idioma + "-placeholder"];});
+    });
+    // Captura ?next=... y lo pasa al backend
+    (function setNext() {
+      const params = new URLSearchParams(location.search);
+      const next = params.get('next');
+      if (next) document.getElementById('nextField').value = next;
+    })();
+    (function showNotice() {
+      const params = new URLSearchParams(location.search);
+      const motivo = params.get('motivo');
+      const box = document.getElementById('authNotice');
+      if (!box) return;
+      if (motivo === 'registrado') {
+        box.textContent = 'Cuenta creada, por favor inicia sesión';
+        box.className = 'auth-note success';
+        box.style.display = 'block';
+        return;
+      }
+      if (motivo === 'login-requerido') {
+        box.textContent = 'Debes iniciar sesión para continuar';
+        box.className = 'auth-note info';
+        box.style.display = 'block';
+        return;
+      }
+      if (motivo === 'cerrado') {
+        box.textContent = 'Sesión cerrada correctamente';
+        box.className = 'auth-note info';
+        box.style.display = 'block';
+        return;
+      }
+      if (motivo === 'expirado') {
+        box.textContent = 'Tu sesión expiró, vuelve a iniciar';
+        box.className = 'auth-note warn';
+        box.style.display = 'block';
+        return;
+      }
+      if (motivo === 'sin-permiso') {
+        box.textContent = 'No tienes permiso para acceder a esta sección';
+        box.className = 'auth-note error';
+        box.style.display = 'block';
+        return;
+      }
+    })();
+    (function storeEmailOnSubmit(){
+      const form = document.querySelector('form[action*="login.php"]');
+      if (!form) return;
+      form.addEventListener('submit', function(){
+        try {
+          const input = form.querySelector('input[name="email"]');
+          if (input && input.value) {
+            sessionStorage.setItem('resmag_email', input.value);
+              localStorage.setItem('resmag_email', input.value);
+          }
+        } catch(e){}
+      });
+    })();
+  </script>
+</body>
+</html>
