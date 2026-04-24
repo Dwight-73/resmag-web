@@ -80,8 +80,15 @@
                    data-pt-placeholder="Telefone / Celular">
           </div>
 
-          <select id="servicioSelect" name="servicio_codigo" required>
+          <select id="servicioSelect" name="servicio" required>
             <option value="" disabled selected data-es="Seleccione un Servicio" data-en="Select a Service" data-pt="Selecione um Serviço">Seleccione un Servicio</option>
+            <option value="Mantenimiento Naval" data-es="Mantenimiento Naval" data-en="Naval Maintenance" data-pt="Manutenção Naval">Mantenimiento Naval</option>
+            <option value="Logística Marítima" data-es="Logística Marítima" data-en="Maritime Logistics" data-pt="Logística Marítima">Logística Marítima</option>
+            <option value="Reparaciones Industriales" data-es="Reparaciones Industriales" data-en="Industrial Repairs" data-pt="Reparos Industriais">Reparaciones Industriales</option>
+            <option value="Limpieza de Cascos" data-es="Limpieza de Cascos" data-en="Hull Cleaning" data-pt="Limpeza de Cascos">Limpieza de Cascos</option>
+            <option value="Gestión de Proyectos" data-es="Gestión de Proyectos" data-en="Project Management" data-pt="Gestão de Projetos">Gestión de Proyectos</option>
+            <option value="Consultoría de Seguridad" data-es="Consultoría de Seguridad" data-en="Safety Consulting" data-pt="Consultoria de Segurança">Consultoría de Seguridad</option>
+            <option value="Trabajos de Corte" data-es="Trabajos de Corte" data-en="Cutting Works" data-pt="Trabalhos de Corte">Trabajos de Corte</option>
           </select>
 
           <textarea name="mensaje" rows="5" required
@@ -176,32 +183,6 @@
             const role = (s && (s.rol || (s.user && (s.user.role || s.user.rol)))) || '';
             renderUser(mail, role);
           }
-        })
-        .catch(()=>{});
-    })();
-    (function loadServicios(){
-      const sel = document.getElementById('servicioSelect');
-      if (!sel) return;
-      function fetchServicios(){
-        return fetch('/res-log-man/api/services.php', { credentials: 'include' })
-          .then(r => r.ok ? r.json() : null)
-          .catch(() => null)
-          .then(list => {
-            if (list) return list;
-            return fetch('http://localhost/res-log-man/api/services.php', { credentials: 'include' })
-              .then(r => r.ok ? r.json() : [])
-              .catch(() => []);
-          });
-      }
-      fetchServicios()
-        .then(list => {
-          if (!Array.isArray(list)) return;
-          list.forEach(s => {
-            const opt = document.createElement('option');
-            opt.value = s.codigo || s.id || s.nombre;
-            opt.textContent = s.nombre || s.codigo;
-            sel.appendChild(opt);
-          });
         })
         .catch(()=>{});
     })();
@@ -303,7 +284,7 @@
       <!-- Col 3: Contacto -->
       <div class="footer-col">
         <h4 data-es="Contacto" data-en="Contact" data-pt="Contato">Contacto</h4>
-        <p>📍 <a href="https://maps.app.goo.gl/SQQ8TvCqo834wht99" target="_blank" style="color: inherit; text-decoration: none;">Callao, Perú</a></p>
+        <p>📍 <a href="https://maps.app.goo.gl/SQQ8TvCqo834wht99" target="_blank" style="color: inherit; text-decoration: none;">Caracas Mz.C2 - Lt-27</a></p>
         <p>✉️ contacto@resmag.com</p>
         <p>📞 +51 923 660 474</p>
       </div>
