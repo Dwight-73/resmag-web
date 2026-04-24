@@ -5,16 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RESMAG – Registro</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    .auth-wrapper{max-width:480px;margin:80px auto;padding:30px;background:#1b2028;border:1px solid rgba(255,255,255,0.06);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.35)}
-    .auth-wrapper h1{margin:0 0 14px;color:#fff;font-size:1.6rem}
-    .auth-wrapper p{margin:0 0 20px;color:#c0c5ce}
-    .auth-wrapper input{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:#141820;color:#fff;margin-bottom:14px}
-    .auth-actions{display:flex;gap:12px;align-items:center;justify-content:space-between}
-    .auth-wrapper button{flex:1;padding:12px;border:none;border-radius:8px;background:linear-gradient(135deg,#00b4db,#0083b0);color:#fff;font-weight:700;cursor:pointer}
-    .auth-wrapper a{color:#00b4db;text-decoration:none}
-    .auth-note{margin:0 auto 18px;padding:12px 14px;border-radius:10px;background:rgba(0,132,180,0.12);border:1px solid rgba(0,132,180,0.35);color:#d9f2ff;display:none}
-  </style>
   </head>
 <body class="transparent-header-page">
   <div class="barra-superior">
@@ -34,30 +24,78 @@
     </nav>
   </div>
 
-  <div class="auth-wrapper">
-    <div id="regNotice" class="auth-note">Regístrate para hacer una cotización</div>
-    <h1 data-es="Crear nueva cuenta" data-en="Create a new account" data-pt="Criar nova conta">Crear nueva cuenta</h1>
-    <p data-es="Completa tus datos para registrarte." data-en="Fill in your details to sign up." data-pt="Preencha seus dados para se cadastrar.">Completa tus datos para registrarte.</p>
-    <form action="http://localhost/res-log-man/register.php" method="POST">
-      <input type="hidden" name="next" id="nextField" value="index.html">
-      <input type="text" name="full_name" placeholder="Nombre completo"
-             data-es-placeholder="Nombre completo"
-             data-en-placeholder="Full name"
-             data-pt-placeholder="Nome completo" required>
-      <input type="email" name="email" placeholder="Correo electrónico"
-             data-es-placeholder="Correo electrónico"
-             data-en-placeholder="Email"
-             data-pt-placeholder="E-mail" required>
-      <input type="password" name="password" placeholder="Contraseña"
-             data-es-placeholder="Contraseña"
-             data-en-placeholder="Password"
-             data-pt-placeholder="Senha" required>
-      <div class="auth-actions">
-        <button type="submit" data-es="Registrarme" data-en="Sign up" data-pt="Cadastrar">Registrarme</button>
-        <a href="login.html" data-es="Ya tengo cuenta" data-en="I have an account" data-pt="Já tenho conta">Ya tengo cuenta</a>
+  <main class="auth-page">
+    <section class="auth-shell">
+      <div class="auth-showcase">
+        <div class="auth-showcase-card">
+          <div class="auth-badge">RESMAG SIGNUP</div>
+          <h1 data-es="Crea tu cuenta" data-en="Create your account" data-pt="Crie sua conta">Crea tu cuenta</h1>
+          <p data-es="Registra tus datos para cotizar, consultar servicios y tener una experiencia de acceso mas clara dentro del portal." data-en="Register your data to request quotes, review services, and get a clearer access experience inside the portal." data-pt="Cadastre seus dados para solicitar orcamentos, revisar servicos e ter uma experiencia de acesso mais clara no portal.">Registra tus datos para cotizar, consultar servicios y tener una experiencia de acceso mas clara dentro del portal.</p>
+          <div class="auth-feature-list">
+            <span data-es="Registro rapido con datos esenciales" data-en="Fast registration with essential data" data-pt="Cadastro rapido com dados essenciais">Registro rapido con datos esenciales</span>
+            <span data-es="Acceso inmediato al flujo de cotizaciones" data-en="Immediate access to the quote flow" data-pt="Acesso imediato ao fluxo de orcamentos">Acceso inmediato al flujo de cotizaciones</span>
+            <span data-es="Interfaz renovada y lista para movil" data-en="Renewed interface ready for mobile" data-pt="Interface renovada e pronta para celular">Interfaz renovada y lista para movil</span>
+          </div>
+        </div>
       </div>
-    </form>
-  </div>
+
+      <div class="auth-surface">
+        <div class="auth-card">
+          <div class="auth-tabs">
+            <a href="login.html" data-es="Ingresar" data-en="Login" data-pt="Entrar">Ingresar</a>
+            <a href="registro.html" class="active" data-es="Crear Cuenta" data-en="Create Account" data-pt="Criar Conta">Crear Cuenta</a>
+          </div>
+
+          <h2 data-es="Registrate" data-en="Sign up" data-pt="Cadastre-se">Registrate</h2>
+          <p class="auth-subtitle" data-es="Completa tus datos para crear una cuenta cliente y activar una navegacion personalizada dentro del sitio." data-en="Complete your details to create a client account and enable personalized navigation inside the site." data-pt="Preencha seus dados para criar uma conta de cliente e ativar uma navegacao personalizada no site.">Completa tus datos para crear una cuenta cliente y activar una navegacion personalizada dentro del sitio.</p>
+
+          <div id="regNotice" class="auth-note">Registrate para hacer una cotizacion</div>
+
+          <form class="auth-form" action="http://localhost/res-log-man/register.php" method="POST" novalidate>
+            <input type="hidden" name="next" id="nextField" value="index.html">
+
+            <div class="auth-field">
+              <label for="regName" data-es="Nombre completo" data-en="Full name" data-pt="Nome completo">Nombre completo</label>
+              <input id="regName" type="text" name="full_name" placeholder="Tu nombre completo"
+                     data-es-placeholder="Tu nombre completo"
+                     data-en-placeholder="Your full name"
+                     data-pt-placeholder="Seu nome completo" required>
+            </div>
+
+            <div class="auth-field">
+              <label for="regEmail" data-es="Correo electronico" data-en="Email" data-pt="E-mail">Correo electronico</label>
+              <input id="regEmail" type="email" name="email" placeholder="tucorreo@dominio.com"
+                     data-es-placeholder="tucorreo@dominio.com"
+                     data-en-placeholder="you@example.com"
+                     data-pt-placeholder="voce@exemplo.com" required>
+            </div>
+
+            <div class="auth-field">
+              <label for="regPassword" data-es="Contrasena" data-en="Password" data-pt="Senha">Contrasena</label>
+              <input id="regPassword" type="password" name="password" placeholder="Crea una contrasena segura"
+                     data-es-placeholder="Crea una contrasena segura"
+                     data-en-placeholder="Create a strong password"
+                     data-pt-placeholder="Crie uma senha segura" required>
+            </div>
+
+            <button class="auth-submit" type="submit" data-es="Crear Mi Cuenta" data-en="Create My Account" data-pt="Criar Minha Conta">Crear Mi Cuenta</button>
+
+            <div class="auth-meta">
+              <span data-es="Ya tienes una cuenta?" data-en="Already have an account?" data-pt="Ja possui uma conta?">Ya tienes una cuenta?</span>
+              <a href="login.html" data-es="Ingresar ahora" data-en="Login now" data-pt="Entrar agora">Ingresar ahora</a>
+            </div>
+          </form>
+
+          <div class="auth-security">
+            <div>
+              <strong data-es="Perfil:" data-en="Profile:" data-pt="Perfil:">Perfil:</strong>
+              <span data-es="Las cuentas creadas desde este formulario se registran como clientes y luego muestran tu nombre en la barra superior." data-en="Accounts created from this form are registered as clients and then show your name in the top navigation." data-pt="As contas criadas neste formulario sao registradas como clientes e depois mostram seu nome na barra superior.">Las cuentas creadas desde este formulario se registran como clientes y luego muestran tu nombre en la barra superior.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <script>
     const selector = document.getElementById("selector-idioma");
@@ -73,10 +111,151 @@
     })();
     (function showNotice(){
       const params = new URLSearchParams(location.search);
-      if (params.get('motivo') === 'registrate-cotizacion') {
-        const n = document.getElementById('regNotice');
-        if (n) n.style.display = 'block';
+      const motivo = params.get('motivo');
+      const n = document.getElementById('regNotice');
+      if (!n) return;
+      if (motivo === 'registrate-cotizacion') {
+        n.textContent = 'Registrate para hacer una cotizacion';
+        n.className = 'auth-note info';
+        return;
       }
+      if (motivo === 'faltan-datos') {
+        n.textContent = 'Completa nombre completo, correo y contrasena';
+        n.className = 'auth-note warn';
+        return;
+      }
+      if (motivo === 'correo-invalido') {
+        n.textContent = 'Ingresa un correo electronico valido';
+        n.className = 'auth-note warn';
+        return;
+      }
+      if (motivo === 'duplicado') {
+        n.textContent = 'Ese correo ya esta registrado';
+        n.className = 'auth-note error';
+        return;
+      }
+      if (motivo === 'error') {
+        n.textContent = 'No se pudo crear la cuenta, intenta nuevamente';
+        n.className = 'auth-note error';
+      }
+    })();
+    (function registerValidation(){
+      const form = document.querySelector('.auth-form');
+      const notice = document.getElementById('regNotice');
+      if (!form || !notice) return;
+
+      const nameInput = form.querySelector('input[name="full_name"]');
+      const emailInput = form.querySelector('input[name="email"]');
+      const passwordInput = form.querySelector('input[name="password"]');
+
+      function showMessage(text, type) {
+        notice.textContent = text;
+        notice.className = 'auth-note ' + type;
+      }
+
+      function clearMessage() {
+        const motivo = new URLSearchParams(location.search).get('motivo');
+        if (!motivo) {
+          notice.className = 'auth-note';
+        }
+      }
+
+      form.addEventListener('submit', function(e){
+        const nombre = (nameInput.value || '').trim();
+        const correo = (emailInput.value || '').trim();
+        const clave = passwordInput.value || '';
+
+        if (!nombre || !correo || !clave) {
+          e.preventDefault();
+          showMessage('Completa nombre completo, correo y contrasena', 'warn');
+          return;
+        }
+
+        if (!emailInput.checkValidity()) {
+          e.preventDefault();
+          showMessage('Ingresa un correo electronico valido', 'warn');
+        }
+      });
+
+      [nameInput, emailInput, passwordInput].forEach(function(input){
+        if (!input) return;
+        input.addEventListener('input', clearMessage);
+      });
+    })();
+    (function sessionNav(){
+      const menu = document.querySelector('.menu');
+      const loginBtn = document.querySelector('.login-btn');
+      if (!menu || !loginBtn) return;
+
+      function extractSessionData(s) {
+        const email = (s && (s.email || s.correo || s.mail || (s.user && (s.user.email || s.user.correo))
+                    || (s.usuario && (s.usuario.email || s.usuario.correo))
+                    || (s.cliente && (s.cliente.email || s.cliente.correo))
+                    || (s.account && (s.account.email || s.account.correo)))) || '';
+        const role = (s && (s.rol || s.role || (s.user && (s.user.role || s.user.rol))
+                   || (s.usuario && (s.usuario.role || s.usuario.rol)))) || '';
+        const logged = !!(s && (s.logged === true || s.ok === true || s.status === 'ok' || s.success === true || email));
+        return { email, role, logged };
+      }
+
+      function renderUser(email, role) {
+        const raw = (email || '').split('@')[0] || 'Cuenta';
+        const pretty = raw.charAt(0).toUpperCase() + raw.slice(1);
+        loginBtn.style.display = 'none';
+
+        let userChip = document.querySelector('.user-chip');
+        if (!userChip) {
+          userChip = document.createElement('span');
+          userChip.className = 'user-chip';
+          loginBtn.insertAdjacentElement('afterend', userChip);
+        }
+        userChip.textContent = pretty;
+
+        let logoutLink = document.querySelector('.logout-btn');
+        if (!logoutLink) {
+          logoutLink = document.createElement('a');
+          logoutLink.className = 'logout-btn';
+          logoutLink.href = 'http://localhost/res-log-man/logout.php';
+          logoutLink.textContent = 'Cerrar Sesión';
+          logoutLink.addEventListener('click', function(){
+            try { sessionStorage.removeItem('resmag_email'); } catch(e){}
+            try { localStorage.removeItem('resmag_email'); } catch(e){}
+          });
+          userChip.insertAdjacentElement('afterend', logoutLink);
+        }
+
+        if (role === 'admin') {
+          let adminLink = document.querySelector('.admin-link');
+          if (!adminLink) {
+            adminLink = document.createElement('a');
+            adminLink.className = 'admin-link';
+            adminLink.href = 'admin.html';
+            adminLink.textContent = 'Admin';
+            logoutLink.insertAdjacentElement('afterend', adminLink);
+          }
+        }
+      }
+
+      function fetchSession() {
+        return fetch('/res-log-man/api/session.php', { credentials: 'include' })
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => null)
+          .then(s => {
+            if (s) return s;
+            return fetch('http://localhost/res-log-man/api/session.php', { credentials: 'include' })
+              .then(r => r.ok ? r.json() : null)
+              .catch(() => null);
+          });
+      }
+
+      fetchSession()
+        .then(s => {
+          const data = extractSessionData(s);
+          if (data.logged && data.email) {
+            renderUser(data.email, data.role);
+          }
+        })
+        .catch(() => {});
     })();
   </script>
 </body>

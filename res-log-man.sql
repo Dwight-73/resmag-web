@@ -10,13 +10,13 @@ USE `res-log-man`;
 
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS `usuarios` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_usuario` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `correo` VARCHAR(190) NOT NULL,
   `clave_hash` VARCHAR(255) NOT NULL,
   `nombre_completo` VARCHAR(190) NOT NULL,
   `rol` ENUM('cliente','admin') NOT NULL DEFAULT 'cliente',
   `creado_en` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id_usuario`),
   UNIQUE KEY `uq_usuarios_correo` (`correo`),
   KEY `idx_usuarios_rol` (`rol`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

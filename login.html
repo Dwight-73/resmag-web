@@ -5,20 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RESMAG – Ingresar</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    .auth-wrapper{max-width:420px;margin:80px auto;padding:30px;background:#1b2028;border:1px solid rgba(255,255,255,0.06);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.35)}
-    .auth-wrapper h1{margin:0 0 14px;color:#fff;font-size:1.6rem}
-    .auth-wrapper p{margin:0 0 20px;color:#c0c5ce}
-    .auth-wrapper input{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:#141820;color:#fff;margin-bottom:14px}
-    .auth-actions{display:flex;gap:12px;align-items:center;justify-content:space-between}
-    .auth-wrapper button{flex:1;padding:12px;border:none;border-radius:8px;background:linear-gradient(135deg,#00b4db,#0083b0);color:#fff;font-weight:700;cursor:pointer}
-    .auth-wrapper a{color:#00b4db;text-decoration:none}
-    .auth-note{display:none;margin:0 0 14px;padding:12px;border-radius:8px}
-    .auth-note.info{border:1px solid rgba(0,180,219,0.4);background:rgba(0,180,219,0.12);color:#9ad2e6}
-    .auth-note.success{border:1px solid rgba(46,204,113,0.35);background:rgba(46,204,113,0.12);color:#8bd9a8}
-    .auth-note.warn{border:1px solid rgba(241,196,15,0.4);background:rgba(241,196,15,0.12);color:#e9d27a}
-    .auth-note.error{border:1px solid rgba(231,76,60,0.4);background:rgba(231,76,60,0.12);color:#f0a29a}
-  </style>
 </head>
 <body class="transparent-header-page">
 
@@ -39,26 +25,70 @@
     </nav>
   </div>
 
-  <div class="auth-wrapper">
-    <h1 data-es="Ingresar a tu cuenta" data-en="Sign in to your account" data-pt="Entrar na sua conta">Ingresar a tu cuenta</h1>
-    <p data-es="Usa tu correo y contraseña para continuar." data-en="Use your email and password to continue." data-pt="Use seu e-mail e senha para continuar.">Usa tu correo y contraseña para continuar.</p>
-    <div id="authNotice" class="auth-note"></div>
-    <form action="http://localhost/res-log-man/login.php" method="POST">
-      <input type="hidden" name="next" id="nextField" value="index.html">
-      <input type="email" name="email" placeholder="Correo electrónico"
-             data-es-placeholder="Correo electrónico"
-             data-en-placeholder="Email"
-             data-pt-placeholder="E-mail" required>
-      <input type="password" name="password" placeholder="Contraseña"
-             data-es-placeholder="Contraseña"
-             data-en-placeholder="Password"
-             data-pt-placeholder="Senha" required>
-      <div class="auth-actions">
-        <button type="submit" data-es="Ingresar" data-en="Login" data-pt="Entrar">Ingresar</button>
-        <a href="registro.html" data-es="Crear cuenta" data-en="Create account" data-pt="Criar conta">Crear cuenta</a>
+  <main class="auth-page">
+    <section class="auth-shell">
+      <div class="auth-showcase">
+        <div class="auth-showcase-card">
+          <div class="auth-badge">RESMAG ACCESS</div>
+          <h1 data-es="Bienvenido de vuelta" data-en="Welcome back" data-pt="Bem-vindo de volta">Bienvenido de vuelta</h1>
+          <p data-es="Accede a tu cuenta para gestionar cotizaciones, consultas y seguimiento de servicios con una experiencia mas clara y moderna." data-en="Access your account to manage quotes, inquiries, and service follow-up with a cleaner modern experience." data-pt="Acesse sua conta para gerenciar orcamentos, consultas e acompanhamento de servicos com uma experiencia mais moderna.">Accede a tu cuenta para gestionar cotizaciones, consultas y seguimiento de servicios con una experiencia mas clara y moderna.</p>
+          <div class="auth-feature-list">
+            <span data-es="Estado de sesion visible en toda la navegacion" data-en="Visible session state across navigation" data-pt="Estado de sessao visivel em toda a navegacao">Estado de sesion visible en toda la navegacion</span>
+            <span data-es="Acceso rapido a tus solicitudes y contacto" data-en="Fast access to your requests and contact" data-pt="Acesso rapido as suas solicitacoes e contato">Acceso rapido a tus solicitudes y contacto</span>
+            <span data-es="Diseno optimizado para escritorio y movil" data-en="Optimized design for desktop and mobile" data-pt="Design otimizado para desktop e celular">Diseno optimizado para escritorio y movil</span>
+          </div>
+        </div>
       </div>
-    </form>
-  </div>
+
+      <div class="auth-surface">
+        <div class="auth-card">
+          <div class="auth-tabs">
+            <a href="login.html" class="active" data-es="Ingresar" data-en="Login" data-pt="Entrar">Ingresar</a>
+            <a href="registro.html" data-es="Crear Cuenta" data-en="Create Account" data-pt="Criar Conta">Crear Cuenta</a>
+          </div>
+
+          <h2 data-es="Inicia sesion" data-en="Sign in" data-pt="Entrar">Inicia sesion</h2>
+          <p class="auth-subtitle" data-es="Usa tus credenciales para entrar al sistema y ver tu nombre directamente en la barra de navegacion." data-en="Use your credentials to enter the system and show your name directly in the navigation bar." data-pt="Use suas credenciais para entrar no sistema e mostrar seu nome diretamente na barra de navegacao.">Usa tus credenciales para entrar al sistema y ver tu nombre directamente en la barra de navegacion.</p>
+
+          <div id="authNotice" class="auth-note"></div>
+
+          <form class="auth-form" action="http://localhost/res-log-man/login.php" method="POST">
+            <input type="hidden" name="next" id="nextField" value="index.html">
+
+            <div class="auth-field">
+              <label for="loginEmail" data-es="Correo electronico" data-en="Email" data-pt="E-mail">Correo electronico</label>
+              <input id="loginEmail" type="email" name="email" placeholder="tucorreo@dominio.com"
+                     data-es-placeholder="tucorreo@dominio.com"
+                     data-en-placeholder="you@example.com"
+                     data-pt-placeholder="voce@exemplo.com" required>
+            </div>
+
+            <div class="auth-field">
+              <label for="loginPassword" data-es="Contrasena" data-en="Password" data-pt="Senha">Contrasena</label>
+              <input id="loginPassword" type="password" name="password" placeholder="Ingresa tu contrasena"
+                     data-es-placeholder="Ingresa tu contrasena"
+                     data-en-placeholder="Enter your password"
+                     data-pt-placeholder="Digite sua senha" required>
+            </div>
+
+            <button class="auth-submit" type="submit" data-es="Entrar Ahora" data-en="Login Now" data-pt="Entrar Agora">Entrar Ahora</button>
+
+            <div class="auth-meta">
+              <span data-es="No tienes cuenta aun?" data-en="Don't have an account yet?" data-pt="Ainda nao tem conta?">No tienes cuenta aun?</span>
+              <a href="registro.html" data-es="Crear cuenta" data-en="Create account" data-pt="Criar conta">Crear cuenta</a>
+            </div>
+          </form>
+
+          <div class="auth-security">
+            <div>
+              <strong data-es="Seguridad:" data-en="Security:" data-pt="Seguranca:">Seguridad:</strong>
+              <span data-es="El acceso se valida desde el backend y el estado de sesion se refleja automaticamente en la navegacion." data-en="Access is validated by the backend and session state is reflected automatically in navigation." data-pt="O acesso e validado pelo backend e o estado da sessao aparece automaticamente na navegacao.">El acceso se valida desde el backend y el estado de sesion se refleja automaticamente en la navegacion.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <script>
     const selector = document.getElementById("selector-idioma");
@@ -81,46 +111,113 @@
       if (motivo === 'registrado') {
         box.textContent = 'Cuenta creada, por favor inicia sesión';
         box.className = 'auth-note success';
-        box.style.display = 'block';
         return;
       }
       if (motivo === 'login-requerido') {
         box.textContent = 'Debes iniciar sesión para continuar';
         box.className = 'auth-note info';
-        box.style.display = 'block';
         return;
       }
       if (motivo === 'cerrado') {
         box.textContent = 'Sesión cerrada correctamente';
         box.className = 'auth-note info';
-        box.style.display = 'block';
         return;
       }
       if (motivo === 'expirado') {
         box.textContent = 'Tu sesión expiró, vuelve a iniciar';
         box.className = 'auth-note warn';
-        box.style.display = 'block';
         return;
       }
       if (motivo === 'sin-permiso') {
         box.textContent = 'No tienes permiso para acceder a esta sección';
         box.className = 'auth-note error';
-        box.style.display = 'block';
+        return;
+      }
+      if (motivo === 'credenciales') {
+        box.textContent = 'Correo o contrasena incorrectos';
+        box.className = 'auth-note error';
+        return;
+      }
+      if (motivo === 'faltan-datos') {
+        box.textContent = 'Completa el correo y la contrasena';
+        box.className = 'auth-note warn';
         return;
       }
     })();
-    (function storeEmailOnSubmit(){
-      const form = document.querySelector('form[action*="login.php"]');
-      if (!form) return;
-      form.addEventListener('submit', function(){
-        try {
-          const input = form.querySelector('input[name="email"]');
-          if (input && input.value) {
-            sessionStorage.setItem('resmag_email', input.value);
-              localStorage.setItem('resmag_email', input.value);
+    (function sessionNav(){
+      const menu = document.querySelector('.menu');
+      const loginBtn = document.querySelector('.login-btn');
+      if (!menu || !loginBtn) return;
+
+      function extractSessionData(s) {
+        const email = (s && (s.email || s.correo || s.mail || (s.user && (s.user.email || s.user.correo))
+                    || (s.usuario && (s.usuario.email || s.usuario.correo))
+                    || (s.cliente && (s.cliente.email || s.cliente.correo))
+                    || (s.account && (s.account.email || s.account.correo)))) || '';
+        const role = (s && (s.rol || s.role || (s.user && (s.user.role || s.user.rol))
+                   || (s.usuario && (s.usuario.role || s.usuario.rol)))) || '';
+        const logged = !!(s && (s.logged === true || s.ok === true || s.status === 'ok' || s.success === true || email));
+        return { email, role, logged };
+      }
+
+      function renderUser(email, role) {
+        const raw = (email || '').split('@')[0] || 'Cuenta';
+        const pretty = raw.charAt(0).toUpperCase() + raw.slice(1);
+        loginBtn.style.display = 'none';
+
+        let userChip = document.querySelector('.user-chip');
+        if (!userChip) {
+          userChip = document.createElement('span');
+          userChip.className = 'user-chip';
+          loginBtn.insertAdjacentElement('afterend', userChip);
+        }
+        userChip.textContent = pretty;
+
+        let logoutLink = document.querySelector('.logout-btn');
+        if (!logoutLink) {
+          logoutLink = document.createElement('a');
+          logoutLink.className = 'logout-btn';
+          logoutLink.href = 'http://localhost/res-log-man/logout.php';
+          logoutLink.textContent = 'Cerrar Sesión';
+          logoutLink.addEventListener('click', function(){
+            try { sessionStorage.removeItem('resmag_email'); } catch(e){}
+            try { localStorage.removeItem('resmag_email'); } catch(e){}
+          });
+          userChip.insertAdjacentElement('afterend', logoutLink);
+        }
+
+        if (role === 'admin') {
+          let adminLink = document.querySelector('.admin-link');
+          if (!adminLink) {
+            adminLink = document.createElement('a');
+            adminLink.className = 'admin-link';
+            adminLink.href = 'admin.html';
+            adminLink.textContent = 'Admin';
+            logoutLink.insertAdjacentElement('afterend', adminLink);
           }
-        } catch(e){}
-      });
+        }
+      }
+
+      function fetchSession() {
+        return fetch('/res-log-man/api/session.php', { credentials: 'include' })
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => null)
+          .then(s => {
+            if (s) return s;
+            return fetch('http://localhost/res-log-man/api/session.php', { credentials: 'include' })
+              .then(r => r.ok ? r.json() : null)
+              .catch(() => null);
+          });
+      }
+
+      fetchSession()
+        .then(s => {
+          const data = extractSessionData(s);
+          if (data.logged && data.email) {
+            renderUser(data.email, data.role);
+          }
+        })
+        .catch(() => {});
     })();
   </script>
 </body>

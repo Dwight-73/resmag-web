@@ -209,13 +209,14 @@
       function renderUser(email, role){
         const raw = (email || '').split('@')[0] || 'Cuenta';
         const pretty = raw.charAt(0).toUpperCase() + raw.slice(1);
-        loginBtn.textContent = pretty;
-        loginBtn.href = 'javascript:void(0)';
-        loginBtn.removeAttribute('data-es');
-        loginBtn.removeAttribute('data-en');
-        loginBtn.removeAttribute('data-pt');
-        loginBtn.classList.add('user-name');
-        loginBtn.style.color = '#fff';
+        loginBtn.style.display = 'none';
+        let userChip = document.querySelector('.user-chip');
+        if (!userChip) {
+          userChip = document.createElement('span');
+          userChip.className = 'user-chip';
+          loginBtn.insertAdjacentElement('afterend', userChip);
+        }
+        userChip.textContent = pretty;
         let logoutLink = document.querySelector('.logout-btn');
         if (!logoutLink) {
           logoutLink = document.createElement('a');
@@ -226,7 +227,7 @@
             try { sessionStorage.removeItem('resmag_email'); } catch(e){}
             try { localStorage.removeItem('resmag_email'); } catch(e){}
           });
-          loginBtn.insertAdjacentElement('afterend', logoutLink);
+          userChip.insertAdjacentElement('afterend', logoutLink);
         }
         if (role === 'admin') {
           let adminLink = document.querySelector('.admin-link');
@@ -235,7 +236,7 @@
             adminLink.className = 'admin-link';
             adminLink.href = 'admin.html';
             adminLink.textContent = 'Admin';
-            loginBtn.insertAdjacentElement('afterend', adminLink);
+            logoutLink.insertAdjacentElement('afterend', adminLink);
           }
         }
       }
@@ -260,19 +261,44 @@
           const isLogged = !!(s && (s.logged === true || s.ok === true || s.status === 'ok' || s.success === true || mail));
           if (isLogged) {
             renderUser(mail, role);
-            return;
           }
-          const ss = (typeof sessionStorage !== 'undefined') ? sessionStorage.getItem('resmag_email') : null;
-          const ls = (typeof localStorage !== 'undefined') ? localStorage.getItem('resmag_email') : null;
-          const emailFallback = ss || ls;
-          if (emailFallback) renderUser(emailFallback, '');
         })
-        .catch(()=>{
-          const ss = (typeof sessionStorage !== 'undefined') ? sessionStorage.getItem('resmag_email') : null;
-          const ls = (typeof localStorage !== 'undefined') ? localStorage.getItem('resmag_email') : null;
-          const emailFallback = ss || ls;
-          if (emailFallback) renderUser(emailFallback, '');
+        .catch(()=>{});
+    })();
+  </script>
+  <script>
+    (function scrollReveal(){
+      const targets = [
+        ...document.querySelectorAll('.contenido'),
+        ...document.querySelectorAll('.contenido .card-valor'),
+        ...document.querySelectorAll('.contenido .card-servicio'),
+        ...document.querySelectorAll('.legal-grid-wrapper .seccion-legal')
+      ];
+
+      if (!targets.length) return;
+
+      targets.forEach((el, index) => {
+        el.classList.add('scroll-reveal');
+        el.style.transitionDelay = ((index % 4) * 0.08) + 's';
+      });
+
+      if (!('IntersectionObserver' in window)) {
+        targets.forEach(el => el.classList.add('is-visible'));
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
         });
+      }, {
+        threshold: 0.14,
+        rootMargin: '0px 0px -10% 0px'
+      });
+
+      targets.forEach(el => observer.observe(el));
     })();
   </script>
   <!-- Pie de página -->
