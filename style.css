@@ -796,6 +796,18 @@ img[src*="LM1.png"] {
 }
 
 /* Footer Styles */
+.email-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(204, 204, 204, 0.7);
+  transition: color 0.2s ease, border-bottom-color 0.2s ease;
+}
+
+.email-link:hover {
+  color: #00b4db;
+  border-bottom-color: rgba(0, 180, 219, 0.8);
+}
+
 .footer {
   background-color: #0b3642;
   color: #ffffff;
@@ -1466,6 +1478,127 @@ img[src*="LM1.png"] {
 }
 
 /* Estilos de Secciones Legales - Dark Theme */
+.legal-section {
+  padding: 0 0 40px;
+}
+
+.legal-heading {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 40px 0;
+}
+
+.legal-heading h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+
+.legal-subtitle {
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.65;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  max-width: 80ch;
+}
+
+.legal-updated {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.95rem;
+}
+
+.legal-updated time {
+  color: #61dafb;
+  font-weight: 700;
+}
+
+.legal-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 26px 40px 60px;
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.legal-layout .legal-toc {
+  margin-top: 0;
+  position: sticky;
+  top: 120px;
+  max-height: calc(100vh - 140px);
+  overflow: auto;
+}
+
+.legal-layout .legal-grid-wrapper {
+  padding: 0;
+  margin: 0;
+  max-width: none;
+}
+
+.legal-layout .legal-grid-wrapper.legal-single {
+  max-width: none;
+}
+
+.legal-toc {
+  margin-top: 18px;
+  padding: 18px 18px;
+  border-radius: 16px;
+  background: rgba(12, 18, 24, 0.78);
+  border: 1px solid rgba(0, 180, 219, 0.18);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
+}
+
+.legal-toc h3 {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.88);
+  margin-bottom: 12px;
+}
+
+.legal-toc ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+}
+
+.legal-toc a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  border-bottom: none;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: rgba(0, 180, 219, 0.1);
+  border: 1px solid rgba(97, 218, 251, 0.14);
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.legal-toc a:hover {
+  transform: translateY(-1px);
+  background: rgba(0, 180, 219, 0.18);
+  border-color: rgba(97, 218, 251, 0.3);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.25);
+}
+
+.legal-toc a:focus-visible {
+  outline: 2px solid rgba(97, 218, 251, 0.75);
+  outline-offset: 3px;
+}
+
+.legal-grid-wrapper.legal-single {
+  grid-template-columns: 1fr;
+  max-width: 980px;
+}
+
 .legal-grid-wrapper {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1486,6 +1619,11 @@ img[src*="LM1.png"] {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.seccion-legal:target {
+  border-color: rgba(97, 218, 251, 0.55);
+  box-shadow: 0 18px 38px rgba(0, 180, 219, 0.12);
 }
 
 .seccion-legal:hover {
@@ -1523,8 +1661,69 @@ img[src*="LM1.png"] {
   margin: 0;
 }
 
+.seccion-legal ul {
+  list-style: none;
+  margin-top: 16px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.seccion-legal li {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.55;
+}
+
+.legal-key {
+  display: inline-block;
+  min-width: 150px;
+  color: #61dafb;
+  font-weight: 800;
+}
+
+.legal-section a {
+  color: #61dafb;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(97, 218, 251, 0.35);
+}
+
+.legal-section a:hover {
+  color: #9ee7ff;
+  border-bottom-color: rgba(158, 231, 255, 0.6);
+}
+
 /* Responsive Grid */
 @media (max-width: 768px) {
+  .legal-heading {
+    padding: 24px 20px 0;
+  }
+
+  .legal-layout {
+    grid-template-columns: 1fr;
+    padding: 18px 20px 44px;
+  }
+
+  .legal-layout .legal-toc {
+    position: static;
+    top: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .legal-toc ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .legal-key {
+    min-width: 0;
+    display: block;
+    margin-bottom: 4px;
+  }
+
   .legal-grid-wrapper {
     grid-template-columns: 1fr;
     padding: 40px 20px;
