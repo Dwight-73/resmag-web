@@ -20,64 +20,8 @@
         <option value="pt">🇧🇷 BR</option>
       </select>
       <span class="spacer"></span>
-      <a href="login.html" class="login-btn" data-es="Ingresar" data-en="Login" data-pt="Entrar">Ingresar</a>
     </nav>
   </div>
-
-  <script>
-    (function sessionNav(){
-      const menu = document.querySelector('.menu');
-      const loginBtn = document.querySelector('.login-btn');
-      if (!menu || !loginBtn) return;
-      function renderUser(email){
-        const raw = (email || '').split('@')[0] || 'Cuenta';
-        const pretty = raw.charAt(0).toUpperCase() + raw.slice(1);
-        loginBtn.style.display = 'none';
-        let userChip = document.querySelector('.user-chip');
-        if (!userChip) {
-          userChip = document.createElement('span');
-          userChip.className = 'user-chip';
-          loginBtn.insertAdjacentElement('afterend', userChip);
-        }
-        userChip.textContent = pretty;
-        let logoutLink = document.querySelector('.logout-btn');
-        if (!logoutLink) {
-          logoutLink = document.createElement('a');
-          logoutLink.className = 'logout-btn';
-          logoutLink.href = 'http://localhost/res-log-man/logout.php';
-          logoutLink.textContent = 'Cerrar Sesión';
-          logoutLink.addEventListener('click', function(){
-            try { sessionStorage.removeItem('resmag_email'); } catch(e){}
-            try { localStorage.removeItem('resmag_email'); } catch(e){}
-          });
-          userChip.insertAdjacentElement('afterend', logoutLink);
-        }
-      }
-      function fetchSession(){
-        return fetch('/res-log-man/api/session.php', { credentials: 'include' })
-          .then(r => r.ok ? r.json() : null)
-          .catch(() => null)
-          .then(s => {
-            if (s) return s;
-            return fetch('http://localhost/res-log-man/api/session.php', { credentials: 'include' })
-              .then(r => r.ok ? r.json() : null)
-              .catch(() => null);
-          });
-      }
-      fetchSession()
-        .then(s => {
-          const mail = (s && (s.email || s.correo || s.mail || (s.user && (s.user.email || s.user.correo))
-                              || (s.usuario && (s.usuario.email || s.usuario.correo))
-                              || (s.cliente && (s.cliente.email || s.cliente.correo))
-                              || (s.account && (s.account.email || s.account.correo)))) || '';
-          const isLogged = !!(s && (s.logged === true || s.ok === true || s.status === 'ok' || s.success === true || mail));
-          if (isLogged) {
-            renderUser(mail);
-          }
-        })
-        .catch(()=>{});
-    })();
-  </script>
 
   <div id="adminApp" style="display:none">
     <div class="contenido">
@@ -153,8 +97,7 @@
       try {
         const res = await fetch(url, { credentials: 'include' });
         if (res.status === 401) {
-          const params = new URLSearchParams({ motivo: 'sin-permiso', next: 'admin.html' });
-          window.location.href = 'login.html?' + params.toString();
+          window.location.href = 'index.html';
           return [];
         }
         if (!res.ok) return [];
@@ -225,8 +168,7 @@
       try {
         const res = await fetch(API_QUOTES, { credentials: 'include' });
         if (res.status === 401) {
-          const params = new URLSearchParams({ motivo: 'sin-permiso', next: 'admin.html' });
-          window.location.href = 'login.html?' + params.toString();
+          window.location.href = 'index.html';
           return false;
         }
         return true;
