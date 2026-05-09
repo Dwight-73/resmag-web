@@ -9,8 +9,9 @@
 <body class="transparent-header-page">
 
   <div class="barra-superior">
+    <button class="nav-toggle" type="button" aria-label="Menú" aria-expanded="false">☰</button>
     <img src="images/LM1.png" alt="RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC" />
-    <nav class="menu">
+    <nav class="menu" id="site-menu">
       <a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a>
       <a href="nosotros.html" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a>
       <a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
@@ -23,11 +24,12 @@
       <span class="spacer"></span>
     </nav>
   </div>
+  <div class="mobile-nav-overlay" aria-hidden="true"></div>
 
   <div class="banner-page">
     <img src="images/callao.jpg" alt="Aviso Legal" class="banner-bg">
     <div class="banner-content">
-      <h1 data-es="AVISO LEGAL" data-en="LEGAL NOTICE" data-pt="AVISO LEGAL">AVISO LEGAL</h1>
+      <h1 data-es="AVISO LEGAL" data-es-short="AVISO" data-en="LEGAL NOTICE" data-en-short="NOTICE" data-pt="AVISO LEGAL" data-pt-short="AVISO">AVISO LEGAL</h1>
       <div class="breadcrumb">
         <a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a> /
         <span data-es="Legal" data-en="Legal" data-pt="Legal">Legal</span> /
@@ -145,7 +147,7 @@
           <h3>Contacto</h3>
           <p>Para solicitudes legales, correcciones de contenido o uso de marca, contáctenos:</p>
           <ul>
-            <li><span class="legal-key">Correo:</span> <a class="email-link" href="https://mail.google.com/mail/?view=cm&fs=1&to=logisticaymanteniendo@gmail.com" target="_blank" rel="noopener noreferrer">logisticaymanteniendo@gmail.com</a>.</li>
+            <li><span class="legal-key">Correo:</span> <a class="email-link" href="mailto:logisticaymanteniendo@gmail.com">logisticaymanteniendo@gmail.com</a>.</li>
             <li><span class="legal-key">Dirección:</span> Av. Saiz Peña 182 Int. 201, Callao, Perú.</li>
           </ul>
         </div>
@@ -179,7 +181,7 @@
       <div class="footer-col">
         <h4 data-es="Contacto" data-en="Contact" data-pt="Contato">Contacto</h4>
         <p>📍 <a href="https://www.google.com/maps?q=Av.+Saiz+Pe%C3%B1a+182+Interior+201,+Callao,+Per%C3%BA" target="_blank" style="color: inherit; text-decoration: none;">Av. Saiz Peña 182 Int. 201, Callao</a></p>
-        <p>✉️ <a class="email-link" href="https://mail.google.com/mail/?view=cm&fs=1&to=logisticaymanteniendo@gmail.com" target="_blank" rel="noopener noreferrer">logisticaymanteniendo@gmail.com</a></p>
+        <p>✉️ <a class="email-link" href="mailto:logisticaymanteniendo@gmail.com">logisticaymanteniendo@gmail.com</a></p>
       </div>
 
       <div class="footer-col">
@@ -205,12 +207,59 @@
 
   <script>
     const selector = document.getElementById("selector-idioma");
-    selector.addEventListener("change", () => {
-      const idioma = selector.value;
+    const applyLanguage = (idioma) => {
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
       document.querySelectorAll("[data-es]").forEach(el => {
-        el.textContent = el.dataset[idioma];
+        const shortKey = `${idioma}Short`;
+        const value = isMobile && el.dataset[shortKey] ? el.dataset[shortKey] : el.dataset[idioma];
+        if (value != null) el.textContent = value;
       });
-    });
+    };
+    selector.addEventListener("change", () => applyLanguage(selector.value));
+    applyLanguage(selector.value);
+    window.addEventListener("resize", () => applyLanguage(selector.value));
+    (() => {
+      const body = document.body;
+      const toggle = document.querySelector('.nav-toggle');
+      const overlay = document.querySelector('.mobile-nav-overlay');
+      const menu = document.querySelector('.menu');
+
+      if (!toggle || !overlay || !menu) return;
+
+      const close = () => {
+        body.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      };
+
+      const open = () => {
+        body.classList.add('nav-open');
+        toggle.setAttribute('aria-expanded', 'true');
+      };
+
+      toggle.addEventListener('click', () => {
+        if (body.classList.contains('nav-open')) {
+          close();
+          return;
+        }
+        open();
+      });
+
+      overlay.addEventListener('click', close);
+
+      menu.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        if (target.closest('a')) close();
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') close();
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) close();
+      });
+    })();
     (function scrollReveal(){
       const targets = [
         ...document.querySelectorAll('.legal-heading'),

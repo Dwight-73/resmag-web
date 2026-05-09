@@ -9,8 +9,9 @@
 <body class="transparent-header-page">
 
   <div class="barra-superior">
+    <button class="nav-toggle" type="button" aria-label="Menú" aria-expanded="false">☰</button>
     <img src="images/LM1.png" alt="RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC" />
-    <nav class="menu">
+    <nav class="menu" id="site-menu">
       <a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a>
       <a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
       <a href="cotizacion.html" data-es="Cotización" data-en="Quote" data-pt="Orçamento">Cotización</a>
@@ -22,6 +23,7 @@
       <span class="spacer"></span>
     </nav>
   </div>
+  <div class="mobile-nav-overlay" aria-hidden="true"></div>
 
   <div id="adminApp" style="display:none">
     <div class="contenido">
@@ -80,6 +82,48 @@
   </div>
 
   <script>
+    (() => {
+      const body = document.body;
+      const toggle = document.querySelector('.nav-toggle');
+      const overlay = document.querySelector('.mobile-nav-overlay');
+      const menu = document.querySelector('.menu');
+
+      if (!toggle || !overlay || !menu) return;
+
+      const close = () => {
+        body.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      };
+
+      const open = () => {
+        body.classList.add('nav-open');
+        toggle.setAttribute('aria-expanded', 'true');
+      };
+
+      toggle.addEventListener('click', () => {
+        if (body.classList.contains('nav-open')) {
+          close();
+          return;
+        }
+        open();
+      });
+
+      overlay.addEventListener('click', close);
+
+      menu.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        if (target.closest('a')) close();
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') close();
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) close();
+      });
+    })();
     const API_QUOTES = 'http://localhost/res-log-man/api/quotes.php';
     const API_WSP = 'http://localhost/res-log-man/api/whatsapp.php';
 
