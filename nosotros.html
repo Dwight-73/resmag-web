@@ -204,12 +204,41 @@
   <!-- Script de idioma -->
   <script>
     const selector = document.getElementById("selector-idioma");
-    selector.addEventListener("change", () => {
-      const idioma = selector.value;
+    const applyLanguage = (idioma) => {
       document.querySelectorAll("[data-es]").forEach(el => {
-        el.textContent = el.dataset[idioma];
+        const value = el.dataset[idioma];
+        if (value != null) el.textContent = value;
       });
-    });
+    };
+    const STORAGE_KEY = "resmag-lang";
+    const normalizeLanguage = (value) => (value === "es" || value === "en" || value === "pt" ? value : null);
+    const safeGetStoredLanguage = () => {
+      try {
+        return localStorage.getItem(STORAGE_KEY);
+      } catch {
+        return null;
+      }
+    };
+    const safeSetStoredLanguage = (value) => {
+      try {
+        localStorage.setItem(STORAGE_KEY, value);
+      } catch {}
+    };
+    const getInitialLanguage = () => {
+      const urlLang = normalizeLanguage(new URLSearchParams(window.location.search).get("lang"));
+      const storedLang = normalizeLanguage(safeGetStoredLanguage());
+      return urlLang || storedLang || normalizeLanguage(selector.value) || "es";
+    };
+    const setLanguage = (idioma) => {
+      const next = normalizeLanguage(idioma);
+      if (!next) return;
+      selector.value = next;
+      applyLanguage(next);
+      safeSetStoredLanguage(next);
+      document.documentElement.lang = next;
+    };
+    selector.addEventListener("change", () => setLanguage(selector.value));
+    setLanguage(getInitialLanguage());
     (() => {
       const body = document.body;
       const toggle = document.querySelector('.nav-toggle');

@@ -198,8 +198,35 @@
         if (value != null) el.textContent = value;
       });
     };
-    selector.addEventListener("change", () => applyLanguage(selector.value));
-    applyLanguage(selector.value);
+    const STORAGE_KEY = "resmag-lang";
+    const normalizeLanguage = (value) => (value === "es" || value === "en" || value === "pt" ? value : null);
+    const safeGetStoredLanguage = () => {
+      try {
+        return localStorage.getItem(STORAGE_KEY);
+      } catch {
+        return null;
+      }
+    };
+    const safeSetStoredLanguage = (value) => {
+      try {
+        localStorage.setItem(STORAGE_KEY, value);
+      } catch {}
+    };
+    const getInitialLanguage = () => {
+      const urlLang = normalizeLanguage(new URLSearchParams(window.location.search).get("lang"));
+      const storedLang = normalizeLanguage(safeGetStoredLanguage());
+      return urlLang || storedLang || normalizeLanguage(selector.value) || "es";
+    };
+    const setLanguage = (idioma) => {
+      const next = normalizeLanguage(idioma);
+      if (!next) return;
+      selector.value = next;
+      applyLanguage(next);
+      safeSetStoredLanguage(next);
+      document.documentElement.lang = next;
+    };
+    selector.addEventListener("change", () => setLanguage(selector.value));
+    setLanguage(getInitialLanguage());
     window.addEventListener("resize", () => applyLanguage(selector.value));
     (() => {
       const body = document.body;
