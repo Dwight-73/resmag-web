@@ -5,7 +5,8 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**",
-      "res-log-man/**"
+      "res-log-man/**",
+      "cloud-sql-proxy.exe"
     ]
   }
 }
