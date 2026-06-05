@@ -20,7 +20,7 @@ service cloud.firestore {
     }
 
     match /usuarios/{docId} {
-      allow read: if signedIn();
+      allow read: if signedIn() && isAdminEmail();
       allow write: if false;
     }
   }
