@@ -1,3 +1,5 @@
 res-log-man/config.php
 res-log-man/*.csv
 res-log-man/.env
+.firebase/
+firebase-debug.log
