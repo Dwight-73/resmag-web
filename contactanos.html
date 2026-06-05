@@ -87,24 +87,58 @@
       </div>
 
       <!-- Formulario -->
-      <div class="form-contacto" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-        <h2 data-es="¿Necesitas una Cotización?" data-en="Need a Quote?" data-pt="Precisa de um Orçamento?">¿Necesitas una Cotización?</h2>
-        <p style="margin-bottom: 30px; color: #ccc; font-size: 1.1rem;" 
-           data-es="Solicita un presupuesto detallado para nuestros servicios de mantenimiento y logística naval."
-           data-en="Request a detailed quote for our naval maintenance and logistics services."
-           data-pt="Solicite um orçamento detalhado para nossos serviços de manutenção e logística naval.">
-           Solicita un presupuesto detallado para nuestros servicios de mantenimiento y logística naval.
+      <div class="form-contacto" id="cotizacion" style="max-width: 820px; width: 100%;">
+        <h2 data-es="Solicitar Cotización" data-en="Request a Quote" data-pt="Solicitar Orçamento">Solicitar Cotización</h2>
+        <p style="margin-bottom: 24px; color: #ccc; font-size: 1.05rem;"
+           data-es="Completa el formulario y te enviaremos una propuesta adaptada a tu necesidad."
+           data-en="Fill out the form and we will send you a proposal tailored to your needs."
+           data-pt="Preencha o formulário e enviaremos uma proposta adaptada à sua necessidade.">
+          Completa el formulario y te enviaremos una propuesta adaptada a tu necesidad.
         </p>
-        <a href="cotizacion.html" style="width: 100%; text-decoration: none;">
-          <button id="btn-realizar-cot" style="width: 100%; padding: 15px; font-size: 1.2rem; background-color: #0b3642; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;"
-                  onmouseover="this.style.backgroundColor='#00b4db'" 
-                  onmouseout="this.style.backgroundColor='#0b3642'"
-                  data-es="Realizar una cotización" 
-                  data-en="Request a Quote" 
-                  data-pt="Fazer um Orçamento">
-            Realizar una cotización
-          </button>
-        </a>
+        <form id="quoteForm" method="POST">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+            <input type="text" name="nombre" required
+                   placeholder="Nombre Completo"
+                   data-es-placeholder="Nombre Completo"
+                   data-en-placeholder="Full Name"
+                   data-pt-placeholder="Nome Completo">
+            <input type="text" name="empresa" required
+                   placeholder="Empresa"
+                   data-es-placeholder="Empresa"
+                   data-en-placeholder="Company"
+                   data-pt-placeholder="Empresa">
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+            <input type="email" name="email" required
+                   placeholder="Correo Electrónico"
+                   data-es-placeholder="Correo Electrónico"
+                   data-en-placeholder="Email Address"
+                   data-pt-placeholder="Endereço de E-mail">
+            <input type="tel" name="telefono" required
+                   placeholder="Teléfono / Celular"
+                   data-es-placeholder="Teléfono / Celular"
+                   data-en-placeholder="Phone / Mobile"
+                   data-pt-placeholder="Telefone / Celular">
+          </div>
+
+          <select name="servicio" required>
+            <option value="" disabled selected data-es="Seleccione un Servicio" data-en="Select a Service" data-pt="Selecione um Serviço">Seleccione un Servicio</option>
+            <option value="Mantenimiento Naval" data-es="Mantenimiento Naval" data-en="Naval Maintenance" data-pt="Manutenção Naval">Mantenimiento Naval</option>
+            <option value="Logística Marítima" data-es="Logística Marítima" data-en="Maritime Logistics" data-pt="Logística Marítima">Logística Marítima</option>
+            <option value="Trabajo de Buceo" data-es="Trabajo de Buceo" data-en="Diving Work" data-pt="Trabalho de Mergulho">Trabajo de Buceo</option>
+            <option value="Planos de Construcción de Embarcaciones" data-es="Planos de Construcción de Embarcaciones" data-en="Vessel Construction Plans" data-pt="Planos de Construção de Embarcações">Planos de Construcción de Embarcaciones</option>
+            <option value="Consultoría" data-es="Consultoría" data-en="Consulting" data-pt="Consultoria">Consultoría</option>
+          </select>
+
+          <textarea name="mensaje" rows="5" required
+                    placeholder="Describe tu requerimiento..."
+                    data-es-placeholder="Describe tu requerimiento..."
+                    data-en-placeholder="Describe your requirement..."
+                    data-pt-placeholder="Descreva seu requerimento..."></textarea>
+
+          <button type="submit" data-es="Enviar Solicitud" data-en="Send Request" data-pt="Enviar Solicitação">Enviar Solicitud</button>
+        </form>
       </div>
     </div>
   </div>
@@ -204,6 +238,77 @@
     };
     selector.addEventListener("change", () => setLanguage(selector.value));
     setLanguage(getInitialLanguage());
+
+    (function preselectServicio(){
+      const form = document.getElementById('quoteForm');
+      if (!form) return;
+      const select = form.querySelector('select[name="servicio"]');
+      if (!select) return;
+      const servicio = new URLSearchParams(window.location.search).get('servicio');
+      if (!servicio) return;
+      const value = servicio.trim();
+      const exists = Array.from(select.options).some(o => o.value === value);
+      if (exists) select.value = value;
+    })();
+
+    (function gmailQuoteDraft(){
+      const form = document.getElementById('quoteForm');
+      if (!form) return;
+
+      const TO = 'logisticaymanteniendo@gmail.com';
+      const SUBJECT = 'Solicito una cotizacion urgente';
+
+      const getValue = (name) => {
+        const el = form.querySelector(`[name="${name}"]`);
+        if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement)) return '';
+        return (el.value || '').trim();
+      };
+
+      const buildBody = () => {
+        const lines = [
+          'Solicito una cotización con la siguiente información:',
+          '',
+          `Nombre: ${getValue('nombre')}`,
+          `Empresa: ${getValue('empresa')}`,
+          `Correo: ${getValue('email')}`,
+          `Teléfono: ${getValue('telefono')}`,
+          `Servicio: ${getValue('servicio')}`,
+          '',
+          'Detalle del requerimiento:',
+          getValue('mensaje')
+        ];
+        return lines.join('\n');
+      };
+
+      const buildGmailUrl = () => {
+        const url = new URL('https://mail.google.com/mail/');
+        url.searchParams.set('view', 'cm');
+        url.searchParams.set('fs', '1');
+        url.searchParams.set('to', TO);
+        url.searchParams.set('su', SUBJECT);
+        url.searchParams.set('body', buildBody());
+        return url.toString();
+      };
+
+      form.addEventListener('submit', (event) => {
+        if (!form.reportValidity()) {
+          event.preventDefault();
+          return;
+        }
+
+        event.preventDefault();
+        try {
+          const url = 'http://localhost/res-log-man/api/quotes-create-public.php';
+          const payload = new FormData(form);
+          if ('sendBeacon' in navigator) {
+            navigator.sendBeacon(url, payload);
+          } else {
+            fetch(url, { method: 'POST', body: payload, keepalive: true }).catch(() => {});
+          }
+        } catch {}
+        window.open(buildGmailUrl(), '_blank', 'noopener,noreferrer');
+      });
+    })();
     (() => {
       const body = document.body;
       const toggle = document.querySelector('.nav-toggle');

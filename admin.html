@@ -6,7 +6,7 @@
   <title>Panel de Administración – RESMAG</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="transparent-header-page">
+<body class="pagina-admin transparent-header-page">
 
   <div class="barra-superior">
     <button class="nav-toggle" type="button" aria-label="Menú" aria-expanded="false">☰</button>
@@ -14,7 +14,7 @@
     <nav class="menu" id="site-menu">
       <a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a>
       <a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
-      <a href="cotizacion.html" data-es="Cotización" data-en="Quote" data-pt="Orçamento">Cotización</a>
+      <a href="contactanos.html#cotizacion" data-es="Cotización" data-en="Quote" data-pt="Orçamento">Cotización</a>
       <select id="selector-idioma">
         <option value="es">🇪🇸 ES</option>
         <option value="en">🇺🇸 US</option>
@@ -25,6 +25,36 @@
   </div>
   <div class="mobile-nav-overlay" aria-hidden="true"></div>
 
+  <div class="auth-page" id="adminLogin" style="display:none">
+    <div class="auth-shell" style="max-width: 920px">
+      <div class="auth-showcase">
+        <div class="auth-showcase-card">
+          <div class="auth-badge">RESMAG · Admin</div>
+          <h1>Administración</h1>
+          <p>Inicia sesión para ver cotizaciones y descargar el CSV.</p>
+        </div>
+      </div>
+      <div class="auth-surface">
+        <div class="auth-card">
+          <h2>Iniciar sesión</h2>
+          <p class="auth-subtitle">Acceso solo para administradores.</p>
+          <div id="adminLoginError" class="auth-note error" style="display:none"></div>
+          <form id="adminLoginForm" class="auth-form">
+            <div class="auth-field">
+              <label for="adminEmail">Correo</label>
+              <input id="adminEmail" name="correo" type="email" required placeholder="admin@resmag.local" autocomplete="username">
+            </div>
+            <div class="auth-field">
+              <label for="adminPassword">Contraseña</label>
+              <input id="adminPassword" name="password" type="password" required placeholder="••••••••" autocomplete="current-password">
+            </div>
+            <button type="submit" class="auth-submit">Entrar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="adminApp" style="display:none">
     <div class="contenido">
       <h2 data-es="Panel de Administración" data-en="Admin Panel" data-pt="Painel de Administração">Panel de Administración</h2>
@@ -32,6 +62,8 @@
         <div class="admin-search">
           <input id="searchInput" type="text" placeholder="Buscar por nombre, empresa, correo o servicio">
         </div>
+        <a id="downloadCsvBtn" class="btn-cotizar" href="http://localhost/res-log-man/api/quotes-csv.php" target="_blank" rel="noopener noreferrer"
+           data-es="Descargar CSV" data-en="Download CSV" data-pt="Baixar CSV">Descargar CSV</a>
         <button id="refreshBtn">Actualizar</button>
       </div>
     </div>
@@ -56,25 +88,6 @@
               <tbody></tbody>
             </table>
             <div class="admin-empty" id="quotesEmpty">Sin datos</div>
-          </div>
-        </section>
-
-        <section class="admin-card">
-          <h3 data-es="Mensajes de WhatsApp" data-en="WhatsApp Messages" data-pt="Mensagens de WhatsApp">Mensajes de WhatsApp</h3>
-          <div class="admin-table-wrapper">
-            <table class="admin-table" id="whatsappTable">
-              <thead>
-                <tr>
-                  <th data-es="Fecha" data-en="Date" data-pt="Data">Fecha</th>
-                  <th data-es="Nombre" data-en="Name" data-pt="Nome">Nombre</th>
-                  <th data-es="Teléfono" data-en="Phone" data-pt="Telefone">Teléfono</th>
-                  <th data-es="Mensaje" data-en="Message" data-pt="Mensagem">Mensaje</th>
-                  <th data-es="Enlace" data-en="Link" data-pt="Link">Enlace</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-            <div class="admin-empty" id="whatsappEmpty">Sin datos</div>
           </div>
         </section>
       </div>
@@ -125,27 +138,35 @@
       });
     })();
     const API_QUOTES = 'http://localhost/res-log-man/api/quotes.php';
-    const API_WSP = 'http://localhost/res-log-man/api/whatsapp.php';
+    const API_QUOTES_CSV = 'http://localhost/res-log-man/api/quotes-csv.php';
+    const API_SESSION = 'http://localhost/res-log-man/api/session.php';
+    const API_LOGIN = 'http://localhost/res-log-man/api/login.php';
 
     const quotesTbody = document.querySelector('#quotesTable tbody');
-    const wspTbody = document.querySelector('#whatsappTable tbody');
     const quotesEmpty = document.getElementById('quotesEmpty');
-    const whatsappEmpty = document.getElementById('whatsappEmpty');
     const searchInput = document.getElementById('searchInput');
     const refreshBtn = document.getElementById('refreshBtn');
+    const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+    const adminLogin = document.getElementById('adminLogin');
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    const adminLoginError = document.getElementById('adminLoginError');
+    const adminApp = document.getElementById('adminApp');
 
     let quotesData = [];
-    let wspData = [];
 
-    async function fetchJSON(url) {
+    async function fetchRows(url) {
       try {
         const res = await fetch(url, { credentials: 'include' });
         if (res.status === 401) {
-          window.location.href = 'index.html';
+          showLogin('Tu sesión expiró. Inicia sesión nuevamente.');
           return [];
         }
         if (!res.ok) return [];
-        return await res.json();
+        const data = await res.json();
+        if (Array.isArray(data)) return data;
+        if (data && Array.isArray(data.cotizaciones)) return data.cotizaciones;
+        if (data && Array.isArray(data.rows)) return data.rows;
+        return [];
       } catch {
         return [];
       }
@@ -172,24 +193,6 @@
       });
     }
 
-    function renderWsp(rows) {
-      wspTbody.innerHTML = '';
-      if (!rows.length) { whatsappEmpty.style.display = 'block'; return; }
-      whatsappEmpty.style.display = 'none';
-      rows.forEach(r => {
-        const tr = document.createElement('tr');
-        const enlace = r.enlace || r.link || (r.telefono ? `https://wa.me/${r.telefono}` : '');
-        tr.innerHTML = `
-          <td>${r.fecha || r.created_at || ''}</td>
-          <td>${r.nombre || ''}</td>
-          <td>${r.telefono || ''}</td>
-          <td>${r.mensaje || r.message || ''}</td>
-          <td>${enlace ? `<a href="${enlace}" target="_blank">Abrir</a>` : ''}</td>
-        `;
-        wspTbody.appendChild(tr);
-      });
-    }
-
     function applyFilter() {
       const q = norm(searchInput.value);
       const f1 = quotesData.filter(r =>
@@ -199,44 +202,106 @@
         norm(r.servicio).includes(q) ||
         norm(r.mensaje).includes(q)
       );
-      const f2 = wspData.filter(r =>
-        norm(r.nombre).includes(q) ||
-        norm(r.telefono).includes(q) ||
-        norm(r.mensaje).includes(q)
-      );
       renderQuotes(f1);
-      renderWsp(f2);
+    }
+
+    function showLogin(message) {
+      if (adminApp) adminApp.style.display = 'none';
+      if (adminLogin) adminLogin.style.display = '';
+      if (adminLoginError) {
+        if (message) {
+          adminLoginError.textContent = message;
+          adminLoginError.style.display = '';
+        } else {
+          adminLoginError.textContent = '';
+          adminLoginError.style.display = 'none';
+        }
+      }
+    }
+
+    function showApp() {
+      if (adminLogin) adminLogin.style.display = 'none';
+      if (adminApp) adminApp.style.display = '';
     }
 
     async function checkAdmin() {
       try {
-        const res = await fetch(API_QUOTES, { credentials: 'include' });
-        if (res.status === 401) {
-          window.location.href = 'index.html';
-          return false;
-        }
-        return true;
+        const res = await fetch(API_SESSION, { credentials: 'include' });
+        if (!res.ok) return false;
+        const s = await res.json();
+        const rol = (s && (s.rol || (s.user && s.user.role) || '')).toString();
+        return rol === 'admin';
       } catch {
         return false;
       }
     }
 
     async function loadData() {
-      quotesData = await fetchJSON(API_QUOTES);
-      wspData = await fetchJSON(API_WSP);
+      quotesData = await fetchRows(API_QUOTES);
       renderQuotes(quotesData);
-      renderWsp(wspData);
+    }
+
+    if (downloadCsvBtn) {
+      downloadCsvBtn.addEventListener('click', async (event) => {
+        try {
+          const ok = await checkAdmin();
+          if (!ok) {
+            event.preventDefault();
+            showLogin('Inicia sesión como administrador para descargar el CSV.');
+            return;
+          }
+        } catch {}
+      });
     }
 
     searchInput.addEventListener('input', applyFilter);
     refreshBtn.addEventListener('click', loadData);
     document.addEventListener('DOMContentLoaded', async () => {
+      if (window.location.protocol === 'file:') {
+        const target = 'http://localhost/resmag-web/admin.html';
+        try { window.location.replace(target); } catch {}
+        showLogin('Abre esta página desde http://localhost/resmag-web/admin.html (no desde file://)');
+        return;
+      }
       const ok = await checkAdmin();
       if (ok) {
-        document.getElementById('adminApp').style.display = '';
+        showApp();
         loadData();
+      } else {
+        showLogin();
       }
     });
+
+    if (adminLoginForm) {
+      adminLoginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (window.location.protocol === 'file:') {
+          showLogin('Abre esta página desde http://localhost/resmag-web/admin.html (no desde file://)');
+          return;
+        }
+        if (!adminLoginForm.reportValidity()) return;
+        try {
+          const res = await fetch(API_LOGIN, {
+            method: 'POST',
+            credentials: 'include',
+            body: new FormData(adminLoginForm)
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || !data.ok) {
+            showLogin((data && data.error) ? data.error : 'No se pudo iniciar sesión');
+            return;
+          }
+          if ((data.rol || '').toString() !== 'admin') {
+            showLogin('Acceso denegado');
+            return;
+          }
+          showApp();
+          loadData();
+        } catch {
+          showLogin('No se pudo iniciar sesión');
+        }
+      });
+    }
   </script>
 </body>
 </html>

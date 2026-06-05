@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC – Cotización</title>
   <link rel="stylesheet" href="style.css">
+  <script>
+    (() => {
+      const params = new URLSearchParams(window.location.search);
+      const servicio = params.get('servicio');
+      const url = new URL('contactanos.html', window.location.href);
+      if (servicio) url.searchParams.set('servicio', servicio);
+      url.hash = 'cotizacion';
+      window.location.replace(url.toString());
+    })();
+  </script>
 </head>
 <body class="pagina-contactanos transparent-header-page">
 
