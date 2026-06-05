@@ -8,5 +8,8 @@
       "res-log-man/**",
       "cloud-sql-proxy.exe"
     ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
   }
 }

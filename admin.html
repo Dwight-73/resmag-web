@@ -317,8 +317,18 @@
           const pass = (adminLoginForm.querySelector('#adminPassword')?.value || '').trim();
           try {
             await signInWithEmailAndPassword(auth, email, pass);
-          } catch {
-            showLogin('No se pudo iniciar sesión');
+          } catch (e) {
+            const code = (e && typeof e === 'object' && 'code' in e) ? String(e.code || '') : '';
+            const msg = (() => {
+              if (code === 'auth/invalid-email') return 'Correo inválido';
+              if (code === 'auth/user-not-found') return 'Ese correo no existe en Firebase Auth. Créalo en Firebase Console → Authentication → Users.';
+              if (code === 'auth/wrong-password') return 'Contraseña incorrecta';
+              if (code === 'auth/invalid-credential') return 'Credenciales inválidas (correo o contraseña)';
+              if (code === 'auth/too-many-requests') return 'Demasiados intentos. Intenta en unos minutos.';
+              if (code === 'auth/unauthorized-domain') return 'Dominio no autorizado para Auth. Agrega res-log-man.web.app en Firebase Console → Authentication → Settings → Authorized domains.';
+              return code ? `No se pudo iniciar sesión (${code})` : 'No se pudo iniciar sesión';
+            })();
+            showLogin(msg);
           }
         });
       }
