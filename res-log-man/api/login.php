@@ -27,25 +27,49 @@ function isAdminRole(string $role): bool
 }
 
 try {
-  $pdo->exec("
-    CREATE TABLE IF NOT EXISTS usuarios (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      nombre VARCHAR(255) NOT NULL,
-      correo VARCHAR(255) NOT NULL UNIQUE,
-      password_hash VARCHAR(255) NOT NULL,
-      rol VARCHAR(32) NOT NULL DEFAULT 'user',
-      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-  ");
+  $driver = resmag_db_driver();
+  $createSql = ($driver === 'pgsql')
+    ? "
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        nombre VARCHAR(255) NOT NULL,
+        correo VARCHAR(255) NOT NULL UNIQUE,
+        password_hash VARCHAR(255) NOT NULL,
+        rol VARCHAR(32) NOT NULL DEFAULT 'user',
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    "
+    : "
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        nombre VARCHAR(255) NOT NULL,
+        correo VARCHAR(255) NOT NULL UNIQUE,
+        password_hash VARCHAR(255) NOT NULL,
+        rol VARCHAR(32) NOT NULL DEFAULT 'user',
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    ";
+  $pdo->exec($createSql);
 
-  $colsStmt = $pdo->prepare("
-    SELECT COLUMN_NAME
-    FROM information_schema.COLUMNS
-    WHERE TABLE_SCHEMA = :db
-      AND TABLE_NAME = 'usuarios'
-      AND COLUMN_NAME IN ('password_hash','password','rol')
-  ");
-  $colsStmt->execute([':db' => DB_NAME]);
+  if ($driver === 'pgsql') {
+    $colsStmt = $pdo->prepare("
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_schema = current_schema()
+        AND table_name = 'usuarios'
+        AND column_name IN ('password_hash','password','rol')
+    ");
+    $colsStmt->execute();
+  } else {
+    $colsStmt = $pdo->prepare("
+      SELECT COLUMN_NAME
+      FROM information_schema.COLUMNS
+      WHERE TABLE_SCHEMA = :db
+        AND TABLE_NAME = 'usuarios'
+        AND COLUMN_NAME IN ('password_hash','password','rol')
+    ");
+    $colsStmt->execute([':db' => DB_NAME]);
+  }
   $cols = $colsStmt->fetchAll(PDO::FETCH_COLUMN);
 
   $passwordColumn = in_array('password_hash', $cols, true) ? 'password_hash' : (in_array('password', $cols, true) ? 'password' : null);
@@ -58,11 +82,19 @@ try {
   $adminPassword = defined('ADMIN_PASSWORD') ? (string)ADMIN_PASSWORD : 'Admin123!';
   $adminName = defined('ADMIN_NAME') ? (string)ADMIN_NAME : 'Administrador';
 
-  $insertSql = $hasRol
-    ? "INSERT INTO usuarios (nombre, correo, {$passwordColumn}, rol) VALUES (:n,:c,:p,:r)
-       ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), {$passwordColumn} = VALUES({$passwordColumn}), rol = VALUES(rol)"
-    : "INSERT INTO usuarios (nombre, correo, {$passwordColumn}) VALUES (:n,:c,:p)
-       ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), {$passwordColumn} = VALUES({$passwordColumn})";
+  if ($driver === 'pgsql') {
+    $insertSql = $hasRol
+      ? "INSERT INTO usuarios (nombre, correo, {$passwordColumn}, rol) VALUES (:n,:c,:p,:r)
+         ON CONFLICT (correo) DO UPDATE SET nombre = EXCLUDED.nombre, {$passwordColumn} = EXCLUDED.{$passwordColumn}, rol = EXCLUDED.rol"
+      : "INSERT INTO usuarios (nombre, correo, {$passwordColumn}) VALUES (:n,:c,:p)
+         ON CONFLICT (correo) DO UPDATE SET nombre = EXCLUDED.nombre, {$passwordColumn} = EXCLUDED.{$passwordColumn}";
+  } else {
+    $insertSql = $hasRol
+      ? "INSERT INTO usuarios (nombre, correo, {$passwordColumn}, rol) VALUES (:n,:c,:p,:r)
+         ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), {$passwordColumn} = VALUES({$passwordColumn}), rol = VALUES(rol)"
+      : "INSERT INTO usuarios (nombre, correo, {$passwordColumn}) VALUES (:n,:c,:p)
+         ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), {$passwordColumn} = VALUES({$passwordColumn})";
+  }
 
   $ins = $pdo->prepare($insertSql);
   $params = [

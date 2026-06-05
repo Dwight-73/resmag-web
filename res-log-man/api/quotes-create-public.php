@@ -55,19 +55,35 @@ try {
   $dbOk = false;
   try {
     require_once __DIR__ . '/../db.php';
-    $pdo->exec("
-      CREATE TABLE IF NOT EXISTS cotizaciones (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nombre VARCHAR(255) NOT NULL,
-        empresa VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        telefono VARCHAR(64) NOT NULL,
-        servicio VARCHAR(255) NOT NULL,
-        mensaje TEXT NOT NULL,
-        estado VARCHAR(32) NOT NULL DEFAULT 'nuevo',
-        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-    ");
+    $driver = resmag_db_driver();
+    $createSql = ($driver === 'pgsql')
+      ? "
+        CREATE TABLE IF NOT EXISTS cotizaciones (
+          id SERIAL PRIMARY KEY,
+          nombre VARCHAR(255) NOT NULL,
+          empresa VARCHAR(255) NOT NULL,
+          email VARCHAR(255) NOT NULL,
+          telefono VARCHAR(64) NOT NULL,
+          servicio VARCHAR(255) NOT NULL,
+          mensaje TEXT NOT NULL,
+          estado VARCHAR(32) NOT NULL DEFAULT 'nuevo',
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+      "
+      : "
+        CREATE TABLE IF NOT EXISTS cotizaciones (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          nombre VARCHAR(255) NOT NULL,
+          empresa VARCHAR(255) NOT NULL,
+          email VARCHAR(255) NOT NULL,
+          telefono VARCHAR(64) NOT NULL,
+          servicio VARCHAR(255) NOT NULL,
+          mensaje TEXT NOT NULL,
+          estado VARCHAR(32) NOT NULL DEFAULT 'nuevo',
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      ";
+    $pdo->exec($createSql);
     $stmt = $pdo->prepare('INSERT INTO cotizaciones (nombre, empresa, email, telefono, servicio, mensaje) VALUES (:n,:e,:m,:t,:s,:x)');
     $stmt->execute([
       ':n' => $nombre,
