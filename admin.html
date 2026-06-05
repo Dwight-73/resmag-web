@@ -80,7 +80,7 @@
         <div class="admin-search">
           <input id="searchInput" type="text" placeholder="Buscar por nombre, empresa, correo o servicio">
         </div>
-        <a id="downloadCsvBtn" class="btn-cotizar" href="http://localhost/res-log-man/api/quotes-csv.php" target="_blank" rel="noopener noreferrer"
+        <a id="downloadCsvBtn" class="btn-cotizar" href="#"
            data-es="Descargar CSV" data-en="Download CSV" data-pt="Baixar CSV">Descargar CSV</a>
         <button id="refreshBtn">Actualizar</button>
       </div>
@@ -112,8 +112,285 @@
     </div>
   </div>
 
-  <script>
-    (() => {
+  <script type="module">
+    import { getApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { getFirestore, collection, query, orderBy, getDocs, where, limit } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const API_QUOTES = 'http://localhost/res-log-man/api/quotes.php';
+    const API_QUOTES_CSV = 'http://localhost/res-log-man/api/quotes-csv.php';
+    const API_SESSION = 'http://localhost/res-log-man/api/session.php';
+    const API_LOGIN = 'http://localhost/res-log-man/api/login.php';
+
+    const isHosted = /\.web\.app$|\.firebaseapp\.com$/i.test(window.location.hostname);
+    const quotesTbody = document.querySelector('#quotesTable tbody');
+    const quotesEmpty = document.getElementById('quotesEmpty');
+    const searchInput = document.getElementById('searchInput');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+    const adminLogin = document.getElementById('adminLogin');
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    const adminLoginError = document.getElementById('adminLoginError');
+    const adminApp = document.getElementById('adminApp');
+
+    let quotesData = [];
+
+    const norm = (s) => (s ?? '').toString().toLowerCase();
+    const isAdminRole = (role) => ['admin', 'administrador', 'administrator', 'superadmin', 'root'].includes(norm(role).trim());
+
+    function showLogin(message) {
+      if (adminApp) adminApp.style.display = 'none';
+      if (adminLogin) adminLogin.style.display = '';
+      if (adminLoginError) {
+        if (message) {
+          adminLoginError.textContent = message;
+          adminLoginError.style.display = '';
+        } else {
+          adminLoginError.textContent = '';
+          adminLoginError.style.display = 'none';
+        }
+      }
+    }
+
+    function showApp() {
+      if (adminLogin) adminLogin.style.display = 'none';
+      if (adminApp) adminApp.style.display = '';
+    }
+
+    function formatDate(value) {
+      try {
+        if (value && typeof value.toDate === 'function') {
+          return value.toDate().toLocaleString();
+        }
+        if (typeof value === 'string' && value.trim()) {
+          const d = new Date(value);
+          if (!Number.isNaN(d.getTime())) return d.toLocaleString();
+          return value;
+        }
+        return '';
+      } catch {
+        return '';
+      }
+    }
+
+    function renderQuotes(rows) {
+      quotesTbody.innerHTML = '';
+      if (!rows.length) { quotesEmpty.style.display = 'block'; return; }
+      quotesEmpty.style.display = 'none';
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${formatDate(r.createdAt ?? r.fecha ?? r.created_at)}</td>
+          <td>${r.nombre || r.full_name || ''}</td>
+          <td>${r.empresa || ''}</td>
+          <td>${r.email || ''}</td>
+          <td>${r.telefono || r.phone || ''}</td>
+          <td>${r.servicio || r.service || ''}</td>
+          <td>${r.mensaje || r.message || ''}</td>
+        `;
+        quotesTbody.appendChild(tr);
+      });
+    }
+
+    function getFilteredRows() {
+      const q = norm(searchInput?.value || '');
+      if (!q) return quotesData.slice();
+      return quotesData.filter(r =>
+        norm(r.nombre).includes(q) ||
+        norm(r.empresa).includes(q) ||
+        norm(r.email).includes(q) ||
+        norm(r.servicio).includes(q) ||
+        norm(r.mensaje).includes(q)
+      );
+    }
+
+    function applyFilter() {
+      renderQuotes(getFilteredRows());
+    }
+
+    function downloadCsv(rows) {
+      const sep = ';';
+      const escapeField = (value) => {
+        const s = (value ?? '').toString();
+        if (/[;"\r\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+        return s;
+      };
+      const header = ['id', 'created_at', 'nombre', 'empresa', 'email', 'telefono', 'servicio', 'mensaje', 'estado'];
+      const lines = [
+        `sep=${sep}`,
+        header.join(sep),
+        ...rows.map((r) => ([
+          escapeField(r.id || ''),
+          escapeField(formatDate(r.createdAt ?? r.fecha ?? r.created_at)),
+          escapeField(r.nombre || ''),
+          escapeField(r.empresa || ''),
+          escapeField(r.email || ''),
+          escapeField(r.telefono || ''),
+          escapeField(r.servicio || ''),
+          escapeField(r.mensaje || ''),
+          escapeField(r.estado || ''),
+        ]).join(sep))
+      ].join('\n');
+
+      const blob = new Blob([lines], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cotizaciones.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    async function fetchRowsPhp(url) {
+      try {
+        const res = await fetch(url, { credentials: 'include' });
+        if (res.status === 401) return [];
+        if (!res.ok) return [];
+        const data = await res.json();
+        if (Array.isArray(data)) return data;
+        if (data && Array.isArray(data.cotizaciones)) return data.cotizaciones;
+        if (data && Array.isArray(data.rows)) return data.rows;
+        return [];
+      } catch {
+        return [];
+      }
+    }
+
+    async function checkAdminPhp() {
+      try {
+        const res = await fetch(API_SESSION, { credentials: 'include' });
+        if (!res.ok) return false;
+        const s = await res.json();
+        const rol = (s && (s.rol || (s.user && s.user.role) || '')).toString();
+        return rol === 'admin';
+      } catch {
+        return false;
+      }
+    }
+
+    async function loadDataPhp() {
+      quotesData = await fetchRowsPhp(API_QUOTES);
+      applyFilter();
+    }
+
+    async function initHosted() {
+      const app = getApp();
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      const checkAdminFirestoreByEmail = async (email) => {
+        const q = query(collection(db, 'usuarios'), where('correo', '==', email), limit(1));
+        const snap = await getDocs(q);
+        if (snap.empty) return false;
+        const data = snap.docs[0].data() || {};
+        return isAdminRole(data.rol);
+      };
+
+      const loadDataFirestore = async () => {
+        try {
+          const q = query(collection(db, 'cotizaciones'), orderBy('createdAt', 'desc'));
+          const snap = await getDocs(q);
+          quotesData = snap.docs.map((d) => ({ id: d.id, ...(d.data() || {}) }));
+        } catch {
+          const snap = await getDocs(collection(db, 'cotizaciones'));
+          quotesData = snap.docs.map((d) => ({ id: d.id, ...(d.data() || {}) }));
+        }
+        applyFilter();
+      };
+
+      if (refreshBtn) refreshBtn.addEventListener('click', loadDataFirestore);
+      if (searchInput) searchInput.addEventListener('input', applyFilter);
+      if (downloadCsvBtn) {
+        downloadCsvBtn.addEventListener('click', (event) => {
+          event.preventDefault();
+          downloadCsv(getFilteredRows());
+        });
+      }
+
+      if (adminLoginForm) {
+        adminLoginForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          if (!adminLoginForm.reportValidity()) return;
+          const email = (adminLoginForm.querySelector('#adminEmail')?.value || '').trim();
+          const pass = (adminLoginForm.querySelector('#adminPassword')?.value || '').trim();
+          try {
+            await signInWithEmailAndPassword(auth, email, pass);
+          } catch {
+            showLogin('No se pudo iniciar sesión');
+          }
+        });
+      }
+
+      onAuthStateChanged(auth, async (user) => {
+        if (!user || !user.email) {
+          showLogin();
+          return;
+        }
+        const ok = await checkAdminFirestoreByEmail(user.email).catch(() => false);
+        if (!ok) {
+          try { await signOut(auth); } catch {}
+          showLogin('Acceso denegado');
+          return;
+        }
+        showApp();
+        loadDataFirestore();
+      });
+    }
+
+    async function initLocal() {
+      if (searchInput) searchInput.addEventListener('input', applyFilter);
+      if (refreshBtn) refreshBtn.addEventListener('click', loadDataPhp);
+      if (downloadCsvBtn) {
+        downloadCsvBtn.href = API_QUOTES_CSV;
+        downloadCsvBtn.target = '_blank';
+        downloadCsvBtn.rel = 'noopener noreferrer';
+        downloadCsvBtn.addEventListener('click', async (event) => {
+          const ok = await checkAdminPhp();
+          if (!ok) {
+            event.preventDefault();
+            showLogin('Inicia sesión como administrador para descargar el CSV.');
+          }
+        });
+      }
+
+      const ok = await checkAdminPhp();
+      if (ok) {
+        showApp();
+        loadDataPhp();
+        return;
+      }
+      showLogin();
+      if (adminLoginForm) {
+        adminLoginForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          if (!adminLoginForm.reportValidity()) return;
+          try {
+            const res = await fetch(API_LOGIN, {
+              method: 'POST',
+              credentials: 'include',
+              body: new FormData(adminLoginForm)
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.ok) {
+              showLogin((data && data.error) ? data.error : 'No se pudo iniciar sesión');
+              return;
+            }
+            if ((data.rol || '').toString() !== 'admin') {
+              showLogin('Acceso denegado');
+              return;
+            }
+            showApp();
+            loadDataPhp();
+          } catch {
+            showLogin('No se pudo iniciar sesión');
+          }
+        });
+      }
+    }
+
+    function initNav() {
       const body = document.body;
       const toggle = document.querySelector('.nav-toggle');
       const overlay = document.querySelector('.mobile-nav-overlay');
@@ -154,172 +431,22 @@
       window.addEventListener('resize', () => {
         if (window.innerWidth > 768) close();
       });
-    })();
-    const API_QUOTES = 'http://localhost/res-log-man/api/quotes.php';
-    const API_QUOTES_CSV = 'http://localhost/res-log-man/api/quotes-csv.php';
-    const API_SESSION = 'http://localhost/res-log-man/api/session.php';
-    const API_LOGIN = 'http://localhost/res-log-man/api/login.php';
-
-    const quotesTbody = document.querySelector('#quotesTable tbody');
-    const quotesEmpty = document.getElementById('quotesEmpty');
-    const searchInput = document.getElementById('searchInput');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const downloadCsvBtn = document.getElementById('downloadCsvBtn');
-    const adminLogin = document.getElementById('adminLogin');
-    const adminLoginForm = document.getElementById('adminLoginForm');
-    const adminLoginError = document.getElementById('adminLoginError');
-    const adminApp = document.getElementById('adminApp');
-
-    let quotesData = [];
-
-    async function fetchRows(url) {
-      try {
-        const res = await fetch(url, { credentials: 'include' });
-        if (res.status === 401) {
-          showLogin('Tu sesión expiró. Inicia sesión nuevamente.');
-          return [];
-        }
-        if (!res.ok) return [];
-        const data = await res.json();
-        if (Array.isArray(data)) return data;
-        if (data && Array.isArray(data.cotizaciones)) return data.cotizaciones;
-        if (data && Array.isArray(data.rows)) return data.rows;
-        return [];
-      } catch {
-        return [];
-      }
     }
 
-    function norm(s){ return (s ?? '').toString().toLowerCase(); }
-
-    function renderQuotes(rows) {
-      quotesTbody.innerHTML = '';
-      if (!rows.length) { quotesEmpty.style.display = 'block'; return; }
-      quotesEmpty.style.display = 'none';
-      rows.forEach(r => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${r.fecha || r.created_at || ''}</td>
-          <td>${r.nombre || r.full_name || ''}</td>
-          <td>${r.empresa || ''}</td>
-          <td>${r.email || ''}</td>
-          <td>${r.telefono || r.phone || ''}</td>
-          <td>${r.servicio || r.service || ''}</td>
-          <td>${r.mensaje || r.message || ''}</td>
-        `;
-        quotesTbody.appendChild(tr);
-      });
-    }
-
-    function applyFilter() {
-      const q = norm(searchInput.value);
-      const f1 = quotesData.filter(r =>
-        norm(r.nombre).includes(q) ||
-        norm(r.empresa).includes(q) ||
-        norm(r.email).includes(q) ||
-        norm(r.servicio).includes(q) ||
-        norm(r.mensaje).includes(q)
-      );
-      renderQuotes(f1);
-    }
-
-    function showLogin(message) {
-      if (adminApp) adminApp.style.display = 'none';
-      if (adminLogin) adminLogin.style.display = '';
-      if (adminLoginError) {
-        if (message) {
-          adminLoginError.textContent = message;
-          adminLoginError.style.display = '';
-        } else {
-          adminLoginError.textContent = '';
-          adminLoginError.style.display = 'none';
-        }
-      }
-    }
-
-    function showApp() {
-      if (adminLogin) adminLogin.style.display = 'none';
-      if (adminApp) adminApp.style.display = '';
-    }
-
-    async function checkAdmin() {
-      try {
-        const res = await fetch(API_SESSION, { credentials: 'include' });
-        if (!res.ok) return false;
-        const s = await res.json();
-        const rol = (s && (s.rol || (s.user && s.user.role) || '')).toString();
-        return rol === 'admin';
-      } catch {
-        return false;
-      }
-    }
-
-    async function loadData() {
-      quotesData = await fetchRows(API_QUOTES);
-      renderQuotes(quotesData);
-    }
-
-    if (downloadCsvBtn) {
-      downloadCsvBtn.addEventListener('click', async (event) => {
-        try {
-          const ok = await checkAdmin();
-          if (!ok) {
-            event.preventDefault();
-            showLogin('Inicia sesión como administrador para descargar el CSV.');
-            return;
-          }
-        } catch {}
-      });
-    }
-
-    searchInput.addEventListener('input', applyFilter);
-    refreshBtn.addEventListener('click', loadData);
     document.addEventListener('DOMContentLoaded', async () => {
+      initNav();
       if (window.location.protocol === 'file:') {
         const target = 'http://localhost/resmag-web/admin.html';
         try { window.location.replace(target); } catch {}
         showLogin('Abre esta página desde http://localhost/resmag-web/admin.html (no desde file://)');
         return;
       }
-      const ok = await checkAdmin();
-      if (ok) {
-        showApp();
-        loadData();
+      if (isHosted) {
+        await initHosted();
       } else {
-        showLogin();
+        await initLocal();
       }
     });
-
-    if (adminLoginForm) {
-      adminLoginForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        if (window.location.protocol === 'file:') {
-          showLogin('Abre esta página desde http://localhost/resmag-web/admin.html (no desde file://)');
-          return;
-        }
-        if (!adminLoginForm.reportValidity()) return;
-        try {
-          const res = await fetch(API_LOGIN, {
-            method: 'POST',
-            credentials: 'include',
-            body: new FormData(adminLoginForm)
-          });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok || !data.ok) {
-            showLogin((data && data.error) ? data.error : 'No se pudo iniciar sesión');
-            return;
-          }
-          if ((data.rol || '').toString() !== 'admin') {
-            showLogin('Acceso denegado');
-            return;
-          }
-          showApp();
-          loadData();
-        } catch {
-          showLogin('No se pudo iniciar sesión');
-        }
-      });
-    }
   </script>
 </body>
 </html>

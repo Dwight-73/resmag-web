@@ -8,6 +8,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAA2ahN95a83qbe4uFSYvHCQWUiDRI9aWE",
@@ -21,7 +22,25 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
     try { getAnalytics(app); } catch {}
+
+    window.resmagSaveQuoteToFirestore = async (quote) => {
+      try {
+        const safe = (v) => (v ?? '').toString().trim();
+        const payload = {
+          createdAt: serverTimestamp(),
+          nombre: safe(quote?.nombre),
+          empresa: safe(quote?.empresa),
+          email: safe(quote?.email),
+          telefono: safe(quote?.telefono),
+          servicio: safe(quote?.servicio),
+          mensaje: safe(quote?.mensaje),
+          estado: safe(quote?.estado) || 'nuevo',
+        };
+        await addDoc(collection(db, 'cotizaciones'), payload);
+      } catch {}
+    };
   </script>
 </head>
 <body class="pagina-contactanos transparent-header-page">
@@ -315,6 +334,20 @@
         }
 
         event.preventDefault();
+        try {
+          const saver = window.resmagSaveQuoteToFirestore;
+          if (typeof saver === 'function') {
+            saver({
+              nombre: getValue('nombre'),
+              empresa: getValue('empresa'),
+              email: getValue('email'),
+              telefono: getValue('telefono'),
+              servicio: getValue('servicio'),
+              mensaje: getValue('mensaje'),
+              estado: 'nuevo',
+            });
+          }
+        } catch {}
         try {
           const url = 'http://localhost/res-log-man/api/quotes-create-public.php';
           const payload = new FormData(form);
