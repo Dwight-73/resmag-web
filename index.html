@@ -5,24 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC – Logística & Mantenimiento</title>
   <link rel="stylesheet" href="style.css">
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAA2ahN95a83qbe4uFSYvHCQWUiDRI9aWE",
-      authDomain: "res-log-man.firebaseapp.com",
-      databaseURL: "https://res-log-man-default-rtdb.firebaseio.com",
-      projectId: "res-log-man",
-      storageBucket: "res-log-man.firebasestorage.app",
-      messagingSenderId: "822449215130",
-      appId: "1:822449215130:web:af7144c5bdfccd97a53123",
-      measurementId: "G-JXRX3VBWMX"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    try { getAnalytics(app); } catch {}
-  </script>
+  <script type="module" src="home-firestore.js"></script>
 </head>
 <body class="transparent-header-page">
 
@@ -35,6 +18,7 @@
       <a href="nosotros.html" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a>
       <a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
       <a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a>
+      <a href="auth.html" class="login-btn" data-es="Login" data-en="Login" data-pt="Login">Login</a>
       <select id="selector-idioma">
         <option value="es">🇪🇸 ES</option>
         <option value="en">🇺🇸 US</option>
@@ -52,10 +36,10 @@
     <div class="hero-texto">
       <!-- Columna izquierda -->
       <div class="hero-texto-left">
-        <h1 data-es="Limpieza y mantenimiento naval" data-en="Naval cleaning and maintenance" data-pt="Limpeza e manutenção naval">
+        <h1 id="hero-title" data-es="Limpieza y mantenimiento naval" data-en="Naval cleaning and maintenance" data-pt="Limpeza e manutenção naval">
           Limpieza y mantenimiento naval
         </h1>
-        <p data-es="Operaciones sin contratiempos, con respuesta rápida, equipos certificados y cumplimiento normativo."
+        <p id="hero-description" data-es="Operaciones sin contratiempos, con respuesta rápida, equipos certificados y cumplimiento normativo."
            data-en="Trouble-free operations with fast response, certified teams, and regulatory compliance."
            data-pt="Operações sem contratempos, com resposta rápida, equipes certificadas e conformidade regulatória.">
           Operaciones sin contratiempos, con respuesta rápida, equipos certificados y cumplimiento normativo.
@@ -68,10 +52,10 @@
         </p>
         <div class="botones-hero">
           <a href="contactanos.html#cotizacion">
-            <button data-es="Solicita una cotización" data-en="Request a Quote" data-pt="Solicite um orçamento">Solicita una cotización</button>
+            <button id="hero-cta-primary" data-es="Solicita una cotización" data-en="Request a Quote" data-pt="Solicite um orçamento">Solicita una cotización</button>
           </a>
           <a href="servicios.html">
-            <button data-es="Conoce nuestros servicios" data-en="Learn About Our Services" data-pt="Conheça nossos serviços">Conoce nuestros servicios</button>
+            <button id="hero-cta-secondary" data-es="Conoce nuestros servicios" data-en="Learn About Our Services" data-pt="Conheça nossos serviços">Conoce nuestros servicios</button>
           </a>
         </div>
       </div>
@@ -109,8 +93,60 @@
   </div>
 
   <div class="contenido">
+    <div class="trust-strip">
+      <h2 data-es="Confianza y respaldo operativo" data-en="Trust and operational backing" data-pt="Confiança e respaldo operacional">Confianza y respaldo operativo</h2>
+      <p data-es="Unificamos captación, coordinación y seguimiento para que tu operación no se detenga. Priorizamos seguridad, trazabilidad y cumplimiento."
+         data-en="We unify intake, coordination, and follow-up so your operation never stops. We prioritize safety, traceability, and compliance."
+         data-pt="Unificamos captação, coordenação e acompanhamento para que sua operação não pare. Priorizamos segurança, rastreabilidade e conformidade.">
+         Unificamos captación, coordinación y seguimiento para que tu operación no se detenga. Priorizamos seguridad, trazabilidad y cumplimiento.
+      </p>
+      <div class="trust-badges">
+        <span class="trust-badge" data-es="24/7 • Respuesta rápida" data-en="24/7 • Fast response" data-pt="24/7 • Resposta rápida">24/7 • Respuesta rápida</span>
+        <span class="trust-badge" data-es="Enfoque en seguridad" data-en="Safety-first approach" data-pt="Foco em segurança">Enfoque en seguridad</span>
+        <span class="trust-badge" data-es="Trazabilidad y reportes" data-en="Traceability and reporting" data-pt="Rastreabilidade e relatórios">Trazabilidad y reportes</span>
+        <span class="trust-badge" data-es="Cobertura Callao y Lima" data-en="Coverage: Callao and Lima" data-pt="Cobertura: Callao e Lima">Cobertura Callao y Lima</span>
+      </div>
+    </div>
+
+    <div class="split-section">
+      <div class="split-card">
+        <h3 data-es="Credenciales operativas" data-en="Operational credentials" data-pt="Credenciais operacionais">Credenciales operativas</h3>
+        <ul class="split-list">
+          <li data-es="Procedimientos estandarizados para intervenciones seguras y eficientes."
+              data-en="Standardized procedures for safe and efficient interventions."
+              data-pt="Procedimentos padronizados para intervenções seguras e eficientes.">
+              Procedimientos estandarizados para intervenciones seguras y eficientes.
+          </li>
+          <li data-es="Coordinación clara con responsable, alcance y tiempos desde el primer contacto."
+              data-en="Clear coordination with owner, scope, and timelines from the first contact."
+              data-pt="Coordenação clara com responsável, escopo e prazos desde o primeiro contato.">
+              Coordinación clara con responsable, alcance y tiempos desde el primer contacto.
+          </li>
+          <li data-es="Evidencias y seguimiento por hitos para mantener trazabilidad del servicio."
+              data-en="Evidence and milestone tracking to keep service traceability."
+              data-pt="Evidências e acompanhamento por marcos para manter a rastreabilidade do serviço.">
+              Evidencias y seguimiento por hitos para mantener trazabilidad del servicio.
+          </li>
+        </ul>
+      </div>
+      <div class="split-card">
+        <h3 data-es="Sectores atendidos" data-en="Sectors served" data-pt="Setores atendidos">Sectores atendidos</h3>
+        <ul class="split-list">
+          <li data-es="Puertos, astilleros y navieras." data-en="Ports, shipyards, and shipping lines." data-pt="Portos, estaleiros e companhias marítimas.">Puertos, astilleros y navieras.</li>
+          <li data-es="Operadores logísticos y almacenes." data-en="Logistics operators and warehouses." data-pt="Operadores logísticos e armazéns.">Operadores logísticos y almacenes.</li>
+          <li data-es="Industria, energía y proyectos especiales." data-en="Industry, energy, and special projects." data-pt="Indústria, energia e projetos especiais.">Industria, energía y proyectos especiales.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="contenido">
+    <div id="react-home-root"></div>
+  </div>
+
+  <div class="contenido">
     <h2 data-es="Servicios Destacados" data-en="Featured Services" data-pt="Serviços em Destaque">Servicios Destacados</h2>
-    <div class="grid-servicios">
+    <div class="grid-servicios" id="featured-services-grid">
       <div class="card-servicio">
         <div class="icono-servicio">🚢</div>
         <h3 data-es="Mantenimiento Naval" data-en="Naval Maintenance" data-pt="Manutenção Naval">Mantenimiento Naval</h3>
@@ -167,6 +203,91 @@
            data-pt="Executamos com segurança, rastreabilidade e controle de qualidade para um resultado confiável.">
           Ejecutamos con seguridad, trazabilidad y control de calidad para un resultado confiable.
         </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="contenido">
+    <h2 data-es="Casos y resultados" data-en="Cases and results" data-pt="Casos e resultados">Casos y resultados</h2>
+    <p data-es="Ejemplos de escenarios típicos con enfoque en seguridad, coordinación y cumplimiento."
+       data-en="Examples of typical scenarios focused on safety, coordination, and compliance."
+       data-pt="Exemplos de cenários típicos com foco em segurança, coordenação e conformidade.">
+      Ejemplos de escenarios típicos con enfoque en seguridad, coordinación y cumplimiento.
+    </p>
+    <div class="case-grid">
+      <article class="case-card">
+        <img src="images/PUERTO.jpg" alt="Operación portuaria" />
+        <h3 data-es="Atención portuaria coordinada" data-en="Coordinated port response" data-pt="Atendimento portuário coordenado">Atención portuaria coordinada</h3>
+        <p data-es="Registro del requerimiento, asignación de responsable y seguimiento por hitos para asegurar ejecución ordenada."
+           data-en="Requirement intake, owner assignment, and milestone tracking to ensure an orderly execution."
+           data-pt="Registro da necessidade, atribuição de responsável e acompanhamento por marcos para garantir execução ordenada.">
+          Registro del requerimiento, asignación de responsable y seguimiento por hitos para asegurar ejecución ordenada.
+        </p>
+        <div class="case-kpis">
+          <span class="case-kpi" data-es="Seguimiento: en tiempo real" data-en="Tracking: real-time" data-pt="Acompanhamento: em tempo real">Seguimiento: en tiempo real</span>
+          <span class="case-kpi" data-es="Enfoque: seguridad" data-en="Focus: safety" data-pt="Foco: segurança">Enfoque: seguridad</span>
+        </div>
+      </article>
+      <article class="case-card">
+        <img src="images/CONTENEDORES.png" alt="Carga y contenedores" />
+        <h3 data-es="Trazabilidad de logística" data-en="Logistics traceability" data-pt="Rastreabilidade logística">Trazabilidad de logística</h3>
+        <p data-es="Consolidación de información de carga, comunicación y estado para reducir re-trabajo y mejorar tiempos de respuesta."
+           data-en="Consolidated cargo information, communication, and status to reduce rework and improve response times."
+           data-pt="Consolidação de informações de carga, comunicação e status para reduzir retrabalho e melhorar tempos de resposta.">
+          Consolidación de información de carga, comunicación y estado para reducir re-trabajo y mejorar tiempos de respuesta.
+        </p>
+        <div class="case-kpis">
+          <span class="case-kpi" data-es="Control: vales y etiquetas" data-en="Control: vouchers and labels" data-pt="Controle: vales e etiquetas">Control: vales y etiquetas</span>
+          <span class="case-kpi" data-es="Visibilidad: estados" data-en="Visibility: statuses" data-pt="Visibilidade: estados">Visibilidad: estados</span>
+        </div>
+      </article>
+      <article class="case-card">
+        <img src="images/callao.jpg" alt="Zona del Callao" />
+        <h3 data-es="Mantenimiento con planificación" data-en="Planned maintenance" data-pt="Manutenção com planejamento">Mantenimiento con planificación</h3>
+        <p data-es="Diagnóstico, propuesta y ejecución con control de calidad para lograr continuidad operativa y cumplimiento."
+           data-en="Assessment, proposal, and execution with quality control to ensure operational continuity and compliance."
+           data-pt="Diagnóstico, proposta e execução com controle de qualidade para garantir continuidade operacional e conformidade.">
+          Diagnóstico, propuesta y ejecución con control de calidad para lograr continuidad operativa y cumplimiento.
+        </p>
+        <div class="case-kpis">
+          <span class="case-kpi" data-es="Hitos: definidos" data-en="Milestones: defined" data-pt="Marcos: definidos">Hitos: definidos</span>
+          <span class="case-kpi" data-es="Entrega: con evidencias" data-en="Delivery: with evidence" data-pt="Entrega: com evidências">Entrega: con evidencias</span>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="contenido">
+    <h2 data-es="Testimonios" data-en="Testimonials" data-pt="Depoimentos">Testimonios</h2>
+    <p data-es="Comentarios representativos sobre coordinación, cumplimiento y respuesta."
+       data-en="Representative feedback about coordination, compliance, and response."
+       data-pt="Comentários representativos sobre coordenação, conformidade e resposta.">
+      Comentarios representativos sobre coordinación, cumplimiento y respuesta.
+    </p>
+    <div class="testimonial-grid">
+      <div class="quote-card">
+        <p data-es="“Buena coordinación y comunicación constante. El seguimiento por estados nos ayudó a ordenar el trabajo.”"
+           data-en="“Great coordination and constant communication. Status tracking helped us organize the work.”"
+           data-pt="“Boa coordenação e comunicação constante. O acompanhamento por estados ajudou a organizar o trabalho.”">
+          “Buena coordinación y comunicación constante. El seguimiento por estados nos ayudó a ordenar el trabajo.”
+        </p>
+        <div class="quote-meta" data-es="Cliente logístico (Callao)" data-en="Logistics client (Callao)" data-pt="Cliente logístico (Callao)">Cliente logístico (Callao)</div>
+      </div>
+      <div class="quote-card">
+        <p data-es="“Respuesta rápida y equipo preparado. Se notó el enfoque en seguridad y cumplimiento.”"
+           data-en="“Fast response and a prepared team. The safety-first mindset was clear.”"
+           data-pt="“Resposta rápida e equipe preparada. O foco em segurança e conformidade ficou claro.”">
+          “Respuesta rápida y equipo preparado. Se notó el enfoque en seguridad y cumplimiento.”
+        </p>
+        <div class="quote-meta" data-es="Operación portuaria" data-en="Port operation" data-pt="Operação portuária">Operación portuaria</div>
+      </div>
+      <div class="quote-card">
+        <p data-es="“La propuesta fue clara y con tiempos definidos. La ejecución se mantuvo alineada a lo acordado.”"
+           data-en="“The proposal was clear with defined timelines. Execution stayed aligned with what was agreed.”"
+           data-pt="“A proposta foi clara e com prazos definidos. A execução permaneceu alinhada ao combinado.”">
+          “La propuesta fue clara y con tiempos definidos. La ejecución se mantuvo alineada a lo acordado.”
+        </p>
+        <div class="quote-meta" data-es="Cliente industrial" data-en="Industrial client" data-pt="Cliente industrial">Cliente industrial</div>
       </div>
     </div>
   </div>
@@ -243,6 +364,24 @@
       </div>
     </div>
   </div>
+
+  <div class="sticky-cta" aria-label="Accesos rápidos">
+    <a href="contactanos.html#cotizacion" aria-label="Solicitar cotización">
+      <span class="cta-text" data-es="Solicitar cotización" data-en="Request a quote" data-pt="Solicitar orçamento">Solicitar cotización</span>
+    </a>
+    <a class="secondary" href="mailto:logisticaymanteniendo@gmail.com" aria-label="Escribir correo">
+      <span class="cta-text" data-es="Escribir correo" data-en="Email us" data-pt="Enviar e-mail">Escribir correo</span>
+    </a>
+  </div>
+
+  <a class="whatsapp-float" href="https://wa.me/51960731930?text=Hola%20RESMAG%2C%20quisiera%20una%20cotizaci%C3%B3n." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp RESMAG">
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path d="M19.11 17.44c-.28-.14-1.62-.8-1.87-.9-.25-.09-.43-.14-.62.14-.18.28-.71.9-.87 1.08-.16.18-.32.21-.6.07-.28-.14-1.17-.43-2.23-1.37-.82-.73-1.38-1.64-1.54-1.92-.16-.28-.02-.43.12-.57.13-.13.28-.32.42-.48.14-.16.18-.28.28-.46.09-.18.05-.35-.02-.5-.07-.14-.62-1.5-.85-2.06-.22-.52-.44-.45-.62-.46h-.53c-.18 0-.46.07-.71.35-.25.28-.93.9-.93 2.2 0 1.29.96 2.54 1.09 2.72.14.18 1.88 2.87 4.56 4.03.64.28 1.14.45 1.53.58.64.2 1.22.17 1.67.1.51-.08 1.62-.66 1.85-1.3.23-.64.23-1.19.16-1.3-.07-.11-.25-.18-.53-.32z"/>
+      <path d="M16.01 3C8.84 3 3 8.84 3 16.01c0 2.22.58 4.39 1.68 6.3L3 29l6.86-1.6c1.85 1.01 3.92 1.54 6.15 1.54 7.17 0 13.01-5.84 13.01-12.93C29.02 8.84 23.18 3 16.01 3zm0 23.7c-2.09 0-4.07-.56-5.8-1.62l-.41-.25-4.06.95 1.08-3.96-.27-.41a10.69 10.69 0 0 1-1.69-5.8c0-5.95 4.88-10.79 10.88-10.79 5.95 0 10.79 4.84 10.79 10.79 0 5.99-4.84 10.88-10.52 10.88z"/>
+    </svg>
+  </a>
+
+  <script type="module" src="react-home.js"></script>
 
   
   <!-- Script de idioma -->
@@ -427,5 +566,7 @@
 
 
   
+  <script type="module" src="auth-nav.js"></script>
 </body>
 </html>
+

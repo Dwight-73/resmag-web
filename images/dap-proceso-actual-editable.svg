@@ -1,0 +1,205 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1600" viewBox="0 0 1400 1600">
+  <defs>
+    <style>
+      .title { font: 700 34px 'Times New Roman', serif; fill: #fff; }
+      .head { font: 700 24px 'Times New Roman', serif; fill: #fff; }
+      .label { font: 400 22px 'Times New Roman', serif; fill: #fff; }
+      .text { font: 400 22px 'Times New Roman', serif; fill: #111; }
+      .bold { font: 700 22px 'Times New Roman', serif; fill: #111; }
+      .small { font: 400 20px 'Times New Roman', serif; fill: #111; }
+      .center { text-anchor: middle; dominant-baseline: middle; }
+      .grid { stroke: #ffffff; stroke-width: 2; }
+      .blue { fill: #5f89c1; }
+      .light { fill: #dbe4f1; }
+      .white { fill: #ffffff; }
+      .redline { stroke: #b36464; stroke-width: 5; fill: none; opacity: 0.9; }
+      .iconBlue { fill: #234e9c; stroke: #d9e3ff; stroke-width: 4; }
+      .iconRed { fill: #c76b6b; stroke: #f7dada; stroke-width: 3; }
+    </style>
+  </defs>
+
+  <rect width="1400" height="1600" fill="#ffffff"/>
+
+  <rect x="60" y="40" width="1280" height="56" class="blue"/>
+  <text x="700" y="76" class="title center">DIAGRAMA DE ANALISIS DEL PROCESO ACTUAL (DAP)</text>
+
+  <rect x="60" y="96" width="1280" height="360" class="light"/>
+  <line x1="60" y1="96" x2="1340" y2="96" class="grid"/>
+  <line x1="60" y1="152" x2="1340" y2="152" class="grid"/>
+  <line x1="60" y1="208" x2="1340" y2="208" class="grid"/>
+  <line x1="60" y1="264" x2="1340" y2="264" class="grid"/>
+  <line x1="60" y1="320" x2="1340" y2="320" class="grid"/>
+  <line x1="60" y1="376" x2="1340" y2="376" class="grid"/>
+  <line x1="60" y1="456" x2="1340" y2="456" class="grid"/>
+
+  <line x1="300" y1="96" x2="300" y2="456" class="grid"/>
+  <line x1="500" y1="264" x2="500" y2="456" class="grid"/>
+  <line x1="930" y1="96" x2="930" y2="456" class="grid"/>
+
+  <rect x="60" y="96" width="240" height="224" class="blue"/>
+  <rect x="60" y="320" width="240" height="136" class="blue"/>
+
+  <text x="80" y="132" class="label">Empresa</text>
+  <text x="315" y="132" class="text">REPAIRS SERVICES MAINTENANCE GROUP S.A.C.</text>
+
+  <text x="80" y="188" class="label">Departamento /</text>
+  <text x="80" y="220" class="label">Area</text>
+  <text x="315" y="202" class="text">Area de Administracion</text>
+
+  <text x="80" y="244" class="label">Seccion</text>
+  <text x="315" y="244" class="text">Trabajos de campo</text>
+
+  <text x="80" y="292" class="label">Actividad</text>
+  <text x="350" y="292" class="text center">Metodo</text>
+  <text x="715" y="292" class="text center">Observador</text>
+
+  <text x="350" y="344" class="text center">Actual</text>
+  <text x="1010" y="320" class="text">Milton Bruno</text>
+  <text x="1010" y="356" class="text">Escalante Mattos</text>
+  <text x="1010" y="392" class="text">Jose Albert Gutierrez</text>
+  <text x="1010" y="428" class="text">Marquez</text>
+
+  <text x="80" y="352" class="label">Operacion</text>
+  <text x="400" y="352" class="text center">7</text>
+  <text x="575" y="352" class="text">Fecha:</text>
+  <text x="575" y="392" class="text">25/04/2026</text>
+
+  <text x="80" y="408" class="label">Inspeccion</text>
+  <text x="400" y="408" class="text center">1</text>
+  <text x="575" y="408" class="text">Metodo:</text>
+  <text x="1010" y="408" class="text">Actual</text>
+
+  <text x="80" y="464" class="label">Transporte</text>
+  <text x="400" y="464" class="text center">0</text>
+
+  <text x="80" y="520" class="label">Demora</text>
+  <text x="400" y="520" class="text center">0</text>
+
+  <text x="80" y="576" class="label">Almacenaje</text>
+  <text x="400" y="576" class="text center">0</text>
+
+  <text x="80" y="632" class="label">Total</text>
+  <text x="400" y="632" class="text center">8</text>
+  <text x="575" y="520" class="text">Simbolos</text>
+  <text x="1010" y="520" class="text">Tiempo</text>
+  <text x="1010" y="556" class="text">Segundos</text>
+
+  <text x="80" y="688" class="label">Tiempo real</text>
+  <text x="315" y="688" class="text">4 horas</text>
+
+  <rect x="60" y="736" width="1280" height="780" class="light"/>
+  <rect x="60" y="736" width="80" height="780" class="blue"/>
+  <rect x="140" y="736" width="360" height="780" class="white"/>
+  <rect x="500" y="736" width="460" height="780" fill="#cfe0f6"/>
+  <rect x="960" y="736" width="170" height="780" class="white"/>
+  <rect x="1130" y="736" width="210" height="780" class="white"/>
+
+  <line x1="60" y1="736" x2="1340" y2="736" class="grid"/>
+  <line x1="60" y1="808" x2="1340" y2="808" class="grid"/>
+  <line x1="60" y1="908" x2="1340" y2="908" class="grid"/>
+  <line x1="60" y1="1008" x2="1340" y2="1008" class="grid"/>
+  <line x1="60" y1="1108" x2="1340" y2="1108" class="grid"/>
+  <line x1="60" y1="1208" x2="1340" y2="1208" class="grid"/>
+  <line x1="60" y1="1308" x2="1340" y2="1308" class="grid"/>
+  <line x1="60" y1="1408" x2="1340" y2="1408" class="grid"/>
+  <line x1="60" y1="1508" x2="1340" y2="1508" class="grid"/>
+
+  <line x1="140" y1="736" x2="140" y2="1516" class="grid"/>
+  <line x1="500" y1="736" x2="500" y2="1516" class="grid"/>
+  <line x1="592" y1="736" x2="592" y2="1516" class="grid"/>
+  <line x1="684" y1="736" x2="684" y2="1516" class="grid"/>
+  <line x1="776" y1="736" x2="776" y2="1516" class="grid"/>
+  <line x1="868" y1="736" x2="868" y2="1516" class="grid"/>
+  <line x1="960" y1="736" x2="960" y2="1516" class="grid"/>
+  <line x1="1130" y1="736" x2="1130" y2="1516" class="grid"/>
+
+  <text x="100" y="772" class="head center">N°</text>
+  <text x="320" y="772" class="head center">Descripcion</text>
+
+  <circle cx="546" cy="772" r="20" class="iconBlue"/>
+  <rect x="661" y="752" width="38" height="38" class="iconBlue"/>
+  <polygon points="715,752 775,752 805,771 775,790 715,790" class="iconBlue"/>
+  <polygon points="838,752 892,752 865,798" class="iconBlue"/>
+  <path d="M925,752 L925,790 A19,19 0 0 0 925,752 Z" class="iconBlue"/>
+
+  <text x="1045" y="760" class="head center">Tiempo</text>
+  <text x="1045" y="790" class="head center">(min.)</text>
+  <text x="1235" y="772" class="head center">Obs.</text>
+
+  <text x="100" y="858" class="text center">1</text>
+  <text x="100" y="958" class="text center">2</text>
+  <text x="100" y="1058" class="text center">3</text>
+  <text x="100" y="1158" class="text center">4</text>
+  <text x="100" y="1258" class="text center">5</text>
+  <text x="100" y="1358" class="text center">6</text>
+  <text x="100" y="1458" class="text center">7</text>
+
+  <text x="160" y="840" class="text">
+    <tspan x="160" dy="0">Recepcion y registro</tspan>
+    <tspan x="160" dy="30">manual de datos</tspan>
+  </text>
+  <text x="160" y="958" class="text">Tiempo de espera por atencion</text>
+  <text x="160" y="1040" class="text">
+    <tspan x="160" dy="0">Busqueda manual</tspan>
+    <tspan x="160" dy="30">precios/stock</tspan>
+  </text>
+  <text x="160" y="1140" class="text">
+    <tspan x="160" dy="0">Elaboracion y calculo de</tspan>
+    <tspan x="160" dy="30">cotizacion</tspan>
+  </text>
+  <text x="160" y="1258" class="text">Tiempo de espera por confirmacion</text>
+  <text x="160" y="1340" class="text">
+    <tspan x="160" dy="0">Asentamiento manual de</tspan>
+    <tspan x="160" dy="30">orden</tspan>
+  </text>
+  <text x="160" y="1458" class="text">Envio de cotizacion final</text>
+
+  <text x="1045" y="858" class="text center">40 min.</text>
+  <text x="1045" y="958" class="text center">20 min.</text>
+  <text x="1045" y="1058" class="text center">40 min.</text>
+  <text x="1045" y="1158" class="text center">60 min.</text>
+  <text x="1045" y="1258" class="text center">30 min.</text>
+  <text x="1045" y="1358" class="text center">20 min.</text>
+  <text x="1045" y="1458" class="text center">30 min.</text>
+
+  <text x="1235" y="840" class="small center">
+    <tspan x="1235" dy="0">Via</tspan>
+    <tspan x="1235" dy="28">WhatsApp</tspan>
+  </text>
+  <text x="1235" y="958" class="small center">
+    <tspan x="1235" dy="0">Carga</tspan>
+    <tspan x="1235" dy="28">operativa</tspan>
+  </text>
+  <text x="1235" y="1040" class="small center">
+    <tspan x="1235" dy="0">Datos</tspan>
+    <tspan x="1235" dy="28">dispersos</tspan>
+  </text>
+  <text x="1235" y="1140" class="small center">
+    <tspan x="1235" dy="0">Riesgo de</tspan>
+    <tspan x="1235" dy="28">error</tspan>
+  </text>
+  <text x="1235" y="1258" class="small center">
+    <tspan x="1235" dy="0">Com.</tspan>
+    <tspan x="1235" dy="28">externa</tspan>
+  </text>
+  <text x="1235" y="1340" class="small center">
+    <tspan x="1235" dy="0">Duplicidad</tspan>
+  </text>
+  <text x="1235" y="1458" class="small center">Informal</text>
+
+  <circle cx="546" cy="858" r="12" class="iconRed"/>
+  <rect x="668" y="940" width="24" height="24" class="iconRed"/>
+  <circle cx="546" cy="1058" r="12" class="iconRed"/>
+  <circle cx="546" cy="1158" r="12" class="iconRed"/>
+  <rect x="668" y="1240" width="24" height="24" class="iconRed"/>
+  <circle cx="546" cy="1358" r="12" class="iconRed"/>
+  <circle cx="546" cy="1458" r="12" class="iconRed"/>
+
+  <path class="redline" d="M546 858 L680 952 L546 1058 L546 1158 L680 1252 L546 1358 L546 1458"/>
+
+  <rect x="60" y="1508" width="440" height="100" class="blue"/>
+  <text x="280" y="1558" class="head center">TOTAL</text>
+  <text x="546" y="1558" class="text center">7</text>
+  <text x="638" y="1558" class="text center">1</text>
+  <text x="1045" y="1558" class="bold center">240 min.</text>
+</svg>

@@ -5,24 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Panel de Administración – RESMAG</title>
   <link rel="stylesheet" href="style.css">
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAA2ahN95a83qbe4uFSYvHCQWUiDRI9aWE",
-      authDomain: "res-log-man.firebaseapp.com",
-      databaseURL: "https://res-log-man-default-rtdb.firebaseio.com",
-      projectId: "res-log-man",
-      storageBucket: "res-log-man.firebasestorage.app",
-      messagingSenderId: "822449215130",
-      appId: "1:822449215130:web:af7144c5bdfccd97a53123",
-      measurementId: "G-JXRX3VBWMX"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    try { getAnalytics(app); } catch {}
-  </script>
+  <script type="module" src="firebase-client.js"></script>
 </head>
 <body class="pagina-admin transparent-header-page">
 
@@ -33,6 +16,7 @@
       <a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a>
       <a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
       <a href="contactanos.html#cotizacion" data-es="Cotización" data-en="Quote" data-pt="Orçamento">Cotización</a>
+      <a href="auth.html" class="login-btn" data-es="Login" data-en="Login" data-pt="Login">Login</a>
       <select id="selector-idioma">
         <option value="es">🇪🇸 ES</option>
         <option value="en">🇺🇸 US</option>
@@ -48,8 +32,8 @@
       <div class="auth-showcase">
         <div class="auth-showcase-card">
           <div class="auth-badge">RESMAG · Admin</div>
-          <h1>Administración</h1>
-          <p>Inicia sesión para ver cotizaciones y descargar el CSV.</p>
+          <h1>Dashboard de Solicitudes</h1>
+          <p>Acceso solo para cuentas registradas en Firebase Authentication y autorizadas como administradores.</p>
         </div>
       </div>
       <div class="auth-surface">
@@ -76,38 +60,211 @@
   <div id="adminApp" style="display:none">
     <div class="contenido">
       <h2 data-es="Panel de Administración" data-en="Admin Panel" data-pt="Painel de Administração">Panel de Administración</h2>
+      <p class="admin-intro">Monitorea la cantidad de solicitudes, su estado actual y si cada caso es urgente o normal.</p>
       <div class="admin-header-actions">
         <div class="admin-search">
           <input id="searchInput" type="text" placeholder="Buscar por nombre, empresa, correo o servicio">
         </div>
+        <select id="timeFilter">
+          <option value="todos">Todo el tiempo</option>
+          <option value="hoy">Hoy</option>
+          <option value="7d">Últimos 7 días</option>
+          <option value="30d">Últimos 30 días</option>
+        </select>
+        <select id="statusFilter">
+          <option value="todos">Todos los estados</option>
+          <option value="nuevo">Nuevo</option>
+          <option value="en_revision">En revisión</option>
+          <option value="proceso">Proceso</option>
+          <option value="cerrado">Cerrado</option>
+        </select>
+        <select id="urgencyFilter">
+          <option value="todos">Todas las urgencias</option>
+          <option value="urgente">Urgente</option>
+          <option value="normal">Normal</option>
+        </select>
+        <select id="sortBy">
+          <option value="newest">Más recientes</option>
+          <option value="oldest">Más antiguos</option>
+          <option value="urgent_first">Urgentes primero</option>
+          <option value="status">Orden por estado</option>
+        </select>
+        <div class="admin-view-toggle" role="group" aria-label="Vista">
+          <button id="viewTableBtn" type="button" class="admin-toggle active">Tabla</button>
+          <button id="viewKanbanBtn" type="button" class="admin-toggle">Kanban</button>
+        </div>
         <a id="downloadCsvBtn" class="btn-cotizar" href="#"
            data-es="Descargar CSV" data-en="Download CSV" data-pt="Baixar CSV">Descargar CSV</a>
         <button id="refreshBtn">Actualizar</button>
+      </div>
+      <div class="admin-subbar">
+        <div class="admin-subbar-left">
+          <span id="resultsInfo" class="admin-results">Mostrando 0 de 0</span>
+        </div>
+        <div class="admin-subbar-right">
+          <label class="admin-page-size">
+            <span>Filas</span>
+            <select id="pageSize">
+              <option value="10">10</option>
+              <option value="25" selected>25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </label>
+          <div class="admin-pagination">
+            <button id="prevPageBtn" type="button" class="admin-page-btn">Anterior</button>
+            <span id="pageInfo" class="admin-page-info">1 / 1</span>
+            <button id="nextPageBtn" type="button" class="admin-page-btn">Siguiente</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="contenido">
       <div class="admin-cards">
         <section class="admin-card">
+          <h3>Resumen</h3>
+          <div class="admin-summary-grid">
+            <article class="admin-summary-item" data-summary="total">
+              <span>Total</span>
+              <strong id="metricTotal">0</strong>
+              <small>Solicitudes registradas</small>
+            </article>
+            <article class="admin-summary-item" data-summary="nuevo">
+              <span>Nuevas</span>
+              <strong id="metricNuevo">0</strong>
+              <small>Pendientes por revisar</small>
+            </article>
+            <article class="admin-summary-item" data-summary="en_revision">
+              <span>En revisión</span>
+              <strong id="metricRevision">0</strong>
+              <small>En seguimiento</small>
+            </article>
+            <article class="admin-summary-item" data-summary="proceso">
+              <span>En proceso</span>
+              <strong id="metricProceso">0</strong>
+              <small>Gestión en curso</small>
+            </article>
+            <article class="admin-summary-item" data-summary="cerrado">
+              <span>Cerradas</span>
+              <strong id="metricCerrado">0</strong>
+              <small>Atendidas / finalizadas</small>
+            </article>
+            <article class="admin-summary-item" data-summary="urgente">
+              <span>Urgentes</span>
+              <strong id="metricUrgente">0</strong>
+              <small>Atención prioritaria</small>
+            </article>
+          </div>
+        </section>
+        <section class="admin-card">
           <h3 data-es="Solicitudes de Cotización" data-en="Quote Requests" data-pt="Solicitações de Orçamento">Solicitudes de Cotización</h3>
-          <div class="admin-table-wrapper">
+          <div class="admin-table-wrapper" id="tableView">
             <table class="admin-table" id="quotesTable">
               <thead>
                 <tr>
                   <th data-es="Fecha" data-en="Date" data-pt="Data">Fecha</th>
+                  <th>Edad</th>
                   <th data-es="Nombre" data-en="Name" data-pt="Nome">Nombre</th>
                   <th data-es="Empresa" data-en="Company" data-pt="Empresa">Empresa</th>
                   <th>Email</th>
                   <th data-es="Teléfono" data-en="Phone" data-pt="Telefone">Teléfono</th>
                   <th data-es="Servicio" data-en="Service" data-pt="Serviço">Servicio</th>
+                  <th data-es="Urgencia" data-en="Urgency" data-pt="Urgência">Urgencia</th>
+                  <th data-es="Estado" data-en="Status" data-pt="Estado">Estado</th>
                   <th data-es="Mensaje" data-en="Message" data-pt="Mensagem">Mensaje</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody></tbody>
             </table>
             <div class="admin-empty" id="quotesEmpty">Sin datos</div>
           </div>
+          <div id="kanbanView" class="admin-kanban" style="display:none">
+            <div class="admin-kanban-col" data-col="nuevo">
+              <div class="admin-kanban-head">
+                <h4>Nuevo</h4>
+                <span class="admin-kanban-count" id="kanbanNuevoCount">0</span>
+              </div>
+              <div class="admin-kanban-list" id="kanbanNuevo"></div>
+            </div>
+            <div class="admin-kanban-col" data-col="en_revision">
+              <div class="admin-kanban-head">
+                <h4>En revisión</h4>
+                <span class="admin-kanban-count" id="kanbanRevisionCount">0</span>
+              </div>
+              <div class="admin-kanban-list" id="kanbanRevision"></div>
+            </div>
+            <div class="admin-kanban-col" data-col="proceso">
+              <div class="admin-kanban-head">
+                <h4>Proceso</h4>
+                <span class="admin-kanban-count" id="kanbanProcesoCount">0</span>
+              </div>
+              <div class="admin-kanban-list" id="kanbanProceso"></div>
+            </div>
+            <div class="admin-kanban-col" data-col="cerrado">
+              <div class="admin-kanban-head">
+                <h4>Cerrado</h4>
+                <span class="admin-kanban-count" id="kanbanCerradoCount">0</span>
+              </div>
+              <div class="admin-kanban-list" id="kanbanCerrado"></div>
+            </div>
+          </div>
         </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-modal" id="quoteModal" style="display:none" aria-hidden="true">
+    <div class="admin-modal-overlay" data-modal-close></div>
+    <div class="admin-modal-card" role="dialog" aria-modal="true" aria-label="Detalle de solicitud">
+      <div class="admin-modal-header">
+        <div>
+          <div class="admin-modal-title" id="modalTitle">Solicitud</div>
+          <div class="admin-modal-subtitle" id="modalSubtitle"></div>
+        </div>
+        <button type="button" class="admin-modal-close" data-modal-close aria-label="Cerrar">×</button>
+      </div>
+      <div class="admin-modal-body">
+        <div class="admin-modal-grid">
+          <div class="admin-modal-item">
+            <span>Estado</span>
+            <select id="modalEstado" class="admin-inline-select"></select>
+          </div>
+          <div class="admin-modal-item">
+            <span>Urgencia</span>
+            <select id="modalUrgencia" class="admin-inline-select"></select>
+          </div>
+          <div class="admin-modal-item">
+            <span>Asignado a</span>
+            <input id="modalAsignadoA" class="admin-inline-input" type="text" placeholder="Responsable">
+          </div>
+          <div class="admin-modal-item">
+            <span>Teléfono</span>
+            <a id="modalTelefono" class="admin-modal-link" href="#" target="_blank" rel="noopener noreferrer">-</a>
+          </div>
+          <div class="admin-modal-item">
+            <span>Email</span>
+            <a id="modalEmail" class="admin-modal-link" href="#" target="_blank" rel="noopener noreferrer">-</a>
+          </div>
+          <div class="admin-modal-item">
+            <span>Servicio</span>
+            <strong id="modalServicio">-</strong>
+          </div>
+        </div>
+        <div class="admin-modal-message">
+          <span>Mensaje</span>
+          <pre id="modalMensaje"></pre>
+        </div>
+        <div class="admin-modal-message">
+          <span>Notas internas</span>
+          <textarea id="modalNotas" rows="4" placeholder="Notas internas (solo admin)"></textarea>
+        </div>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="admin-secondary-btn" id="modalWhatsappBtn">WhatsApp</button>
+        <button type="button" class="admin-secondary-btn" id="modalMailBtn">Email</button>
+        <button type="button" class="admin-primary-btn" id="modalSaveBtn">Guardar</button>
       </div>
     </div>
   </div>
@@ -115,28 +272,94 @@
   <script type="module">
     import { getApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, collection, query, orderBy, getDocs, where, limit } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { collection, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, serverTimestamp, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-    const API_QUOTES = 'http://localhost/res-log-man/api/quotes.php';
-    const API_QUOTES_CSV = 'http://localhost/res-log-man/api/quotes-csv.php';
-    const API_SESSION = 'http://localhost/res-log-man/api/session.php';
-    const API_LOGIN = 'http://localhost/res-log-man/api/login.php';
-
-    const isHosted = /\.web\.app$|\.firebaseapp\.com$/i.test(window.location.hostname);
     const quotesTbody = document.querySelector('#quotesTable tbody');
     const quotesEmpty = document.getElementById('quotesEmpty');
     const searchInput = document.getElementById('searchInput');
+    const timeFilter = document.getElementById('timeFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const urgencyFilter = document.getElementById('urgencyFilter');
+    const sortBy = document.getElementById('sortBy');
+    const viewTableBtn = document.getElementById('viewTableBtn');
+    const viewKanbanBtn = document.getElementById('viewKanbanBtn');
+    const tableView = document.getElementById('tableView');
+    const kanbanView = document.getElementById('kanbanView');
+    const resultsInfo = document.getElementById('resultsInfo');
+    const pageSize = document.getElementById('pageSize');
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    const pageInfo = document.getElementById('pageInfo');
     const refreshBtn = document.getElementById('refreshBtn');
     const downloadCsvBtn = document.getElementById('downloadCsvBtn');
     const adminLogin = document.getElementById('adminLogin');
     const adminLoginForm = document.getElementById('adminLoginForm');
     const adminLoginError = document.getElementById('adminLoginError');
     const adminApp = document.getElementById('adminApp');
+    const metricTotal = document.getElementById('metricTotal');
+    const metricNuevo = document.getElementById('metricNuevo');
+    const metricRevision = document.getElementById('metricRevision');
+    const metricProceso = document.getElementById('metricProceso');
+    const metricCerrado = document.getElementById('metricCerrado');
+    const metricUrgente = document.getElementById('metricUrgente');
+
+    const kanbanNuevo = document.getElementById('kanbanNuevo');
+    const kanbanRevision = document.getElementById('kanbanRevision');
+    const kanbanProceso = document.getElementById('kanbanProceso');
+    const kanbanCerrado = document.getElementById('kanbanCerrado');
+    const kanbanNuevoCount = document.getElementById('kanbanNuevoCount');
+    const kanbanRevisionCount = document.getElementById('kanbanRevisionCount');
+    const kanbanProcesoCount = document.getElementById('kanbanProcesoCount');
+    const kanbanCerradoCount = document.getElementById('kanbanCerradoCount');
+
+    const quoteModal = document.getElementById('quoteModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSubtitle = document.getElementById('modalSubtitle');
+    const modalEstado = document.getElementById('modalEstado');
+    const modalUrgencia = document.getElementById('modalUrgencia');
+    const modalAsignadoA = document.getElementById('modalAsignadoA');
+    const modalTelefono = document.getElementById('modalTelefono');
+    const modalEmail = document.getElementById('modalEmail');
+    const modalServicio = document.getElementById('modalServicio');
+    const modalMensaje = document.getElementById('modalMensaje');
+    const modalNotas = document.getElementById('modalNotas');
+    const modalWhatsappBtn = document.getElementById('modalWhatsappBtn');
+    const modalMailBtn = document.getElementById('modalMailBtn');
+    const modalSaveBtn = document.getElementById('modalSaveBtn');
 
     let quotesData = [];
+    let db = null;
+    let currentView = 'table';
+    let currentPage = 1;
+    let currentModalId = '';
+    let unsubscribe = null;
 
     const norm = (s) => (s ?? '').toString().toLowerCase();
     const isAdminRole = (role) => ['admin', 'administrador', 'administrator', 'superadmin', 'root'].includes(norm(role).trim());
+    const normalizeStatus = (value) => {
+      const current = norm(value).replace(/\s+/g, '_');
+      if (current === 'en_revision' || current === 'en-revision') return 'en_revision';
+      if (current === 'cotizado' || current === 'proceso' || current === 'en_proceso') return 'proceso';
+      if (current === 'cerrado') return 'cerrado';
+      return 'nuevo';
+    };
+    const normalizeUrgency = (value) => norm(value) === 'urgente' ? 'urgente' : 'normal';
+    const statusLabel = (value) => {
+      const current = normalizeStatus(value);
+      if (current === 'en_revision') return 'En revisión';
+      if (current === 'proceso') return 'Proceso';
+      if (current === 'cerrado') return 'Cerrado';
+      return 'Nuevo';
+    };
+    const urgencyLabel = (value) => normalizeUrgency(value) === 'urgente' ? 'Urgente' : 'Normal';
+    const statusRank = (value) => {
+      const current = normalizeStatus(value);
+      if (current === 'nuevo') return 1;
+      if (current === 'en_revision') return 2;
+      if (current === 'proceso') return 3;
+      if (current === 'cerrado') return 4;
+      return 9;
+    };
 
     function showLogin(message) {
       if (adminApp) adminApp.style.display = 'none';
@@ -173,39 +396,261 @@
       }
     }
 
+    function getCreatedDate(row) {
+      const value = row?.createdAt ?? row?.fecha ?? row?.created_at;
+      try {
+        if (value && typeof value.toDate === 'function') return value.toDate();
+      } catch {}
+      if (typeof value === 'string' && value.trim()) {
+        const d = new Date(value);
+        if (!Number.isNaN(d.getTime())) return d;
+      }
+      return null;
+    }
+
+    function formatAge(row) {
+      const created = getCreatedDate(row);
+      if (!created) return '';
+      const diffMs = Date.now() - created.getTime();
+      const diffMins = Math.max(0, Math.floor(diffMs / 60000));
+      if (diffMins < 60) return `${diffMins}m`;
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return `${diffHours}h`;
+      const diffDays = Math.floor(diffHours / 24);
+      return `${diffDays}d`;
+    }
+
+    function getTimeFilteredRows() {
+      const mode = norm(timeFilter?.value || 'todos');
+      if (mode === 'todos') return quotesData.slice();
+      const now = new Date();
+      const start = new Date(now);
+      start.setHours(0, 0, 0, 0);
+      if (mode === 'hoy') {
+        return quotesData.filter((row) => {
+          const d = getCreatedDate(row);
+          return d && d.getTime() >= start.getTime();
+        });
+      }
+      const days = mode === '7d' ? 7 : 30;
+      const threshold = Date.now() - (days * 24 * 60 * 60 * 1000);
+      return quotesData.filter((row) => {
+        const d = getCreatedDate(row);
+        return d && d.getTime() >= threshold;
+      });
+    }
+
     function renderQuotes(rows) {
       quotesTbody.innerHTML = '';
       if (!rows.length) { quotesEmpty.style.display = 'block'; return; }
       quotesEmpty.style.display = 'none';
       rows.forEach(r => {
+        const status = normalizeStatus(r.estado);
+        const urgency = normalizeUrgency(r.urgencia);
         const tr = document.createElement('tr');
+        if (urgency === 'urgente') tr.classList.add('is-urgent');
         tr.innerHTML = `
           <td>${formatDate(r.createdAt ?? r.fecha ?? r.created_at)}</td>
+          <td>${formatAge(r)}</td>
           <td>${r.nombre || r.full_name || ''}</td>
           <td>${r.empresa || ''}</td>
           <td>${r.email || ''}</td>
           <td>${r.telefono || r.phone || ''}</td>
           <td>${r.servicio || r.service || ''}</td>
-          <td>${r.mensaje || r.message || ''}</td>
+          <td>
+            <span class="admin-pill urgency ${urgency}">${urgencyLabel(urgency)}</span>
+            <select class="admin-inline-select" data-id="${r.id}" data-field="urgencia">
+              <option value="normal"${urgency === 'normal' ? ' selected' : ''}>Normal</option>
+              <option value="urgente"${urgency === 'urgente' ? ' selected' : ''}>Urgente</option>
+            </select>
+          </td>
+          <td>
+            <span class="admin-pill status ${status}">${statusLabel(status)}</span>
+            <select class="admin-inline-select" data-id="${r.id}" data-field="estado">
+              <option value="nuevo"${status === 'nuevo' ? ' selected' : ''}>Nuevo</option>
+              <option value="en_revision"${status === 'en_revision' ? ' selected' : ''}>En revisión</option>
+              <option value="proceso"${status === 'proceso' ? ' selected' : ''}>Proceso</option>
+              <option value="cerrado"${status === 'cerrado' ? ' selected' : ''}>Cerrado</option>
+            </select>
+          </td>
+          <td class="admin-message-cell">${(r.mensaje || r.message || '').toString()}</td>
+          <td><button type="button" class="admin-row-btn" data-action="view" data-id="${r.id}">Ver</button></td>
         `;
         quotesTbody.appendChild(tr);
       });
     }
 
+    function updateMetrics(rows) {
+      const total = rows.length;
+      const nuevos = rows.filter((row) => normalizeStatus(row.estado) === 'nuevo').length;
+      const revision = rows.filter((row) => normalizeStatus(row.estado) === 'en_revision').length;
+      const proceso = rows.filter((row) => normalizeStatus(row.estado) === 'proceso').length;
+      const cerrado = rows.filter((row) => normalizeStatus(row.estado) === 'cerrado').length;
+      const urgentes = rows.filter((row) => normalizeUrgency(row.urgencia) === 'urgente').length;
+      if (metricTotal) metricTotal.textContent = String(total);
+      if (metricNuevo) metricNuevo.textContent = String(nuevos);
+      if (metricRevision) metricRevision.textContent = String(revision);
+      if (metricProceso) metricProceso.textContent = String(proceso);
+      if (metricCerrado) metricCerrado.textContent = String(cerrado);
+      if (metricUrgente) metricUrgente.textContent = String(urgentes);
+    }
+
+    function sortRows(rows) {
+      const mode = norm(sortBy?.value || 'newest');
+      const copy = rows.slice();
+      if (mode === 'oldest') {
+        copy.sort((a, b) => {
+          const ad = getCreatedDate(a)?.getTime() || 0;
+          const bd = getCreatedDate(b)?.getTime() || 0;
+          return ad - bd;
+        });
+        return copy;
+      }
+      if (mode === 'urgent_first') {
+        copy.sort((a, b) => {
+          const au = normalizeUrgency(a.urgencia) === 'urgente' ? 0 : 1;
+          const bu = normalizeUrgency(b.urgencia) === 'urgente' ? 0 : 1;
+          if (au !== bu) return au - bu;
+          const ad = getCreatedDate(a)?.getTime() || 0;
+          const bd = getCreatedDate(b)?.getTime() || 0;
+          return bd - ad;
+        });
+        return copy;
+      }
+      if (mode === 'status') {
+        copy.sort((a, b) => {
+          const as = statusRank(a.estado);
+          const bs = statusRank(b.estado);
+          if (as !== bs) return as - bs;
+          const ad = getCreatedDate(a)?.getTime() || 0;
+          const bd = getCreatedDate(b)?.getTime() || 0;
+          return bd - ad;
+        });
+        return copy;
+      }
+      copy.sort((a, b) => {
+        const ad = getCreatedDate(a)?.getTime() || 0;
+        const bd = getCreatedDate(b)?.getTime() || 0;
+        return bd - ad;
+      });
+      return copy;
+    }
+
     function getFilteredRows() {
       const q = norm(searchInput?.value || '');
-      if (!q) return quotesData.slice();
-      return quotesData.filter(r =>
-        norm(r.nombre).includes(q) ||
-        norm(r.empresa).includes(q) ||
-        norm(r.email).includes(q) ||
-        norm(r.servicio).includes(q) ||
-        norm(r.mensaje).includes(q)
-      );
+      const status = norm(statusFilter?.value || 'todos');
+      const urgency = norm(urgencyFilter?.value || 'todos');
+      const base = getTimeFilteredRows();
+      const filtered = base.filter((r) => {
+        const matchesQuery = !q || (
+          norm(r.nombre).includes(q) ||
+          norm(r.empresa).includes(q) ||
+          norm(r.email).includes(q) ||
+          norm(r.servicio).includes(q) ||
+          norm(r.mensaje).includes(q)
+        );
+        const matchesStatus = status === 'todos' || normalizeStatus(r.estado) === status;
+        const matchesUrgency = urgency === 'todos' || normalizeUrgency(r.urgencia) === urgency;
+        return matchesQuery && matchesStatus && matchesUrgency;
+      });
+      return sortRows(filtered);
+    }
+
+    function paginateRows(rows) {
+      const size = Math.max(1, Number(pageSize?.value || 25));
+      const totalPages = Math.max(1, Math.ceil(rows.length / size));
+      currentPage = Math.min(Math.max(1, currentPage), totalPages);
+      const start = (currentPage - 1) * size;
+      const pageRows = rows.slice(start, start + size);
+      if (pageInfo) pageInfo.textContent = `${currentPage} / ${totalPages}`;
+      if (prevPageBtn) prevPageBtn.disabled = currentPage <= 1;
+      if (nextPageBtn) nextPageBtn.disabled = currentPage >= totalPages;
+      return { pageRows, totalPages };
+    }
+
+    function renderKanban(rows) {
+      if (!kanbanNuevo || !kanbanRevision || !kanbanProceso || !kanbanCerrado) return;
+      kanbanNuevo.innerHTML = '';
+      kanbanRevision.innerHTML = '';
+      kanbanProceso.innerHTML = '';
+      kanbanCerrado.innerHTML = '';
+
+      const groups = {
+        nuevo: [],
+        en_revision: [],
+        proceso: [],
+        cerrado: []
+      };
+      rows.forEach((row) => {
+        const key = normalizeStatus(row.estado);
+        if (key in groups) groups[key].push(row);
+      });
+
+      const renderCard = (row) => {
+        const urgency = normalizeUrgency(row.urgencia);
+        const status = normalizeStatus(row.estado);
+        const card = document.createElement('article');
+        card.className = `admin-kanban-card ${urgency === 'urgente' ? 'is-urgent' : ''}`;
+        const title = `${(row.empresa || row.nombre || 'Solicitud').toString()}`;
+        const subtitle = `${(row.servicio || '').toString()}`.trim();
+        card.innerHTML = `
+          <div class="admin-kanban-top">
+            <div class="admin-kanban-title">${title}</div>
+            <span class="admin-pill urgency ${urgency}">${urgencyLabel(urgency)}</span>
+          </div>
+          <div class="admin-kanban-sub">${subtitle}</div>
+          <div class="admin-kanban-meta">
+            <span>${formatAge(row)} • ${formatDate(row.createdAt ?? row.fecha ?? row.created_at)}</span>
+          </div>
+          <div class="admin-kanban-actions">
+            <select class="admin-inline-select" data-id="${row.id}" data-field="estado">
+              <option value="nuevo"${status === 'nuevo' ? ' selected' : ''}>Nuevo</option>
+              <option value="en_revision"${status === 'en_revision' ? ' selected' : ''}>En revisión</option>
+              <option value="proceso"${status === 'proceso' ? ' selected' : ''}>Proceso</option>
+              <option value="cerrado"${status === 'cerrado' ? ' selected' : ''}>Cerrado</option>
+            </select>
+            <button type="button" class="admin-row-btn" data-action="view" data-id="${row.id}">Ver</button>
+          </div>
+        `;
+        return card;
+      };
+
+      const fill = (container, items) => {
+        items.slice(0, 200).forEach((row) => container.appendChild(renderCard(row)));
+      };
+
+      fill(kanbanNuevo, groups.nuevo);
+      fill(kanbanRevision, groups.en_revision);
+      fill(kanbanProceso, groups.proceso);
+      fill(kanbanCerrado, groups.cerrado);
+
+      if (kanbanNuevoCount) kanbanNuevoCount.textContent = String(groups.nuevo.length);
+      if (kanbanRevisionCount) kanbanRevisionCount.textContent = String(groups.en_revision.length);
+      if (kanbanProcesoCount) kanbanProcesoCount.textContent = String(groups.proceso.length);
+      if (kanbanCerradoCount) kanbanCerradoCount.textContent = String(groups.cerrado.length);
+    }
+
+    function setView(view) {
+      currentView = view === 'kanban' ? 'kanban' : 'table';
+      if (viewTableBtn) viewTableBtn.classList.toggle('active', currentView === 'table');
+      if (viewKanbanBtn) viewKanbanBtn.classList.toggle('active', currentView === 'kanban');
+      if (tableView) tableView.style.display = currentView === 'table' ? '' : 'none';
+      if (kanbanView) kanbanView.style.display = currentView === 'kanban' ? '' : 'none';
+      applyFilter();
     }
 
     function applyFilter() {
-      renderQuotes(getFilteredRows());
+      const base = getTimeFilteredRows();
+      updateMetrics(base);
+      const rows = getFilteredRows();
+      const { pageRows } = paginateRows(rows);
+      if (resultsInfo) resultsInfo.textContent = `Mostrando ${pageRows.length} de ${rows.length}`;
+      if (currentView === 'kanban') {
+        renderKanban(rows);
+        quotesEmpty.style.display = rows.length ? 'none' : 'block';
+        return;
+      }
+      renderQuotes(pageRows);
     }
 
     function downloadCsv(rows) {
@@ -215,7 +660,7 @@
         if (/[;"\r\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
         return s;
       };
-      const header = ['id', 'created_at', 'nombre', 'empresa', 'email', 'telefono', 'servicio', 'mensaje', 'estado'];
+      const header = ['id', 'created_at', 'nombre', 'empresa', 'email', 'telefono', 'servicio', 'urgencia', 'mensaje', 'estado'];
       const lines = [
         `sep=${sep}`,
         header.join(sep),
@@ -227,8 +672,9 @@
           escapeField(r.email || ''),
           escapeField(r.telefono || ''),
           escapeField(r.servicio || ''),
+          escapeField(normalizeUrgency(r.urgencia)),
           escapeField(r.mensaje || ''),
-          escapeField(r.estado || ''),
+          escapeField(normalizeStatus(r.estado)),
         ]).join(sep))
       ].join('\n');
 
@@ -243,45 +689,123 @@
       URL.revokeObjectURL(url);
     }
 
-    async function fetchRowsPhp(url) {
-      try {
-        const res = await fetch(url, { credentials: 'include' });
-        if (res.status === 401) return [];
-        if (!res.ok) return [];
-        const data = await res.json();
-        if (Array.isArray(data)) return data;
-        if (data && Array.isArray(data.cotizaciones)) return data.cotizaciones;
-        if (data && Array.isArray(data.rows)) return data.rows;
-        return [];
-      } catch {
-        return [];
-      }
-    }
-
-    async function checkAdminPhp() {
-      try {
-        const res = await fetch(API_SESSION, { credentials: 'include' });
-        if (!res.ok) return false;
-        const s = await res.json();
-        const rol = (s && (s.rol || (s.user && s.user.role) || '')).toString();
-        return rol === 'admin';
-      } catch {
-        return false;
-      }
-    }
-
-    async function loadDataPhp() {
-      quotesData = await fetchRowsPhp(API_QUOTES);
+    async function updateQuoteField(id, field, value) {
+      if (!db || !id || !field) return;
+      await updateDoc(doc(db, 'cotizaciones', id), {
+        [field]: field === 'estado' ? normalizeStatus(value) : normalizeUrgency(value),
+        updatedAt: serverTimestamp()
+      });
+      quotesData = quotesData.map((row) => row.id === id ? {
+        ...row,
+        [field]: field === 'estado' ? normalizeStatus(value) : normalizeUrgency(value)
+      } : row);
       applyFilter();
     }
 
-    async function initHosted() {
+    function openModal(row) {
+      if (!quoteModal) return;
+      currentModalId = row?.id || '';
+      if (!currentModalId) return;
+
+      const createdText = formatDate(row.createdAt ?? row.fecha ?? row.created_at);
+      const title = `${(row.empresa || row.nombre || 'Solicitud').toString()}`.trim();
+      if (modalTitle) modalTitle.textContent = title || 'Solicitud';
+      if (modalSubtitle) modalSubtitle.textContent = createdText ? `Creada: ${createdText}` : '';
+      if (modalServicio) modalServicio.textContent = (row.servicio || row.service || '').toString() || '-';
+      if (modalMensaje) modalMensaje.textContent = (row.mensaje || row.message || '').toString() || '-';
+
+      const phone = (row.telefono || row.phone || '').toString().trim();
+      if (modalTelefono) {
+        modalTelefono.textContent = phone || '-';
+        const clean = phone.replace(/[^\d]/g, '');
+        modalTelefono.href = clean ? `https://wa.me/${clean}` : '#';
+      }
+
+      const email = (row.email || '').toString().trim();
+      if (modalEmail) {
+        modalEmail.textContent = email || '-';
+        modalEmail.href = email ? `mailto:${encodeURIComponent(email)}` : '#';
+      }
+
+      if (modalEstado) {
+        modalEstado.innerHTML = '';
+        ['nuevo', 'en_revision', 'proceso', 'cerrado'].forEach((value) => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = statusLabel(value);
+          if (normalizeStatus(row.estado) === value) option.selected = true;
+          modalEstado.appendChild(option);
+        });
+      }
+
+      if (modalUrgencia) {
+        modalUrgencia.innerHTML = '';
+        ['normal', 'urgente'].forEach((value) => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = urgencyLabel(value);
+          if (normalizeUrgency(row.urgencia) === value) option.selected = true;
+          modalUrgencia.appendChild(option);
+        });
+      }
+
+      if (modalAsignadoA) modalAsignadoA.value = (row.asignadoA || '').toString();
+      if (modalNotas) modalNotas.value = (row.notas || '').toString();
+
+      quoteModal.style.display = '';
+      quoteModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+    }
+
+    function closeModal() {
+      if (!quoteModal) return;
+      quoteModal.style.display = 'none';
+      quoteModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      currentModalId = '';
+    }
+
+    async function saveModal() {
+      if (!db || !currentModalId) return;
+      const estado = modalEstado ? modalEstado.value : '';
+      const urgencia = modalUrgencia ? modalUrgencia.value : '';
+      const asignadoA = modalAsignadoA ? modalAsignadoA.value : '';
+      const notas = modalNotas ? modalNotas.value : '';
+      await updateDoc(doc(db, 'cotizaciones', currentModalId), {
+        estado: normalizeStatus(estado),
+        urgencia: normalizeUrgency(urgencia),
+        asignadoA: (asignadoA || '').toString().trim(),
+        notas: (notas || '').toString(),
+        updatedAt: serverTimestamp()
+      });
+      quotesData = quotesData.map((row) => row.id === currentModalId ? {
+        ...row,
+        estado: normalizeStatus(estado),
+        urgencia: normalizeUrgency(urgencia),
+        asignadoA: (asignadoA || '').toString().trim(),
+        notas: (notas || '').toString()
+      } : row);
+      applyFilter();
+      closeModal();
+    }
+
+    async function initAdmin() {
       const app = getApp();
       const auth = getAuth(app);
-      const db = getFirestore(app);
+      db = getFirestore(app);
 
-      const checkAdminFirestoreByEmail = async (email) => {
-        const q = query(collection(db, 'usuarios'), where('correo', '==', email), limit(1));
+      const checkAdminFirestore = async (user) => {
+        if (!user || !user.email) return false;
+
+        try {
+          const directSnap = await getDoc(doc(db, 'usuarios', user.uid));
+          if (directSnap.exists()) {
+            const directData = directSnap.data() || {};
+            if (isAdminRole(directData.rol)) return true;
+          }
+        } catch {}
+
+        const q = query(collection(db, 'usuarios'), where('correo', '==', user.email), limit(1));
         const snap = await getDocs(q);
         if (snap.empty) return false;
         const data = snap.docs[0].data() || {};
@@ -290,24 +814,136 @@
 
       const loadDataFirestore = async () => {
         try {
-          const q = query(collection(db, 'cotizaciones'), orderBy('createdAt', 'desc'));
+          const q = query(collection(db, 'cotizaciones'), orderBy('createdAt', 'desc'), limit(800));
           const snap = await getDocs(q);
           quotesData = snap.docs.map((d) => ({ id: d.id, ...(d.data() || {}) }));
         } catch {
           const snap = await getDocs(collection(db, 'cotizaciones'));
           quotesData = snap.docs.map((d) => ({ id: d.id, ...(d.data() || {}) }));
         }
+        currentPage = 1;
         applyFilter();
       };
 
       if (refreshBtn) refreshBtn.addEventListener('click', loadDataFirestore);
       if (searchInput) searchInput.addEventListener('input', applyFilter);
+      if (timeFilter) timeFilter.addEventListener('change', () => { currentPage = 1; applyFilter(); });
+      if (statusFilter) statusFilter.addEventListener('change', applyFilter);
+      if (urgencyFilter) urgencyFilter.addEventListener('change', applyFilter);
+      if (sortBy) sortBy.addEventListener('change', applyFilter);
+      if (pageSize) pageSize.addEventListener('change', () => { currentPage = 1; applyFilter(); });
+      if (prevPageBtn) prevPageBtn.addEventListener('click', () => { currentPage = Math.max(1, currentPage - 1); applyFilter(); });
+      if (nextPageBtn) nextPageBtn.addEventListener('click', () => { currentPage = currentPage + 1; applyFilter(); });
+      if (viewTableBtn) viewTableBtn.addEventListener('click', () => setView('table'));
+      if (viewKanbanBtn) viewKanbanBtn.addEventListener('click', () => setView('kanban'));
       if (downloadCsvBtn) {
         downloadCsvBtn.addEventListener('click', (event) => {
           event.preventDefault();
           downloadCsv(getFilteredRows());
         });
       }
+      if (quotesTbody) {
+        quotesTbody.addEventListener('change', async (event) => {
+          const target = event.target;
+          if (!(target instanceof HTMLSelectElement)) return;
+          const id = target.dataset.id || '';
+          const field = target.dataset.field || '';
+          if (!id || !field) return;
+          target.disabled = true;
+          try {
+            await updateQuoteField(id, field, target.value);
+          } catch {
+            alert('No se pudo actualizar la solicitud.');
+          } finally {
+            target.disabled = false;
+          }
+        });
+      }
+      if (quotesTbody) {
+        quotesTbody.addEventListener('click', (event) => {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+          const btn = target.closest('[data-action="view"]');
+          if (!btn) return;
+          const id = btn.getAttribute('data-id') || '';
+          const row = quotesData.find((item) => item.id === id);
+          if (row) openModal(row);
+        });
+      }
+      if (kanbanView) {
+        kanbanView.addEventListener('click', (event) => {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+          const btn = target.closest('[data-action="view"]');
+          if (!btn) return;
+          const id = btn.getAttribute('data-id') || '';
+          const row = quotesData.find((item) => item.id === id);
+          if (row) openModal(row);
+        });
+      }
+      if (kanbanView) {
+        kanbanView.addEventListener('change', async (event) => {
+          const target = event.target;
+          if (!(target instanceof HTMLSelectElement)) return;
+          const id = target.dataset.id || '';
+          const field = target.dataset.field || '';
+          if (!id || !field) return;
+          target.disabled = true;
+          try {
+            await updateQuoteField(id, field, target.value);
+          } catch {
+            alert('No se pudo actualizar la solicitud.');
+          } finally {
+            target.disabled = false;
+          }
+        });
+      }
+      document.querySelectorAll('.admin-summary-item[data-summary]').forEach((card) => {
+        card.addEventListener('click', () => {
+          const key = card.getAttribute('data-summary') || '';
+          if (key === 'total') {
+            if (statusFilter) statusFilter.value = 'todos';
+            if (urgencyFilter) urgencyFilter.value = 'todos';
+          } else if (key === 'urgente') {
+            if (urgencyFilter) urgencyFilter.value = 'urgente';
+          } else if (statusFilter) {
+            statusFilter.value = key;
+          }
+          currentPage = 1;
+          applyFilter();
+        });
+      });
+
+      if (quoteModal) {
+        quoteModal.addEventListener('click', (event) => {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+          if (target.hasAttribute('data-modal-close') || target.closest('[data-modal-close]')) {
+            closeModal();
+          }
+        });
+      }
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeModal();
+      });
+      if (modalSaveBtn) modalSaveBtn.addEventListener('click', async () => {
+        modalSaveBtn.disabled = true;
+        try {
+          await saveModal();
+        } catch {
+          alert('No se pudo guardar.');
+        } finally {
+          modalSaveBtn.disabled = false;
+        }
+      });
+      if (modalWhatsappBtn) modalWhatsappBtn.addEventListener('click', () => {
+        const href = modalTelefono?.href || '#';
+        if (href && href !== '#') window.open(href, '_blank', 'noopener,noreferrer');
+      });
+      if (modalMailBtn) modalMailBtn.addEventListener('click', () => {
+        const href = modalEmail?.href || '#';
+        if (href && href !== '#') window.open(href, '_blank', 'noopener,noreferrer');
+      });
 
       if (adminLoginForm) {
         adminLoginForm.addEventListener('submit', async (event) => {
@@ -342,66 +978,17 @@
           showLogin();
           return;
         }
-        const ok = await checkAdminFirestoreByEmail(user.email).catch(() => false);
+        const ok = await checkAdminFirestore(user).catch(() => false);
         if (!ok) {
           try { await signOut(auth); } catch {}
-          showLogin('Acceso denegado');
+          showLogin('Acceso denegado. Solo pueden entrar cuentas registradas en Firebase Authentication con rol admin.');
           return;
         }
         showApp();
-        loadDataFirestore();
+        try { unsubscribe?.(); } catch {}
+        unsubscribe = null;
+        await loadDataFirestore();
       });
-    }
-
-    async function initLocal() {
-      if (searchInput) searchInput.addEventListener('input', applyFilter);
-      if (refreshBtn) refreshBtn.addEventListener('click', loadDataPhp);
-      if (downloadCsvBtn) {
-        downloadCsvBtn.href = API_QUOTES_CSV;
-        downloadCsvBtn.target = '_blank';
-        downloadCsvBtn.rel = 'noopener noreferrer';
-        downloadCsvBtn.addEventListener('click', async (event) => {
-          const ok = await checkAdminPhp();
-          if (!ok) {
-            event.preventDefault();
-            showLogin('Inicia sesión como administrador para descargar el CSV.');
-          }
-        });
-      }
-
-      const ok = await checkAdminPhp();
-      if (ok) {
-        showApp();
-        loadDataPhp();
-        return;
-      }
-      showLogin();
-      if (adminLoginForm) {
-        adminLoginForm.addEventListener('submit', async (event) => {
-          event.preventDefault();
-          if (!adminLoginForm.reportValidity()) return;
-          try {
-            const res = await fetch(API_LOGIN, {
-              method: 'POST',
-              credentials: 'include',
-              body: new FormData(adminLoginForm)
-            });
-            const data = await res.json().catch(() => ({}));
-            if (!res.ok || !data.ok) {
-              showLogin((data && data.error) ? data.error : 'No se pudo iniciar sesión');
-              return;
-            }
-            if ((data.rol || '').toString() !== 'admin') {
-              showLogin('Acceso denegado');
-              return;
-            }
-            showApp();
-            loadDataPhp();
-          } catch {
-            showLogin('No se pudo iniciar sesión');
-          }
-        });
-      }
     }
 
     function initNav() {
@@ -450,17 +1037,15 @@
     document.addEventListener('DOMContentLoaded', async () => {
       initNav();
       if (window.location.protocol === 'file:') {
-        const target = 'http://localhost/resmag-web/admin.html';
+        const target = 'http://127.0.0.1:4173/admin.html';
         try { window.location.replace(target); } catch {}
-        showLogin('Abre esta página desde http://localhost/resmag-web/admin.html (no desde file://)');
+        showLogin('Abre esta página desde http://127.0.0.1:4173/admin.html o desde Firebase Hosting (no desde file://)');
         return;
       }
-      if (isHosted) {
-        await initHosted();
-      } else {
-        await initLocal();
-      }
+      await initAdmin();
     });
   </script>
+  <script type="module" src="auth-nav.js"></script>
 </body>
 </html>
+
