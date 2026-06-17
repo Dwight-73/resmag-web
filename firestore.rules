@@ -1,0 +1,62 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function email() {
+      return signedIn() ? request.auth.token.email : null;
+    }
+
+    function isAdminEmail() {
+      return email() in ['resmag@local.pe', 'admin@resmag.local', 'logisticaymanteniendo@gmail.com'];
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    match /cotizaciones/{docId} {
+      allow create: if true;
+      allow read: if signedIn() && isAdminEmail();
+      allow update: if signedIn() && isAdminEmail();
+      allow delete: if false;
+    }
+
+    match /clientes/{docId} {
+      allow create, update: if true;
+      allow read: if signedIn() && isAdminEmail();
+      allow delete: if false;
+    }
+
+    match /servicios/{docId} {
+      allow read: if true;
+      allow create, update, delete: if signedIn() && isAdminEmail();
+    }
+
+    match /configuracion/{docId} {
+      allow read: if true;
+      allow create, update, delete: if signedIn() && isAdminEmail();
+    }
+
+    match /actividad/{docId} {
+      allow create: if true;
+      allow read: if signedIn() && isAdminEmail();
+      allow update, delete: if false;
+    }
+
+    match /usuarios/{docId} {
+      allow create: if isOwner(docId)
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.rol == 'cliente';
+      allow read: if isOwner(docId) || (signedIn() && isAdminEmail());
+      allow update: if (
+        isOwner(docId)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.rol == resource.data.rol
+      ) || (signedIn() && isAdminEmail());
+      allow delete: if false;
+    }
+  }
+}

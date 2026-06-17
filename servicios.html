@@ -5,6 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Operaciones Portuarias – Servicios</title>
   <link rel="stylesheet" href="style.css">
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAA2ahN95a83qbe4uFSYvHCQWUiDRI9aWE",
+      authDomain: "res-log-man.firebaseapp.com",
+      databaseURL: "https://res-log-man-default-rtdb.firebaseio.com",
+      projectId: "res-log-man",
+      storageBucket: "res-log-man.firebasestorage.app",
+      messagingSenderId: "822449215130",
+      appId: "1:822449215130:web:af7144c5bdfccd97a53123",
+      measurementId: "G-JXRX3VBWMX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    try { getAnalytics(app); } catch {}
+  </script>
 </head>
 <body class="pagina-servicios transparent-header-page">
 
@@ -17,6 +35,7 @@
       <a href="nosotros.html" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a>
       <a href="servicios.html" class="active" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
       <a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a>
+      <a href="auth.html" class="login-btn" data-es="Login" data-en="Login" data-pt="Login">Login</a>
       <select id="selector-idioma">
         <option value="es">🇪🇸 ES</option>
         <option value="en">🇺🇸 US</option>
@@ -125,6 +144,136 @@
       </div>
     </div>
 
+    <section class="service-details">
+      <h2 data-es="Detalles por servicio" data-en="Service details" data-pt="Detalhes por serviço">Detalles por servicio</h2>
+      <p data-es="Alcance referencial para planificar recursos, tiempos y requisitos. La propuesta final se ajusta al diagnóstico y condiciones del servicio."
+         data-en="Reference scope to plan resources, timelines, and requirements. The final proposal is adjusted after assessment and service conditions."
+         data-pt="Escopo referencial para planejar recursos, prazos e requisitos. A proposta final é ajustada após o diagnóstico e as condições do serviço.">
+        Alcance referencial para planificar recursos, tiempos y requisitos. La propuesta final se ajusta al diagnóstico y condiciones del servicio.
+      </p>
+
+      <div class="details-grid">
+        <article class="details-card">
+          <h3 data-es="Mantenimiento Naval" data-en="Naval Maintenance" data-pt="Manutenção Naval">Mantenimiento Naval</h3>
+          <details>
+            <summary data-es="Incluye" data-en="Includes" data-pt="Inclui">Incluye</summary>
+            <ul>
+              <li data-es="Inspección inicial y planificación del trabajo." data-en="Initial inspection and work planning." data-pt="Inspeção inicial e planejamento do trabalho.">Inspección inicial y planificación del trabajo.</li>
+              <li data-es="Mantenimiento preventivo y correctivo según alcance." data-en="Preventive and corrective maintenance as per scope." data-pt="Manutenção preventiva e corretiva conforme o escopo.">Mantenimiento preventivo y correctivo según alcance.</li>
+              <li data-es="Control de calidad y entrega con evidencias." data-en="Quality control and delivery with evidence." data-pt="Controle de qualidade e entrega com evidências.">Control de calidad y entrega con evidencias.</li>
+            </ul>
+          </details>
+          <details>
+            <summary data-es="Tiempo típico" data-en="Typical timeline" data-pt="Prazo típico">Tiempo típico</summary>
+            <ul>
+              <li data-es="Depende del diagnóstico, accesos y disponibilidad de la nave." data-en="Depends on assessment, access, and vessel availability." data-pt="Depende do diagnóstico, acessos e disponibilidade da embarcação.">Depende del diagnóstico, accesos y disponibilidad de la nave.</li>
+            </ul>
+          </details>
+          <details>
+            <summary data-es="Seguridad y requisitos" data-en="Safety and requirements" data-pt="Segurança e requisitos">Seguridad y requisitos</summary>
+            <ul>
+              <li data-es="Protocolos de seguridad y permisos según el área de trabajo." data-en="Safety protocols and permits depending on the work area." data-pt="Protocolos de segurança e permissões conforme a área de trabalho.">Protocolos de seguridad y permisos según el área de trabajo.</li>
+              <li data-es="Coordinación de ventana operativa y responsables." data-en="Coordination of operational window and owners." data-pt="Coordenação de janela operacional e responsáveis.">Coordinación de ventana operativa y responsables.</li>
+            </ul>
+          </details>
+        </article>
+
+        <article class="details-card">
+          <h3 data-es="Logística Marítima" data-en="Maritime Logistics" data-pt="Logística Marítima">Logística Marítima</h3>
+          <details>
+            <summary data-es="Incluye" data-en="Includes" data-pt="Inclui">Incluye</summary>
+            <ul>
+              <li data-es="Coordinación de transporte y movimientos." data-en="Transport and movement coordination." data-pt="Coordenação de transporte e movimentações.">Coordinación de transporte y movimientos.</li>
+              <li data-es="Control y trazabilidad (vales, etiquetado y registros)." data-en="Control and traceability (vouchers, labeling, records)." data-pt="Controle e rastreabilidade (vales, etiquetagem e registros).">Control y trazabilidad (vales, etiquetado y registros).</li>
+              <li data-es="Actualizaciones de estado durante la operación." data-en="Status updates during operations." data-pt="Atualizações de status durante a operação.">Actualizaciones de estado durante la operación.</li>
+            </ul>
+          </details>
+          <details>
+            <summary data-es="No incluye" data-en="Excludes" data-pt="Não inclui">No incluye</summary>
+            <ul>
+              <li data-es="Costos de terceros no informados en la propuesta." data-en="Third-party costs not stated in the proposal." data-pt="Custos de terceiros não informados na proposta.">Costos de terceros no informados en la propuesta.</li>
+            </ul>
+          </details>
+          <details>
+            <summary data-es="Zonas" data-en="Areas" data-pt="Áreas">Zonas</summary>
+            <ul>
+              <li data-es="Callao, Lima y coordinaciones según operación." data-en="Callao, Lima, and coordination per operation." data-pt="Callao, Lima e coordenações conforme a operação.">Callao, Lima y coordinaciones según operación.</li>
+            </ul>
+          </details>
+        </article>
+
+        <article class="details-card">
+          <h3 data-es="Trabajo de Buceo" data-en="Diving Work" data-pt="Trabalho de Mergulho">Trabajo de Buceo</h3>
+          <details>
+            <summary data-es="Incluye" data-en="Includes" data-pt="Inclui">Incluye</summary>
+            <ul>
+              <li data-es="Inspección subacuática y reporte del hallazgo." data-en="Underwater inspection and findings report." data-pt="Inspeção subaquática e relatório de achados.">Inspección subacuática y reporte del hallazgo.</li>
+              <li data-es="Apoyo operativo según procedimiento." data-en="Operational support as per procedure." data-pt="Apoio operacional conforme procedimento.">Apoyo operativo según procedimiento.</li>
+            </ul>
+          </details>
+          <details>
+            <summary data-es="Requisitos" data-en="Requirements" data-pt="Requisitos">Requisitos</summary>
+            <ul>
+              <li data-es="Condiciones de seguridad, permisos y coordinación de área." data-en="Safety conditions, permits, and area coordination." data-pt="Condições de segurança, permissões e coordenação de área.">Condiciones de seguridad, permisos y coordinación de área.</li>
+              <li data-es="Ventana operativa según marea y accesos." data-en="Operational window depending on tide and access." data-pt="Janela operacional conforme maré e acessos.">Ventana operativa según marea y accesos.</li>
+            </ul>
+          </details>
+          <details>
+            <summary data-es="Tiempo típico" data-en="Typical timeline" data-pt="Prazo típico">Tiempo típico</summary>
+            <ul>
+              <li data-es="Según profundidad, visibilidad, alcance y permisos." data-en="Depends on depth, visibility, scope, and permits." data-pt="Conforme profundidade, visibilidade, escopo e permissões.">Según profundidad, visibilidad, alcance y permisos.</li>
+            </ul>
+          </details>
+        </article>
+
+        <article class="details-card">
+          <h3 data-es="Planos de Construcción" data-en="Construction Plans" data-pt="Planos de Construção">Planos de Construcción</h3>
+          <details>
+            <summary data-es="Incluye" data-en="Includes" data-pt="Inclui">Incluye</summary>
+            <ul>
+              <li data-es="Levantamiento de información y revisión de requerimientos." data-en="Information gathering and requirement review." data-pt="Levantamento de informações e revisão de requisitos.">Levantamiento de información y revisión de requerimientos.</li>
+              <li data-es="Planos técnicos y actualización por versiones." data-en="Technical drawings and version updates." data-pt="Plantas técnicas e atualização por versões.">Planos técnicos y actualización por versiones.</li>
+            </ul>
+          </details>
+          <details>
+            <summary data-es="Entregables" data-en="Deliverables" data-pt="Entregáveis">Entregables</summary>
+            <ul>
+              <li data-es="Archivos digitales y documento de cambios." data-en="Digital files and change log." data-pt="Arquivos digitais e registro de alterações.">Archivos digitales y documento de cambios.</li>
+            </ul>
+          </details>
+          <details>
+            <summary data-es="Tiempo típico" data-en="Typical timeline" data-pt="Prazo típico">Tiempo típico</summary>
+            <ul>
+              <li data-es="Según complejidad, alcance y revisiones." data-en="Depends on complexity, scope, and revisions." data-pt="Conforme complexidade, escopo e revisões.">Según complejidad, alcance y revisiones.</li>
+            </ul>
+          </details>
+        </article>
+
+        <article class="details-card">
+          <h3 data-es="Consultoría" data-en="Consulting" data-pt="Consultoria">Consultoría</h3>
+          <details>
+            <summary data-es="Incluye" data-en="Includes" data-pt="Inclui">Incluye</summary>
+            <ul>
+              <li data-es="Diagnóstico de riesgos y recomendaciones." data-en="Risk assessment and recommendations." data-pt="Diagnóstico de riscos e recomendações.">Diagnóstico de riesgos y recomendaciones.</li>
+              <li data-es="Soporte para permisos, licencias y planes." data-en="Support for permits, licenses, and plans." data-pt="Suporte para permissões, licenças e planos.">Soporte para permisos, licencias y planes.</li>
+            </ul>
+          </details>
+          <details>
+            <summary data-es="Qué necesitas enviar" data-en="What to provide" data-pt="O que enviar">Qué necesitas enviar</summary>
+            <ul>
+              <li data-es="Descripción del caso, urgencia y documentación disponible." data-en="Case description, urgency, and available documents." data-pt="Descrição do caso, urgência e documentação disponível.">Descripción del caso, urgencia y documentación disponible.</li>
+            </ul>
+          </details>
+          <details>
+            <summary data-es="Tiempo típico" data-en="Typical timeline" data-pt="Prazo típico">Tiempo típico</summary>
+            <ul>
+              <li data-es="Según alcance y tiempos de respuesta de terceros." data-en="Depends on scope and third-party response times." data-pt="Conforme escopo e tempos de resposta de terceiros.">Según alcance y tiempos de respuesta de terceros.</li>
+            </ul>
+          </details>
+        </article>
+      </div>
+    </section>
+
     <div class="seccion-nosotros galeria-servicios">
       <h2 
         data-es="Galería de Servicios" 
@@ -199,6 +348,22 @@
     </div>
   </div>
 
+  <div class="sticky-cta" aria-label="Accesos rápidos">
+    <a href="contactanos.html#cotizacion" aria-label="Solicitar cotización">
+      <span class="cta-text" data-es="Solicitar cotización" data-en="Request a quote" data-pt="Solicitar orçamento">Solicitar cotización</span>
+    </a>
+    <a class="secondary" href="mailto:logisticaymanteniendo@gmail.com" aria-label="Escribir correo">
+      <span class="cta-text" data-es="Escribir correo" data-en="Email us" data-pt="Enviar e-mail">Escribir correo</span>
+    </a>
+  </div>
+
+  <a class="whatsapp-float" href="https://wa.me/51960731930?text=Hola%20RESMAG%2C%20quisiera%20una%20cotizaci%C3%B3n." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp RESMAG">
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path d="M19.11 17.44c-.28-.14-1.62-.8-1.87-.9-.25-.09-.43-.14-.62.14-.18.28-.71.9-.87 1.08-.16.18-.32.21-.6.07-.28-.14-1.17-.43-2.23-1.37-.82-.73-1.38-1.64-1.54-1.92-.16-.28-.02-.43.12-.57.13-.13.28-.32.42-.48.14-.16.18-.28.28-.46.09-.18.05-.35-.02-.5-.07-.14-.62-1.5-.85-2.06-.22-.52-.44-.45-.62-.46h-.53c-.18 0-.46.07-.71.35-.25.28-.93.9-.93 2.2 0 1.29.96 2.54 1.09 2.72.14.18 1.88 2.87 4.56 4.03.64.28 1.14.45 1.53.58.64.2 1.22.17 1.67.1.51-.08 1.62-.66 1.85-1.3.23-.64.23-1.19.16-1.3-.07-.11-.25-.18-.53-.32z"/>
+      <path d="M16.01 3C8.84 3 3 8.84 3 16.01c0 2.22.58 4.39 1.68 6.3L3 29l6.86-1.6c1.85 1.01 3.92 1.54 6.15 1.54 7.17 0 13.01-5.84 13.01-12.93C29.02 8.84 23.18 3 16.01 3zm0 23.7c-2.09 0-4.07-.56-5.8-1.62l-.41-.25-4.06.95 1.08-3.96-.27-.41a10.69 10.69 0 0 1-1.69-5.8c0-5.95 4.88-10.79 10.88-10.79 5.95 0 10.79 4.84 10.79 10.79 0 5.99-4.84 10.88-10.52 10.88z"/>
+    </svg>
+  </a>
+
   <!-- Pie de página -->
   <footer class="footer">
     <div class="footer-container">
@@ -220,6 +385,7 @@
           <li><a href="nosotros.html" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a></li>
           <li><a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a></li>
           <li><a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a></li>
+          <li><a href="auth.html" data-es="Login" data-en="Login" data-pt="Login">Login</a></li>
         </ul>
       </div>
   
@@ -426,5 +592,7 @@
     })();
   </script>
 
+  <script type="module" src="auth-nav.js"></script>
 </body>
 </html>
+

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login – RESMAG</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { addDoc, collection, doc, getDoc, getFirestore, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAA2ahN95a83qbe4uFSYvHCQWUiDRI9aWE",
+      authDomain: "res-log-man.firebaseapp.com",
+      databaseURL: "https://res-log-man-default-rtdb.firebaseio.com",
+      projectId: "res-log-man",
+      storageBucket: "res-log-man.firebasestorage.app",
+      messagingSenderId: "822449215130",
+      appId: "1:822449215130:web:af7144c5bdfccd97a53123",
+      measurementId: "G-JXRX3VBWMX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    try { getAnalytics(app); } catch {}
+
+    const norm = (value) => (value ?? "").toString().trim();
+    const isFileProtocol = window.location.protocol === "file:";
+    const localhostAuthUrl = "http://127.0.0.1:4173/auth.html";
+
+    function getAuthErrorMessage(error, fallbackMessage) {
+      const code = String(error?.code || "");
+      if (isFileProtocol) {
+        return `Abre esta página desde ${localhostAuthUrl} o desde Firebase Hosting, no desde file://`;
+      }
+      if (code === "auth/email-already-in-use") return "Ese correo ya está registrado.";
+      if (code === "auth/invalid-email") return "Correo inválido.";
+      if (code === "auth/weak-password") return "La contraseña es muy débil.";
+      if (code === "auth/user-not-found") return "Ese correo no está registrado.";
+      if (code === "auth/wrong-password" || code === "auth/invalid-credential") return "Correo o contraseña incorrectos.";
+      if (code === "auth/too-many-requests") return "Demasiados intentos. Intenta nuevamente en unos minutos.";
+      if (code === "auth/operation-not-allowed") return "Email/Password no está habilitado en Firebase Authentication.";
+      if (code === "auth/configuration-not-found") return "Firebase Authentication no está configurado correctamente en este proyecto.";
+      if (code === "auth/unauthorized-domain") return "Este dominio no está autorizado en Firebase Authentication.";
+      if (code === "auth/network-request-failed") return "No se pudo conectar con Firebase. Verifica tu conexión y abre la web por http://localhost o Hosting.";
+      if (code === "permission-denied") return "Firestore rechazó guardar el perfil del usuario. Publica firestore.rules con firebase deploy --only firestore:rules.";
+      return code ? `${fallbackMessage} (${code})` : fallbackMessage;
+    }
+
+    async function upsertUserProfile(user, data = {}, options = {}) {
+      const ref = doc(db, "usuarios", user.uid);
+      let snap = null;
+      let existing = {};
+
+      try {
+        snap = await getDoc(ref);
+        existing = snap.exists() ? (snap.data() || {}) : {};
+      } catch (error) {
+        const code = String(error?.code || "");
+        if (code !== "permission-denied") throw error;
+      }
+
+      const payload = {
+        uid: user.uid,
+        correo: norm(user.email || data.correo),
+        nombre: norm(data.nombre || user.displayName || existing.nombre),
+        telefono: norm(data.telefono || existing.telefono),
+        empresa: norm(data.empresa || existing.empresa),
+        rol: norm(existing.rol || data.rol || "cliente") || "cliente",
+        providerIds: Array.isArray(user.providerData) ? user.providerData.map((item) => norm(item?.providerId)).filter(Boolean) : ["password"],
+        photoURL: norm(user.photoURL || existing.photoURL),
+        updatedAt: serverTimestamp()
+      };
+
+      if (!snap.exists() || options.isNew) {
+        payload.createdAt = serverTimestamp();
+      }
+
+      if (options.trackLogin) {
+        payload.lastLoginAt = serverTimestamp();
+      }
+
+      try {
+        await setDoc(ref, payload, { merge: true });
+      } catch (error) {
+        throw error;
+      }
+      try {
+        const latest = await getDoc(ref);
+        return latest.exists() ? latest.data() || payload : payload;
+      } catch {
+        return { ...existing, ...payload };
+      }
+    }
+
+    async function logActivity(data = {}) {
+      await addDoc(collection(db, "actividad"), {
+        usuarioId: norm(data.usuarioId),
+        correo: norm(data.correo).toLowerCase(),
+        accion: norm(data.accion),
+        detalle: norm(data.detalle),
+        modulo: norm(data.modulo) || "auth",
+        fecha: serverTimestamp(),
+        resultado: norm(data.resultado) || "exitoso",
+        referenciaId: norm(data.referenciaId)
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (isFileProtocol) {
+        try { window.location.replace(localhostAuthUrl); } catch {}
+      }
+
+      const guestView = document.getElementById("authGuest");
+      const accountView = document.getElementById("authAccount");
+      const loginForm = document.getElementById("loginForm");
+      const authError = document.getElementById("authError");
+      const authSuccess = document.getElementById("authSuccess");
+      const accountName = document.getElementById("accountName");
+      const accountEmail = document.getElementById("accountEmail");
+      const accountRole = document.getElementById("accountRole");
+      const accountCompany = document.getElementById("accountCompany");
+      const accountPhone = document.getElementById("accountPhone");
+      const adminAccess = document.getElementById("adminAccess");
+      const signOutBtn = document.getElementById("signOutBtn");
+      const selector = document.getElementById("selector-idioma");
+
+      const normalizeLanguage = (value) => (value === "es" || value === "en" || value === "pt" ? value : null);
+      const STORAGE_KEY = "resmag-lang";
+      const safeGetStoredLanguage = () => {
+        try {
+          return localStorage.getItem(STORAGE_KEY);
+        } catch {
+          return null;
+        }
+      };
+      const safeSetStoredLanguage = (value) => {
+        try {
+          localStorage.setItem(STORAGE_KEY, value);
+        } catch {}
+      };
+      const applyLanguage = (idioma) => {
+        document.querySelectorAll("[data-es]").forEach((el) => {
+          const value = el.dataset[idioma];
+          if (value != null) el.textContent = value;
+        });
+        document.querySelectorAll("[data-es-placeholder]").forEach((el) => {
+          const value = el.getAttribute(`data-${idioma}-placeholder`);
+          if (value != null) el.placeholder = value;
+        });
+      };
+      const setLanguage = (idioma) => {
+        const next = normalizeLanguage(idioma);
+        if (!next) return;
+        selector.value = next;
+        applyLanguage(next);
+        safeSetStoredLanguage(next);
+        document.documentElement.lang = next;
+      };
+
+      function showMessage(type, message) {
+        authError.style.display = "none";
+        authSuccess.style.display = "none";
+        if (!message) return;
+        if (type === "success") {
+          authSuccess.textContent = message;
+          authSuccess.style.display = "";
+          return;
+        }
+        authError.textContent = message;
+        authError.style.display = "";
+      }
+
+      function fillAccount(profile = {}, user) {
+        const displayName = norm(profile.nombre || user?.displayName) || "Usuario RESMAG";
+        const email = norm(profile.correo || user?.email) || "-";
+        const role = norm(profile.rol) || "cliente";
+        const company = norm(profile.empresa) || "No registrado";
+        const phone = norm(profile.telefono) || "No registrado";
+
+        accountName.textContent = displayName;
+        accountEmail.textContent = email;
+        accountRole.textContent = role;
+        accountCompany.textContent = company;
+        accountPhone.textContent = phone;
+        adminAccess.style.display = "";
+      }
+
+      function showGuest() {
+        guestView.style.display = "";
+        accountView.style.display = "none";
+        showMessage();
+      }
+
+      function showAccount(profile, user) {
+        fillAccount(profile, user);
+        guestView.style.display = "none";
+        accountView.style.display = "";
+      }
+
+      const getInitialLanguage = () => {
+        const urlLang = normalizeLanguage(new URLSearchParams(window.location.search).get("lang"));
+        const storedLang = normalizeLanguage(safeGetStoredLanguage());
+        return urlLang || storedLang || normalizeLanguage(selector.value) || "es";
+      };
+
+      selector.addEventListener("change", () => setLanguage(selector.value));
+      setLanguage(getInitialLanguage());
+
+      if (isFileProtocol) {
+        showMessage("error", `Abre esta página desde ${localhostAuthUrl} o desde Firebase Hosting, no desde file://`);
+      }
+
+      if (loginForm) {
+        loginForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          if (!loginForm.reportValidity()) return;
+          showMessage();
+          const email = norm(loginForm.querySelector('[name="email"]')?.value);
+          const password = norm(loginForm.querySelector('[name="password"]')?.value);
+          try {
+            const credential = await signInWithEmailAndPassword(auth, email, password);
+            await upsertUserProfile(credential.user, {}, { trackLogin: true });
+            try {
+              await logActivity({
+                usuarioId: credential.user.uid,
+                correo: credential.user.email,
+                accion: "login",
+                detalle: "Usuario inicio sesion correctamente"
+              });
+            } catch {}
+            showMessage("success", "Inicio de sesión correcto.");
+          } catch (error) {
+            showMessage("error", getAuthErrorMessage(error, "No se pudo iniciar sesión."));
+          }
+        });
+      }
+
+      if (signOutBtn) {
+        signOutBtn.addEventListener("click", async () => {
+          try {
+            const currentUser = auth.currentUser;
+            if (currentUser) {
+              try {
+                await logActivity({
+                  usuarioId: currentUser.uid,
+                  correo: currentUser.email,
+                  accion: "logout",
+                  detalle: "Usuario cerro sesion"
+                });
+              } catch {}
+            }
+            await signOut(auth);
+            showGuest();
+          } catch {
+            showMessage("error", "No se pudo cerrar sesión.");
+          }
+        });
+      }
+
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          showGuest();
+          return;
+        }
+        try {
+          const profile = await upsertUserProfile(user, {}, { trackLogin: true });
+          showAccount(profile, user);
+        } catch (error) {
+          showGuest();
+          showMessage("error", getAuthErrorMessage(error, "No se pudo cargar el perfil desde Firestore."));
+        }
+      });
+
+      (() => {
+        const body = document.body;
+        const toggle = document.querySelector(".nav-toggle");
+        const overlay = document.querySelector(".mobile-nav-overlay");
+        const menu = document.querySelector(".menu");
+
+        if (!toggle || !overlay || !menu) return;
+
+        const close = () => {
+          body.classList.remove("nav-open");
+          toggle.setAttribute("aria-expanded", "false");
+        };
+
+        const open = () => {
+          body.classList.add("nav-open");
+          toggle.setAttribute("aria-expanded", "true");
+        };
+
+        toggle.addEventListener("click", () => {
+          if (body.classList.contains("nav-open")) {
+            close();
+            return;
+          }
+          open();
+        });
+
+        overlay.addEventListener("click", close);
+
+        menu.addEventListener("click", (event) => {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+          if (target.closest("a")) close();
+        });
+
+        window.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") close();
+        });
+
+        window.addEventListener("resize", () => {
+          if (window.innerWidth > 768) close();
+        });
+      })();
+    });
+  </script>
+</head>
+<body class="transparent-header-page">
+  <div class="barra-superior">
+    <button class="nav-toggle" type="button" aria-label="Menú" aria-expanded="false">☰</button>
+    <img src="images/LM1.png" alt="RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC" />
+    <nav class="menu" id="site-menu">
+      <a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a>
+      <a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
+      <a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a>
+      <a href="auth.html" class="login-btn active" data-es="Login" data-en="Login" data-pt="Login">Login</a>
+      <select id="selector-idioma">
+        <option value="es">🇪🇸 ES</option>
+        <option value="en">🇺🇸 US</option>
+        <option value="pt">🇧🇷 BR</option>
+      </select>
+      <span class="spacer"></span>
+    </nav>
+  </div>
+  <div class="mobile-nav-overlay" aria-hidden="true"></div>
+
+  <div class="auth-page" id="authGuest">
+    <div class="auth-shell">
+      <div class="auth-showcase">
+        <div class="auth-showcase-card">
+          <div class="auth-badge" data-es="RESMAG · Clientes" data-en="RESMAG · Clients" data-pt="RESMAG · Clientes">RESMAG · Clientes</div>
+          <h1 data-es="Accede a tu cuenta" data-en="Access your account" data-pt="Acesse sua conta">Accede a tu cuenta</h1>
+          <p data-es="Inicia sesión con una cuenta creada previamente en Firebase Authentication. El acceso al panel admin depende del rol guardado en Firestore."
+             data-en="Sign in with an account previously created in Firebase Authentication. Admin panel access depends on the role stored in Firestore."
+             data-pt="Entre com uma conta criada previamente no Firebase Authentication. O acesso ao painel admin depende do papel salvo no Firestore.">
+            Inicia sesión con una cuenta creada previamente en Firebase Authentication. El acceso al panel admin depende del rol guardado en Firestore.
+          </p>
+          <div class="auth-feature-list">
+            <span data-es="Login con correo y contraseña" data-en="Email and password login" data-pt="Login com e-mail e senha">Login con correo y contraseña</span>
+            <span data-es="Usuarios creados desde Firebase Authentication" data-en="Users created from Firebase Authentication" data-pt="Usuários criados no Firebase Authentication">Usuarios creados desde Firebase Authentication</span>
+            <span data-es="Acceso admin si el rol es administrador" data-en="Admin access if role is administrator" data-pt="Acesso admin se o papel for administrador">Acceso admin si el rol es administrador</span>
+          </div>
+        </div>
+      </div>
+      <div class="auth-surface">
+        <div class="auth-card">
+          <div id="authError" class="auth-note error" style="display:none"></div>
+          <div id="authSuccess" class="auth-note success" style="display:none"></div>
+
+          <form id="loginForm" class="auth-form">
+            <h2 data-es="Iniciar sesión" data-en="Sign in" data-pt="Entrar">Iniciar sesión</h2>
+            <p class="auth-subtitle"
+               data-es="Ingresa con un usuario que ya haya sido creado en Firebase Authentication."
+               data-en="Sign in with a user that has already been created in Firebase Authentication."
+               data-pt="Entre com um usuário que já tenha sido criado no Firebase Authentication.">
+              Ingresa con un usuario que ya haya sido creado en Firebase Authentication.
+            </p>
+            <div class="auth-field">
+              <label for="loginEmail" data-es="Correo" data-en="Email" data-pt="E-mail">Correo</label>
+              <input id="loginEmail" name="email" type="email" required autocomplete="username"
+                     placeholder="tuempresa@correo.com"
+                     data-es-placeholder="tuempresa@correo.com"
+                     data-en-placeholder="yourcompany@email.com"
+                     data-pt-placeholder="suaempresa@email.com">
+            </div>
+            <div class="auth-field">
+              <label for="loginPassword" data-es="Contraseña" data-en="Password" data-pt="Senha">Contraseña</label>
+              <input id="loginPassword" name="password" type="password" required autocomplete="current-password"
+                     placeholder="••••••••"
+                     data-es-placeholder="••••••••"
+                     data-en-placeholder="••••••••"
+                     data-pt-placeholder="••••••••">
+            </div>
+            <button type="submit" class="auth-submit" data-es="Entrar" data-en="Sign in" data-pt="Entrar">Entrar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-page" id="authAccount" style="display:none">
+    <div class="auth-shell" style="max-width: 980px">
+      <div class="auth-showcase">
+        <div class="auth-showcase-card">
+          <div class="auth-badge" data-es="Sesión activa" data-en="Active session" data-pt="Sessão ativa">Sesión activa</div>
+          <h1 id="accountName">Usuario RESMAG</h1>
+          <p data-es="Tu autenticación ya está conectada con Firebase Auth y tu perfil se almacena en Firestore."
+             data-en="Your authentication is already connected to Firebase Auth and your profile is stored in Firestore."
+             data-pt="Sua autenticação já está conectada ao Firebase Auth e seu perfil é armazenado no Firestore.">
+            Tu autenticación ya está conectada con Firebase Auth y tu perfil se almacena en Firestore.
+          </p>
+        </div>
+      </div>
+      <div class="auth-surface">
+        <div class="auth-card">
+          <h2 data-es="Mi cuenta" data-en="My account" data-pt="Minha conta">Mi cuenta</h2>
+          <p class="auth-subtitle"
+             data-es="Estos datos se leen desde la colección usuarios en Firestore."
+             data-en="These details are read from the usuarios collection in Firestore."
+             data-pt="Esses dados são lidos da coleção usuarios no Firestore.">
+            Estos datos se leen desde la colección usuarios en Firestore.
+          </p>
+
+          <div class="auth-profile-grid">
+            <div class="auth-profile-item">
+              <span data-es="Correo" data-en="Email" data-pt="E-mail">Correo</span>
+              <strong id="accountEmail">-</strong>
+            </div>
+            <div class="auth-profile-item">
+              <span data-es="Rol" data-en="Role" data-pt="Papel">Rol</span>
+              <strong id="accountRole">cliente</strong>
+            </div>
+            <div class="auth-profile-item">
+              <span data-es="Empresa" data-en="Company" data-pt="Empresa">Empresa</span>
+              <strong id="accountCompany">-</strong>
+            </div>
+            <div class="auth-profile-item">
+              <span data-es="Teléfono" data-en="Phone" data-pt="Telefone">Teléfono</span>
+              <strong id="accountPhone">-</strong>
+            </div>
+          </div>
+
+          <div class="auth-profile-actions">
+            <a href="index.html" class="btn-cotizar" data-es="Ir al inicio" data-en="Go home" data-pt="Ir para início">Ir al inicio</a>
+            <a href="contactanos.html#cotizacion" class="btn-cotizar" data-es="Solicitar cotización" data-en="Request quote" data-pt="Solicitar orçamento">Solicitar cotización</a>
+            <a href="admin.html" id="adminAccess" class="btn-cotizar" style="display:none"
+               data-es="Ir al dashboard" data-en="Go to dashboard" data-pt="Ir para o dashboard">Ir al dashboard</a>
+          </div>
+
+          <button type="button" id="signOutBtn" class="auth-submit"
+                  data-es="Cerrar sesión" data-en="Sign out" data-pt="Sair">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <img src="images/logo.png" alt="RESMAG Logo" class="footer-logo">
+        <p data-es="Soluciones integrales en mantenimiento y logística naval."
+           data-en="Integral solutions in naval maintenance and logistics."
+           data-pt="Soluções integrais em manutenção e logística naval.">
+          Soluciones integrales en mantenimiento y logística naval.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4 data-es="Enlaces Rápidos" data-en="Quick Links" data-pt="Links Rápidos">Enlaces Rápidos</h4>
+        <ul>
+          <li><a href="index.html" data-es="Inicio" data-en="Home" data-pt="Início">Inicio</a></li>
+          <li><a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a></li>
+          <li><a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a></li>
+          <li><a href="auth.html" data-es="Login" data-en="Login" data-pt="Login">Login</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-es="Contacto" data-en="Contact" data-pt="Contato">Contacto</h4>
+        <p>📍 <a href="https://www.google.com/maps?q=Av.+Saiz+Pe%C3%B1a+182+Interior+201,+Callao,+Per%C3%BA" target="_blank" style="color: inherit; text-decoration: none;">Av. Saiz Peña 182 Int. 201, Callao</a></p>
+        <p>✉️ <a class="email-link" href="mailto:logisticaymanteniendo@gmail.com">logisticaymanteniendo@gmail.com</a></p>
+      </div>
+      <div class="footer-col">
+        <h4 data-es="Administración" data-en="Administration" data-pt="Administração">Administración</h4>
+        <ul>
+          <li><a href="admin.html" data-es="Panel Admin" data-en="Admin Panel" data-pt="Painel Admin">Panel Admin</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy"
+         data-es="&copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. Todos los derechos reservados."
+         data-en="&copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. All rights reserved."
+         data-pt="&copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. Todos os direitos reservados.">
+        &copy; 2025 RESMAG REPAIRS SERVICES MAINTENANCE GROUP SAC. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+  <script type="module" src="auth-nav.js"></script>
+</body>
+</html>
+

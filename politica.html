@@ -16,6 +16,7 @@
       <a href="nosotros.html" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a>
       <a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a>
       <a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a>
+      <a href="auth.html" class="login-btn" data-es="Login" data-en="Login" data-pt="Login">Login</a>
       <select id="selector-idioma">
         <option value="es">🇪🇸 ES</option>
         <option value="en">🇺🇸 US</option>
@@ -187,6 +188,37 @@
     </div>
   </section>
 
+  <div class="legal-actions">
+    <div class="legal-cta">
+      <h3 data-es="¿Tienes dudas sobre tus datos?" data-en="Questions about your data?" data-pt="Dúvidas sobre seus dados?">¿Tienes dudas sobre tus datos?</h3>
+      <p data-es="Si necesitas actualizar o eliminar información enviada por formularios, escríbenos indicando el correo utilizado y tu solicitud."
+         data-en="If you need to update or delete information sent through forms, email us with the email used and your request."
+         data-pt="Se precisar atualizar ou excluir informações enviadas por formulários, envie um e-mail informando o e-mail utilizado e sua solicitação.">
+        Si necesitas actualizar o eliminar información enviada por formularios, escríbenos indicando el correo utilizado y tu solicitud.
+      </p>
+      <div class="legal-cta-actions">
+        <a class="btn-cotizar" href="contactanos.html#cotizacion" data-es="Solicitar cotización" data-en="Request a quote" data-pt="Solicitar orçamento">Solicitar cotización</a>
+        <a class="btn-cotizar" href="mailto:logisticaymanteniendo@gmail.com" data-es="Escribir correo" data-en="Email us" data-pt="Enviar e-mail">Escribir correo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sticky-cta" aria-label="Accesos rápidos">
+    <a href="contactanos.html#cotizacion" aria-label="Solicitar cotización">
+      <span class="cta-text" data-es="Solicitar cotización" data-en="Request a quote" data-pt="Solicitar orçamento">Solicitar cotización</span>
+    </a>
+    <a class="secondary" href="mailto:logisticaymanteniendo@gmail.com" aria-label="Escribir correo">
+      <span class="cta-text" data-es="Escribir correo" data-en="Email us" data-pt="Enviar e-mail">Escribir correo</span>
+    </a>
+  </div>
+
+  <a class="whatsapp-float" href="https://wa.me/51960731930?text=Hola%20RESMAG%2C%20quisiera%20una%20cotizaci%C3%B3n." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp RESMAG">
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path d="M19.11 17.44c-.28-.14-1.62-.8-1.87-.9-.25-.09-.43-.14-.62.14-.18.28-.71.9-.87 1.08-.16.18-.32.21-.6.07-.28-.14-1.17-.43-2.23-1.37-.82-.73-1.38-1.64-1.54-1.92-.16-.28-.02-.43.12-.57.13-.13.28-.32.42-.48.14-.16.18-.28.28-.46.09-.18.05-.35-.02-.5-.07-.14-.62-1.5-.85-2.06-.22-.52-.44-.45-.62-.46h-.53c-.18 0-.46.07-.71.35-.25.28-.93.9-.93 2.2 0 1.29.96 2.54 1.09 2.72.14.18 1.88 2.87 4.56 4.03.64.28 1.14.45 1.53.58.64.2 1.22.17 1.67.1.51-.08 1.62-.66 1.85-1.3.23-.64.23-1.19.16-1.3-.07-.11-.25-.18-.53-.32z"/>
+      <path d="M16.01 3C8.84 3 3 8.84 3 16.01c0 2.22.58 4.39 1.68 6.3L3 29l6.86-1.6c1.85 1.01 3.92 1.54 6.15 1.54 7.17 0 13.01-5.84 13.01-12.93C29.02 8.84 23.18 3 16.01 3zm0 23.7c-2.09 0-4.07-.56-5.8-1.62l-.41-.25-4.06.95 1.08-3.96-.27-.41a10.69 10.69 0 0 1-1.69-5.8c0-5.95 4.88-10.79 10.88-10.79 5.95 0 10.79 4.84 10.79 10.79 0 5.99-4.84 10.88-10.52 10.88z"/>
+    </svg>
+  </a>
+
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-col">
@@ -205,6 +237,7 @@
           <li><a href="nosotros.html" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós">Nosotros</a></li>
           <li><a href="servicios.html" data-es="Servicios" data-en="Services" data-pt="Serviços">Servicios</a></li>
           <li><a href="contactanos.html" data-es="Contáctanos" data-en="Contact" data-pt="Contate-nos">Contáctanos</a></li>
+          <li><a href="auth.html" data-es="Login" data-en="Login" data-pt="Login">Login</a></li>
         </ul>
       </div>
 
@@ -342,5 +375,7 @@
     })();
   </script>
 
+  <script type="module" src="auth-nav.js"></script>
 </body>
 </html>
+
